@@ -26,8 +26,16 @@ jobs:
   check_overlaps:
     name: Check geometry for overlaps
     runs-on: ubuntu-latest
-    #needs: build
+    needs: build
     steps:
     - uses: actions/checkout@v3
     - name: Install ROOT
       run: sudo snap install root-framework
+    - name: Download default geometry
+      uses: actions/download-artifact@v3.0.1
+      with:
+        name: Default Geometry
+        path: nd_hall_with_lar_tms_sand.gdml
+    - name: Run overlap check
+      run: root -q -b 'checkOverlaps.C("nd_hall_with_lar_tms_sand.gdml")'
+      
