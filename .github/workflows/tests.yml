@@ -29,7 +29,7 @@ jobs:
     #needs: build
     steps:
     - uses: actions/checkout@v3
-    - name: Change Conda Python version
-      run: conda install python==3.7
+    - name: Change Conda Python version and install mamba
+      run: conda install python==3.7 mamba
     - name: Install ROOT
-      run: conda install -c conda-forge root==6.14.06
+      run: $CONDA/bin/mamba install -c conda-forge root==6.14.06
