@@ -6,8 +6,6 @@ on:
   pull_request:
     branches: [ "master" ]
 
-defaults:
-  
 jobs:
   build:
     name: Build default geometry
