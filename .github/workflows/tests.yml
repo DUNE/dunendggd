@@ -34,4 +34,4 @@ jobs:
     - name: Install Mamba
       run: curl micro.mamba.pm/install.sh | bash
     - name: Install ROOT
-      run: micromamba -r $CONDA install -c conda-forge root==6.14.06
+      run: micromamba -r $CONDA install -n base -c conda-forge root==6.14.06
