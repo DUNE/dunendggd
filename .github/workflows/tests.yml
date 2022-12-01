@@ -32,6 +32,6 @@ jobs:
     - name: Change Conda Python version
       run: conda install python==3.7
     - name: Install Mamba
-      run: conda install mamba -n base -c conda-forge
+      run: curl micro.mamba.pm/install.sh | bash
     - name: Install ROOT
-      run: $CONDA/bin/mamba install -c conda-forge root==6.14.06
+      run: micromamba install -c conda-forge root==6.14.06
