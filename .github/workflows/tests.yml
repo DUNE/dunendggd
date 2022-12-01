@@ -35,7 +35,6 @@ jobs:
       uses: actions/download-artifact@v3.0.1
       with:
         name: Default Geometry
-        path: nd_hall_with_lar_tms_sand.gdml
     - name: Debug artifact
       run: |
         ls -l
