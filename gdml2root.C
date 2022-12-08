@@ -6,8 +6,7 @@ void gdml2root(TString infile, TString outfile)
 		exit(1);
 	}
 
-	TGeoManager *geo = new TGeoManager();
-	geo->Import(infile);
+	TGeoManager *geo = TGeoManager::Import(infile);
 
 	geo->CheckOverlaps(1e-5,"d");
  	geo->PrintOverlaps();

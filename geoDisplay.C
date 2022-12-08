@@ -1,7 +1,6 @@
 void geoDisplay(TString filename, Int_t VisLevel=5)
 {
-	TGeoManager *geo = new TGeoManager();
-	geo->Import(filename);
+	TGeoManager *geo = TGeoManager::Import(filename);
 	geo->DefaultColors();
 
 
