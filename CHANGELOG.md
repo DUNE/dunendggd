@@ -8,6 +8,10 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
+## Fixed
+
+- Fixed use of TGeoManager::Import in scripts.
+
 ## [TDR_Production_geometry_v_1.0.2]
 
 ## Fixed
