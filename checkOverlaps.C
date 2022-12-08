@@ -1,7 +1,6 @@
 void checkOverlaps(TString filename)
 {
-    TGeoManager *geo = new TGeoManager();
-    geo->Import(filename);
+    TGeoManager *geo = TGeoManager::Import(filename);
 
     cout<<"======================== Checking Geometry ============================="<<endl;
     geo->CheckGeometry();
