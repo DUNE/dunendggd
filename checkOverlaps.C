@@ -25,6 +25,7 @@ void checkOverlaps(TString filename)
 	  cout<<"========================       Done!       =============================\n\n\n"<<endl;
 	  
 	  }*/
+	//Both method will not work simultaneously
 	cout<<"======================== Checking Overlaps with samplig method ============================="<<endl;
        	geo->CheckOverlaps(1e-6,"s");
 	geo->PrintOverlaps();
