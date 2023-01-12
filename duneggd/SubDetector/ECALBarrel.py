@@ -28,14 +28,14 @@ class ECALBarrelBuilder(gegede.builder.Builder):
         ecalModDim = list(self.ECALBarModBldr.ecalModDim)
         ecalModThick = ecalModDim[2]
         ecalModWide = ecalModDim[1]
-        print("ecalModDim = ",ecalModDim)
-        print("ecalModThick = ",ecalModThick)
-        print("ecalModWide = ",ecalModWide)
+        print(("ecalModDim = ",ecalModDim))
+        print(("ecalModThick = ",ecalModThick))
+        print(("ecalModWide = ",ecalModWide))
         # Define inner barrel dimensions with stt dim and thickness
         sttDim = self.sttDimension
-        print("0.5*sttDim[1] = ",0.5*sttDim[1])
-        print("0.5*ecalModThick = ",0.5*ecalModThick)
-        print("self.sTubeEndsToLead = ", self.sTubeEndsToLead)
+        print(("0.5*sttDim[1] = ",0.5*sttDim[1]))
+        print(("0.5*ecalModThick = ",0.5*ecalModThick))
+        print(("self.sTubeEndsToLead = ", self.sTubeEndsToLead))
         
         # MAK: this code is buggy. 
         self.ecalInDim  = [ sttDim[0] + 2*self.sTubeEndsToLead,

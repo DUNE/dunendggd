@@ -30,7 +30,7 @@ class STTBuilder(gegede.builder.Builder):
         self.liqArThickness         = liqArThickness
         self.configuration          = configuration
 
-        print(" ----> self.configuration : ",configuration)
+        print((" ----> self.configuration : ",configuration))
         print()
         self.strawRadius            = Q('2.5mm')
         self.strawWireWThickness    = Q('20um')
@@ -73,13 +73,13 @@ class STTBuilder(gegede.builder.Builder):
         # the gap between the trkMod and CMod is 4.67 instead of 4.67*2
         
 
-        print("trkModThickness  ", self.trkModThickness)
-        print("totfoilThickness:",self.totfoilThickness)
-        print("self.slabThickness:",self.slabThickness)
-        print("planeXXThickness:",self.planeXXThickness)
-        print("C3H6ModThickness:",self.C3H6ModThickness)
-        print("cModThickness:",self.cModThickness)
-        print("--------- liqArThickness -----------:",self.liqArThickness)
+        print(("trkModThickness  ", self.trkModThickness))
+        print(("totfoilThickness:",self.totfoilThickness))
+        print(("self.slabThickness:",self.slabThickness))
+        print(("planeXXThickness:",self.planeXXThickness))
+        print(("C3H6ModThickness:",self.C3H6ModThickness))
+        print(("cModThickness:",self.cModThickness))
+        print(("--------- liqArThickness -----------:",self.liqArThickness))
 
        # GRAIN
         self.HoneycombThickness  = Q("50mm")
@@ -180,8 +180,8 @@ class STTBuilder(gegede.builder.Builder):
         self.SymStopFirstModId=63
         self.STTUpperLength = 27 * self.C3H6ModThickness + 3.5 * self.cModThickness + 2 * self.trkModThickness
         self.realDistance2ECAL= self.kloeTrkRegRadius - self.STTUpperLength
-        print(" STTUpperLength:", self.STTUpperLength)
-        print("  self.realDistance2ECAL:", self.realDistance2ECAL)
+        print((" STTUpperLength:", self.STTUpperLength))
+        print(("  self.realDistance2ECAL:", self.realDistance2ECAL))
 
     def construct_option2(self,geom):
 
@@ -194,8 +194,8 @@ class STTBuilder(gegede.builder.Builder):
         self.SymStopFirstModId=58
         self.STTUpperLength = 25 * self.C3H6ModThickness + 3.5 * self.cModThickness + 2 * self.trkModThickness
         self.realDistance2ECAL= self.kloeTrkRegRadius - self.STTUpperLength
-        print(" STTUpperLength:", self.STTUpperLength)
-        print("  self.realDistance2ECAL:", self.realDistance2ECAL)
+        print((" STTUpperLength:", self.STTUpperLength))
+        print(("  self.realDistance2ECAL:", self.realDistance2ECAL))
 
     def build_STTSegment(self, geom):
 
@@ -211,7 +211,7 @@ class STTBuilder(gegede.builder.Builder):
 
         main_lv = geom.structure.Volume('STTtracker',   material=self.Material, shape=stt_shape)
         print( "KLOESTTFULL::construct()")
-        print( "  main_lv = "+ main_lv.name)
+        print(( "  main_lv = "+ main_lv.name))
         self.add_volume( main_lv )
         return main_lv
 
@@ -223,7 +223,7 @@ class STTBuilder(gegede.builder.Builder):
             name="STT_"+str(imod).zfill(2)+"_"+self.mod_list[imod]
             self.construct_one_module(main_lv, geom, name, self.Material, self.mod_list[imod], left2upstream)
             #print("name:  %s  left2upstream:  %f"%(name,left2upstream));
-            print("name:", name,"  left2upstream:",left2upstream);
+            print(("name:", name,"  left2upstream:",left2upstream));
             left2upstream +=  self.modthicknesses[self.mod_list[imod]]
 
 
@@ -236,14 +236,14 @@ class STTBuilder(gegede.builder.Builder):
             #            j=80-i
             name="STT_"+str(i).zfill(2)+"_"+self.mod_list[i]
             
-            print("name:", name, " l1:",Q("2m")-left2center," l2:", Q("2m")+left2center-ModThickness,"  ModThickness:",ModThickness);
+            print(("name:", name, " l1:",Q("2m")-left2center," l2:", Q("2m")+left2center-ModThickness,"  ModThickness:",ModThickness));
             self.construct_2sym_modules(main_lv,geom, name, self.Material, self.mod_list[i], left2center)
 
 
         imod=self.centralModId
         left2upstream=self.kloeTrkRegRadius- self.cModThickness/2
         name="STT_"+str(imod).zfill(2)+"_"+self.mod_list[imod]
-        print(" name: ",name,"  left2upstream", left2upstream);
+        print((" name: ",name,"  left2upstream", left2upstream));
         self.construct_one_module(main_lv, geom, name, self.Material, self.mod_list[imod], left2upstream)
 
 
@@ -252,7 +252,7 @@ class STTBuilder(gegede.builder.Builder):
             name="STT_"+str(i).zfill(2)+"_"+self.mod_list[i]
             self.construct_one_module(main_lv, geom, name, self.Material, self.mod_list[i], left2upstream)
             #print("name:  %s  left2upstream:  %f"%(name,left2upstream));
-            print("name:", name,"  left2upstream:",left2upstream);
+            print(("name:", name,"  left2upstream:",left2upstream));
             left2upstream += self.modthicknesses[self.mod_list[i]]
 
 
@@ -485,7 +485,7 @@ class STTBuilder(gegede.builder.Builder):
 
         Nstraw=int((2*halfCrosslength-self.strawRadius)/self.strawRadius/2.0)
 
-        print("%s %d %f"%(name,Nstraw*2, (halflength*2).magnitude))
+        print(("%s %d %f"%(name,Nstraw*2, (halflength*2).magnitude)))
 
 
         straw_shape = geom.shapes.Tubs("shape_"+name+"_1st", rmin=Q("0m"), rmax=self.strawRadius, dz=halflength)

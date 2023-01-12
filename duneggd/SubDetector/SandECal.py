@@ -114,7 +114,7 @@ class SandECalBuilder(gegede.builder.Builder):
                 'ECAL_rotation' + '_' + str(j), Q('90deg'), -theta * Q('1deg'),
                 Q('0deg'))  #Rotating the module on its axis accordingly
 
-            print("Building Kloe ECAL module " + str(j))  # keep compatibility with Python3 pylint: disable=superfluous-parens
+            print(("Building Kloe ECAL module " + str(j)))  # keep compatibility with Python3 pylint: disable=superfluous-parens
 
             ####Placing and appending the j ECAL Module#####
 
@@ -162,7 +162,7 @@ class SandECalBuilder(gegede.builder.Builder):
             ECAL_end_position = geom.structure.Position(
                 'ECAL_end_position' + '_' + str(side), pos[0], pos[1], pos[2])
 
-            print("Building Kloe ECAL Endcap module " + str(side))  # keep compatibility with Python3 pylint: disable=superfluous-parens
+            print(("Building Kloe ECAL Endcap module " + str(side)))  # keep compatibility with Python3 pylint: disable=superfluous-parens
 
             ########################################################################################
             ECAL_end_place = geom.structure.Placement("ECAL_end_pla" + '_' +

@@ -1,0 +1,36 @@
+# This workflow will automatically create a new release and upload the default geometry
+
+name: Create new release
+
+on:
+  push:
+    tags:
+    - "*_v_*.*.*"
+
+jobs:
+  release:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup gegede
+      run: pip install git+https://github.com/brettviren/gegede.git@86ca28190516a23203cd883aafb0548a61664ceb
+    - name: Setup
+      run: pip install .
+    - name: Build default gdml files
+      run: ./build_hall.sh
+    - name: Rename gdml files to include tag
+      run: |
+        for F in *.gdml
+        do
+          mv $F ${F%.gdml}_${GITHUB_REF_NAME}.gdml
+        done
+    - name: Compress geometry files
+      run: tar -czf default_geometries_${GITHUB_REF_NAME}.tar.gz *.gdml
+    - name: Create release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          default_geometries_*.tar.gz
+        body: See `CHANGELOG.md` for a detailed release history.

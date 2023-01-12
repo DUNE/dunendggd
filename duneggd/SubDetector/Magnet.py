@@ -43,8 +43,8 @@ class MagnetBuilder(gegede.builder.Builder):
 
         ##### make the geometry for a coil segment ##########################
         # the coil is segmented along X
-        print("MagnetBuilder  coil segment outer dimensions = ",self.magOutDim)
-        print("MagnetBuilder  coil segment inner dimensions = ",self.magInDim)
+        print(("MagnetBuilder  coil segment outer dimensions = ",self.magOutDim))
+        print(("MagnetBuilder  coil segment inner dimensions = ",self.magInDim))
         magOut = geom.shapes.Box( 'MagOut',                 dx=0.5*self.magOutDim[0], 
                                   dy=0.5*self.magOutDim[1], dz=0.5*self.magOutDim[2]) 
         magIn = geom.shapes.Box(  'MagInner',               dx=0.5*self.magInDim[0]+epsilon, 
@@ -56,8 +56,8 @@ class MagnetBuilder(gegede.builder.Builder):
 
         ##### make the geometry for a yoke segment ###########################
         # the yoke is segmented along z
-        print("MagnetBuilder  yoke segment outer dimensions = ",self.magOutDimB)
-        print("MagnetBuilder  yoke segment inner dimensions = ",self.magInDimB)
+        print(("MagnetBuilder  yoke segment outer dimensions = ",self.magOutDimB))
+        print(("MagnetBuilder  yoke segment inner dimensions = ",self.magInDimB))
         magOutB = geom.shapes.Box( 'YokeOut',                 dx=0.5*self.magOutDimB[0],
                                   dy=0.5*self.magOutDimB[1], dz=0.5*self.magOutDimB[2])
         magInB = geom.shapes.Box(  'YokeInner',               dx=0.5*self.magInDimB[0],
@@ -69,8 +69,8 @@ class MagnetBuilder(gegede.builder.Builder):
         self.MagnetOutt = [self.magOutDimB[0], self.magOutDimB[1], (self.magOutDimB[2]+self.magBGap)*self.nMagB]
 	self.MagnetInn = [(self.magInDim[0]+self.magGap)*self.nMag, self.magInDim[1], self.magInDim[2]]
 
-        print("MagnetBuilder  full yoke outer dimensions = ",self.MagnetOutt)
-        print("MagnetBuilder  full coil inner dimesions = ",self.MagnetInn)
+        print(("MagnetBuilder  full yoke outer dimensions = ",self.MagnetOutt))
+        print(("MagnetBuilder  full coil inner dimesions = ",self.MagnetInn))
         
         ## define the inner dimensions of the magnet system
         magnetIn = geom.shapes.Box('MagnetInner',dx=0.5*self.MagnetInn[0], 

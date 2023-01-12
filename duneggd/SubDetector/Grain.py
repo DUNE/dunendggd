@@ -88,7 +88,7 @@ class GrainBuilder(gegede.builder.Builder):
             main_lv = self.construct_GRAIN_option2(geom)
 
         #main_lv = self.construct_GRAIN(geom)
-        print( "  main_lv = "+ main_lv.name)
+        print(( "  main_lv = "+ main_lv.name))
         self.add_volume( main_lv )
 
 #############################################################         GRAIN   1      ###################################################################

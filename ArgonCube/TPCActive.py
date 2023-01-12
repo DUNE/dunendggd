@@ -43,7 +43,7 @@ PixelPlaneCenter = {
         }
 
 # (key/value)-swapped version of TPCActiveID
-TPCActiveCopyNo = {value:key for key, value in TPCActiveID.items()}
+TPCActiveCopyNo = {value:key for key, value in list(TPCActiveID.items())}
 
 def GetTPCActiveCenter(module_copynumber,halfDetector_copynumber):
     return TPCActiveCenter[str(module_copynumber)+str(halfDetector_copynumber)]

@@ -54,7 +54,7 @@ class ECALModBuilder(gegede.builder.Builder):
         # Calculate ECAL dimensions 
         self.ecalModDim    = list(SBPlaneDim) # get the right x and y dimension
         self.ecalModDim[2] = self.nSBPlanes*(self.leadThickness + SBPlaneDim[2])
-        print( 'ECALModBuilder: set ECAL z dimension to '+str(self.ecalModDim[2])+' (configured as '+str(self.ecalThickness)+')')
+        print(( 'ECALModBuilder: set ECAL z dimension to '+str(self.ecalModDim[2])+' (configured as '+str(self.ecalThickness)+')'))
       
         # Make main shape/volume for this builder
         ecalModBox = geom.shapes.Box( self.name,
@@ -71,7 +71,7 @@ class ECALModBuilder(gegede.builder.Builder):
         n2 = 0
         for i in range(self.nSBPlanes):
             zpos = -0.5*self.ecalModDim[2]+ (i+0.5)*SBPlaneDim[2]+(i+1)*self.leadThickness +self.zXtra
-            print("placing ecal SBPlane %i at zpos=%f cm"%(i,zpos/Q("1cm")))
+            print(("placing ecal SBPlane %i at zpos=%f cm"%(i,zpos/Q("1cm"))))
 	    rotPlane = 'identity'
 	    #if(self.altPlaneOrient): rotPlane = 'r90aboutZ'
 
@@ -93,6 +93,6 @@ class ECALModBuilder(gegede.builder.Builder):
                 n2=n2+1
          
             #ecalMod_lv.params.append(("SensDet",self.name))       
-            print( 'ECALModBuilder: '+str(i+1) +' SBPlanes in '+str(self.name))
+            print(( 'ECALModBuilder: '+str(i+1) +' SBPlanes in '+str(self.name)))
         #print( str(n1)+ ' SBPlanes have scint. bars oriented along X direction and '+ str(n2)+ ' SBPlanes have scint. bars oriented along Y direction for '+str(self.name) )
         return

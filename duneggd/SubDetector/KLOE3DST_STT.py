@@ -20,7 +20,7 @@ class KLOE3DST_STT_builder(gegede.builder.Builder):
                    foilChunkThickness=None, coatThickness=None, mylarThickness=None,
                    **kwds):        
         self.start_time=time.time()
-        print("start_time:",self.start_time)
+        print(("start_time:",self.start_time))
         self.halfDimension, self.Material = ( halfDimension, Material )
         self.useRegMod=useRegMod
         self.Height3DST=Box3DSTDim[1]
@@ -37,7 +37,7 @@ class KLOE3DST_STT_builder(gegede.builder.Builder):
         if useRegMod!=True:
             print("NOTE-------------------- use nos mod instead of reg")
             self.nRear2Mod=nRear2Mod_nos
-        print("self.nRear2Mod:",self.nRear2Mod)
+        print(("self.nRear2Mod:",self.nRear2Mod))
         self.nRear3Mod=nRear3Mod
         self.offset3DSTcenter=offset3DSTcenter
         self.strawRadius=strawRadius
@@ -86,25 +86,25 @@ class KLOE3DST_STT_builder(gegede.builder.Builder):
         test_nRear2 = kloeTrkRegRadius - self.Depth3DST/2 + self.offset3DSTcenter - (self.pureSTModThickness+self.pureSTModGap)*self.nRear1Mod - self.noSlabModThickness*self.nRear3Mod
         test_nRear2A=test_nRear2/self.regModThickness
         test_nRear2B=test_nRear2/self.noSlabModThickness
-        print("test_nfront:",test_nfront)
-        print("test_nMid:",test_nMid)
-        print("test_nRear2A:",test_nRear2A)
-        print("test_nRear2B:",test_nRear2B)
+        print(("test_nfront:",test_nfront))
+        print(("test_nMid:",test_nMid))
+        print(("test_nRear2A:",test_nRear2A))
+        print(("test_nRear2B:",test_nRear2B))
         
         self.frontGap=kloeTrkRegRadius- (self.pureSTModThickness+self.pureSTModGap)*self.nFrontMod - self.Depth3DST/2 - self.offset3DSTcenter
-        print("front gap:",self.frontGap)
+        print(("front gap:",self.frontGap))
 
         rearModsWidth=(self.pureSTModThickness+self.pureSTModGap)*self.nRear1Mod + self.regModThickness*self.nRear2Mod + self.noSlabModThickness*self.nRear3Mod
         self.rearGap= kloeTrkRegRadius - self.Depth3DST/2 + self.offset3DSTcenter - rearModsWidth
-        print("rearModsWidth:",rearModsWidth)
-        print("self.rearGap:",self.rearGap)
+        print(("rearModsWidth:",rearModsWidth))
+        print(("self.rearGap:",self.rearGap))
     
-        print("totfoilThickness:",totfoilThickness)
-        print("self.slabThickness:",self.slabThickness)
-        print("planeXXThickness:",planeXXThickness)
-        print("regModThickness:",regModThickness)
-        print("cModThickness:",cModThickness)
-        print("noSlabModThickness:",noSlabModThickness)
+        print(("totfoilThickness:",totfoilThickness))
+        print(("self.slabThickness:",self.slabThickness))
+        print(("planeXXThickness:",planeXXThickness))
+        print(("regModThickness:",regModThickness))
+        print(("cModThickness:",cModThickness))
+        print(("noSlabModThickness:",noSlabModThickness))
 
         main_lv, main_hDim = ltools.main_lv( self, geom, "Tubs")
         self.add_volume( main_lv )

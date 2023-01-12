@@ -60,7 +60,7 @@ class STTFULLBuilder(gegede.builder.Builder):
                 
         main_lv, main_hDim = ltools.main_lv( self, geom, "Tubs")
         print( "KLOESTTFULL::construct()")
-        print( "  main_lv = "+ main_lv.name)
+        print(( "  main_lv = "+ main_lv.name))
         self.add_volume( main_lv )
         
         # LAr target
@@ -121,7 +121,7 @@ class STTFULLBuilder(gegede.builder.Builder):
             
         end_time=tm.time()
         elapsed_time = end_time-start_time
-        print("elapsed time:" + str(elapsed_time))
+        print(("elapsed time:" + str(elapsed_time)))
 
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
     # construct LAr target
@@ -197,7 +197,7 @@ class STTFULLBuilder(gegede.builder.Builder):
                                         shape=main_shape)
 
         print( "STTModuleFULL::construct()")
-        print( "  main_lv = "+ main_lv.name)
+        print(( "  main_lv = "+ main_lv.name))
 
         foil_lv= self.construct_Foils(geom, 
                                       name + "_foils",
@@ -248,7 +248,7 @@ class STTFULLBuilder(gegede.builder.Builder):
                                         shape=main_shape)
 
         print( "STTModuleFULL::construct()")
-        print( "  main_lv = "+ main_lv.name)
+        print(( "  main_lv = "+ main_lv.name))
 
         slab_shape = geom.shapes.Box(name + "_slab_shape", 
                                      dx=self.slabThickness/2.0, 
@@ -318,7 +318,7 @@ class STTFULLBuilder(gegede.builder.Builder):
                                         shape=main_shape)
         
         print( "STTModuleFULL::construct()")
-        print( "  main_lv = "+ main_lv.name)
+        print(( "  main_lv = "+ main_lv.name))
 
         graphite_shape = geom.shapes.Box(name+"_graph_shape", 
                                          dx=self.graphiteThickness/2.0, 
@@ -371,7 +371,7 @@ class STTFULLBuilder(gegede.builder.Builder):
                                         shape=main_shape)
 
         print( "STTModuleFULL::construct()")
-        print( "  main_lv = "+ main_lv.name)
+        print(( "  main_lv = "+ main_lv.name))
         
         foil_shape = geom.shapes.Box(name + "_foil_shape", 
                                      dx=self.foilThickness/2.0, 

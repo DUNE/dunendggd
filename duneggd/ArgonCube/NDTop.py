@@ -24,7 +24,7 @@ class FullTopBuilder(gegede.builder.Builder):
                                 'dz':   self.top_sep*self.N_Top/2+self.top_builder.halfDimension['dz']}
         main_lv, main_hDim = ltools.main_lv(self,geom,'Box')
         print('DetectorBuilder::construct()')
-        print('main_lv = '+main_lv.name)
+        print(('main_lv = '+main_lv.name))
         self.add_volume(main_lv)
         W=int((self.N_Top-1)/2)  #pick odd number
 
@@ -49,7 +49,7 @@ class TopBuilder(gegede.builder.Builder):
                               'dz':   self.tub_builder.halfDimension['dz']}
         main_lv, main_hDim = ltools.main_lv(self, geom, 'Box')
         print('DetectorBuilder::construct()')
-        print('main_lv = '+main_lv.name)
+        print(('main_lv = '+main_lv.name))
         self.add_volume(main_lv)
 
         pos = [-self.halfDimension['dx']+self.grating_builder.halfDimension['dx'],Q('0cm'), Q('0cm')]
@@ -85,7 +85,7 @@ class GratingBuilder(gegede.builder.Builder):#could stand to add square holes in
                               'dz':   self.topgrating_z/2}
         main_lv, main_hDim = ltools.main_lv(self, geom, 'Box')
         print('DetectorBuilder::construct()')
-        print('main_lv = '+main_lv.name)
+        print(('main_lv = '+main_lv.name))
         self.add_volume(main_lv)
 
         gratingshape = geom.shapes.Box(None, self.gratingthick/2, self.halfDimension['dy'], self.halfDimension['dz'])
@@ -131,7 +131,7 @@ class SupportBuilder(gegede.builder.Builder):   #could stand to put in grating p
                               'dz':   self.botgrating_dim/2}
         main_lv, main_hDim = ltools.main_lv(self, geom, 'Box')
         print('DetectorBuilder::construct()')
-        print('main_lv = '+main_lv.name)
+        print(('main_lv = '+main_lv.name))
         self.add_volume(main_lv)
         cs = Q("1.6in") #center to side of tri
         base_shape =geom.shapes.PolyhedraRegular(None, 3,Q("0deg"),Q("360deg"),Q("0m"),cs,self.halfDimension['dx']-self.gratingthick/2)#the 1.6 is arbitrary for now
@@ -187,7 +187,7 @@ class TubBuilder(gegede.builder.Builder):
                               'dz':   self.tub_z/2}
         main_lv, main_hDim = ltools.main_lv(self, geom, 'Box')
         print('DetectorBuilder::construct()')
-        print('main_lv = '+main_lv.name)
+        print(('main_lv = '+main_lv.name))
         self.add_volume(main_lv)
 
         botplatepos = [ -self.halfDimension['dx']+self.tubthick/2,Q('0cm'),Q('0cm')]
@@ -309,7 +309,7 @@ class FlangesBuilder(gegede.builder.Builder):
                              'dz':   self.bigplate_z/2}
         main_lv, main_hDim = ltools.main_lv(self, geom, 'Box')
         print('DetectorBuilder::construct()')
-        print('main_lv = '+main_lv.name)
+        print(('main_lv = '+main_lv.name))
         self.add_volume(main_lv)
 
         platepos = [-self.halfDimension['dx']+self.plate_x/2,Q('0cm'), Q('0cm')]
@@ -473,7 +473,7 @@ class CapCylBuilder(gegede.builder.Builder):
                               'dz':   self.capOD/2}
         main_lv, main_hDim = ltools.main_lv(self, geom, 'Box')
         print('DetectorBuilder::construct()')
-        print('main_lv = '+main_lv.name)
+        print(('main_lv = '+main_lv.name))
         self.add_volume(main_lv)
 
         tubs0=geom.shapes.Tubs(None,self.cylID/2,self.cylOD/2,self.cyl_x/2, Q("0deg"),Q("360deg"))
@@ -514,7 +514,7 @@ class BeamBuilder(gegede.builder.Builder):
                               'dz':   self.lipsize/2}
         main_lv, main_hDim = ltools.main_lv(self, geom, 'Box')
         print('DetectorBuilder::construct()')
-        print('main_lv = '+main_lv.name)
+        print(('main_lv = '+main_lv.name))
         self.add_volume(main_lv)
         toplippos = [-self.halfDimension['dx']+self.lipthick/2,Q('0cm'), Q('0cm')]
         botlippos = [self.halfDimension['dx']-self.lipthick/2,Q('0cm'), Q('0cm')]
@@ -554,7 +554,7 @@ class CrossBeamBuilder(gegede.builder.Builder):
                               'dz':   self.lipsize/2}
         main_lv, main_hDim = ltools.main_lv(self, geom, 'Box')
         print('DetectorBuilder::construct()')
-        print('main_lv = '+main_lv.name)
+        print(('main_lv = '+main_lv.name))
         self.add_volume(main_lv)
         toplippos = [-self.halfDimension['dx']+self.lipthick/2,Q('0cm'), Q('0cm')]
         botlippos = [self.halfDimension['dx']-self.lipthick/2,Q('0cm'), Q('0cm')]

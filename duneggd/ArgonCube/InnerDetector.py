@@ -33,7 +33,7 @@ class InnerDetectorBuilder(gegede.builder.Builder):
 
         main_lv, main_hDim = ltools.main_lv(self,geom,'Box')
         print('InnerDetectorBuilder::construct()')
-        print('main_lv = '+main_lv.name)
+        print(('main_lv = '+main_lv.name))
         self.add_volume(main_lv)
 
         # Build HalfDetector L

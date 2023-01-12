@@ -30,12 +30,12 @@ class STTModuleBuilder(gegede.builder.Builder):
         # main volume
         main_lv, main_hDim = ltools.main_lv( self, geom, "Box")
         print( "STTModule::construct()")
-        print( "  main_lv = "+ main_lv.name)
+        print(( "  main_lv = "+ main_lv.name))
         self.add_volume( main_lv )
 
         # Straw Plane 1
         plane1_builder=self.get_builder("STTPlane1")
-        print( "plane1_builder="+str(plane1_builder))
+        print(( "plane1_builder="+str(plane1_builder)))
         plane1_lv=plane1_builder.get_volume()
         plane1_pos=geom.structure.Position(self.name+'_Plane1_pos',
                                            self.centerPlane1[0],self.centerPlane1[1],self.centerPlane1[2])
@@ -47,7 +47,7 @@ class STTModuleBuilder(gegede.builder.Builder):
 
         # Straw Plane 2
         plane2_builder=self.get_builder("STTPlane2")
-        print( "plane2_builder="+str(plane2_builder))
+        print(( "plane2_builder="+str(plane2_builder)))
         plane2_lv=plane2_builder.get_volume()
         plane2_pos=geom.structure.Position(self.name+'_Plane2_pos',
                                            self.centerPlane2[0],self.centerPlane2[1],self.centerPlane2[2])

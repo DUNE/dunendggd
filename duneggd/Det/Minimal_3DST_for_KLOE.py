@@ -186,9 +186,9 @@ class Minimal_3DST_Builder(gegede.builder.Builder):
     def getTPC(self, full3dst_lv, tpcPos, geom):
 
         print('location of TPC')
-        print(self.tpcPos[0])
-        print(self.tpcPos[1])
-        print(self.tpcPos[2])
+        print((self.tpcPos[0]))
+        print((self.tpcPos[1]))
+        print((self.tpcPos[2]))
 
         tpcBox = geom.shapes.Box('tpc', dx=0.5*self.tpcDim[0], dy=0.5*self.tpcDim[1], dz=0.5*self.tpcDim[2])
 
@@ -219,9 +219,9 @@ class Minimal_3DST_Builder(gegede.builder.Builder):
     def getEcal(self, full3dst_lv, ecalPos, geom):
 
         print('location of ECAL')
-        print(ecalPos[0])
-        print(ecalPos[1])
-        print(ecalPos[2])
+        print((ecalPos[0]))
+        print((ecalPos[1]))
+        print((ecalPos[2]))
 
         ecalMod = geom.shapes.Box( 'ecalBox',
                                   dx = 0.5*self.ecalModDim[0],
@@ -369,9 +369,9 @@ class Minimal_3DST_Builder(gegede.builder.Builder):
     def getMagnet(self, full3dst_lv, magPos, geom):
 
         print('magnet location')
-        print(magPos[0])
-        print(magPos[1])
-        print(magPos[2])
+        print((magPos[0]))
+        print((magPos[1]))
+        print((magPos[2]))
 
         magOut = geom.shapes.Box( 'MagOut', dx = 0.5*self.magOutDim[0], dy = 0.5*self.magOutDim[1], dz = 0.5*self.magOutDim[2])
         magIn = geom.shapes.Box ('MagInner', dx = 0.5*self.magInDim[0], dy = 0.5*self.magInDim[1], dz = 0.5*self.magInDim[2])
@@ -391,9 +391,9 @@ class Minimal_3DST_Builder(gegede.builder.Builder):
     def getRPC(self, full3dst_lv, rpcPos, geom):
 
         print('rpc location')
-        print(rpcPos[0])
-        print(rpcPos[1])
-        print(rpcPos[2])
+        print((rpcPos[0]))
+        print((rpcPos[1]))
+        print((rpcPos[2]))
 
         rpcModDim = self.rpcModDim
         rpcModBox = geom.shapes.Box('rpcModBox', dx=0.5*self.rpcModDim[0], dy=0.5*self.rpcModDim[1], dz=0.5*rpcModDim[2])
@@ -441,9 +441,9 @@ class Minimal_3DST_Builder(gegede.builder.Builder):
     def getCylinder(self, full3dst_lv, cylinderPos, geom):
 
         print('Cylinder location')
-        print(self.cylinderPos[0])
-        print(self.cylinderPos[1])
-        print(self.cylinderPos[2])
+        print((self.cylinderPos[0]))
+        print((self.cylinderPos[1]))
+        print((self.cylinderPos[2]))
 
         cylinderShape = geom.shapes.Tubs('cylinderShape', rmin=0.5*self.cylinderDim[0], rmax=self.cylinderDim[1], dz=0.5*self.cylinderDim[2], sphi=self.cylinderDim[3], dphi=self.cylinderDim[4])
 

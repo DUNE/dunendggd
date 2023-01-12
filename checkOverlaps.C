@@ -1,7 +1,6 @@
 void checkOverlaps(TString filename)
 {
-	TGeoManager *geo = new TGeoManager();
-	geo->Import(filename);
+    TGeoManager *geo = TGeoManager::Import(filename);
 
 	cout<<"======================== Checking Geometry ============================="<<endl;
 	//geo->CheckGeometry();
@@ -30,7 +29,7 @@ void checkOverlaps(TString filename)
        	geo->CheckOverlaps(1e-6,"s");
 	geo->PrintOverlaps();
 	cout<<"========================       Done!       =============================\n\n\n"<<endl;
-	if(not gROOT->IsBatch()){
+    if(not gROOT->IsBatch()){
         TObjArray* overlaps=geo->GetListOfOverlaps();
         for(int i=0; i<overlaps->GetEntries(); i++){
             TObject* overlap=overlaps->At(i);

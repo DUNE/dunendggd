@@ -59,14 +59,14 @@ class MuIDBarrelBuilder(gegede.builder.Builder):
         # Steel Sheets: just leave the default material of volMuID* steel 
         #   and leave spaces instead of placing explicit volumes
 	
-        print( 'Abs pos for '+ str(self.name) +' along Z: '+ str(self.muidAbsPos[2]))
-        print( math.cos(math.radians(60)))
+        print(( 'Abs pos for '+ str(self.name) +' along Z: '+ str(self.muidAbsPos[2])))
+        print(( math.cos(math.radians(60))))
         EachAngle = int(360/self.nMuTracker)
 
  	#EachAngle = 0
 	for ii in range(self.nMuTracker):
 		Zrot         = Q('0deg')+EachAngle*ii*Q('1deg')
-		print( 'rotating angle of '+str(ii)+' muon tracker: '+str(Zrot))
+		print(( 'rotating angle of '+str(ii)+' muon tracker: '+str(Zrot)))
 		#rAboutXZ     = geom.structure.Rotation( 'rAboutXZ'+str(ii), '0deg',  '0deg', -Zrot+Q('90deg')  )	
 		rAboutXZ     = geom.structure.Rotation( 'rAboutXZ'+str(ii),  Zrot-Q('0deg') , '0deg', '0deg'  )
 
@@ -77,7 +77,7 @@ class MuIDBarrelBuilder(gegede.builder.Builder):
             xpos = self.muidDim[0] + self.muidAbsPos[0]
             ypos = self.muidDim[1]*math.sin(Zrot) + self.muidAbsPos[1]
             zpos = self.muidDim[1]*math.cos(Zrot) + self.muidAbsPos[2]
-            print( 'position of tracker: '+str(xpos)+' '+str(ypos)+' '+str(zpos))
+            print(( 'position of tracker: '+str(xpos)+' '+str(ypos)+' '+str(zpos)))
 
             for j in range(self.nTraysPerPlane):
                 #xpos = -0.5*self.muidDim[0]+self.muidAbsPos[0]

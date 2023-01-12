@@ -48,7 +48,7 @@ class MPTECalTileBuilder(gegede.builder.Builder):
         # first make a mother volume to hold everything else
         dzm = self.depth()
         dzm = dzm/2.0  # Box() requires half dimensions
-        print("dzm=", dzm)
+        print(("dzm=", dzm))
         # shapes need to have a unique name
         name=self.output_name
         tile_shape = geom.shapes.Box(name, self.dx, self.dy, dzm)
@@ -65,7 +65,7 @@ class MPTECalTileBuilder(gegede.builder.Builder):
             lname = (self.output_name+"_L%i" % cntr)
             layer_shape = geom.shapes.Box(lname, self.dx, self.dy, dz/2.0)
             zloc = zloc+skip+dz/2.0
-            print(dz, lspace, mat, zloc)
+            print((dz, lspace, mat, zloc))
             layer_lv = geom.structure.Volume(lname+"_vol", material=mat,
                                              shape=layer_shape)
             if active:
@@ -141,7 +141,7 @@ class MPTECalStripBuilder(gegede.builder.Builder):
 
         # make the mother volume
         name = self.output_name
-        print("In strip builder: strip_length=", strip_length)
+        print(("In strip builder: strip_length=", strip_length))
         strip_shape = geom.shapes.Box(name,
                                       dx=strip_length/2.0,
                                       dy=tile_builder.dy,
@@ -327,7 +327,7 @@ class MPTECalLayerBuilder(gegede.builder.Builder):
         phi_start = self.phi_range[0]+phi_coverage_diff/2.0
 #        phi_end = self.phi_range[1]-phi_coverage_diff/2.0
 #        rmin = self.r
-        print(z_strip, rmin, y_strip, strip_length)
+        print((z_strip, rmin, y_strip, strip_length))
         # figure out outer radius of the mother volume
         # (some euclidean geometry documented in my notes)
         rmax2 = ((z_strip+rmin)**2 + (y_strip/2.0)**2)/Q("1mm**2")
@@ -534,13 +534,13 @@ class MPTECalLayerBuilder(gegede.builder.Builder):
             for y in ys:
                 all_tile_locations.append((x, y))
         ninscribed = len(all_tile_locations)
-        print("number of tiles in inscribed square = %i" % (ninscribed))
+        print(("number of tiles in inscribed square = %i" % (ninscribed)))
         for x, y in new_tile_locations:
             for xx, yy in [(x, y), (x, -y), (y, x), (-y, x)]:
 #                print 'xx, yy = %s , %s' % (xx, yy)
                 all_tile_locations.append((xx, yy))
         nouter = len(all_tile_locations) - ninscribed
-        print('number of tiles outside inscribed square = %i' % (nouter))
+        print(('number of tiles outside inscribed square = %i' % (nouter)))
 
         all_organized=organize_by_rows(all_tile_locations)
         # now build the mother volume
@@ -556,7 +556,7 @@ class MPTECalLayerBuilder(gegede.builder.Builder):
         tname = tile_builder.name
         tile_lv = tile_builder.get_volume()
         for i, yrow in enumerate(all_organized):
-            print('yposition and nx --> %s and %i '%(yrow[0][1],len(yrow))) 
+            print(('yposition and nx --> %s and %i '%(yrow[0][1],len(yrow)))) 
             for j, (x,y) in enumerate(yrow):
 #                print 'placing tile %i_%i at (x,y) = (%s,%s)' % (i, j, x, y)
                 pos = geom.structure.Position(tname+"_%i_%i_pos" % (i, j),
@@ -684,14 +684,14 @@ def organize_by_rows(all_tile_locations):
     temp_array = [all_sorted[0]]
     for x, y in all_sorted[1:]: # loop starting at the second entry
         if y == temp_array[0][1]:
-            print('x == temp_array[0][1] --> %s == %s'%(x, temp_array[0][1]))
-            print('    appending (%s, %s)' % (x, y))
+            print(('x == temp_array[0][1] --> %s == %s'%(x, temp_array[0][1])))
+            print(('    appending (%s, %s)' % (x, y)))
             temp_array.append((x, y))
         else:
             print('appending temp_array')
             all_organized.append(temp_array)
             temp_array = []
-            print('   then appending (%s, %s)' % (x, y))
+            print(('   then appending (%s, %s)' % (x, y)))
             temp_array.append((x, y))
     # loop ends without appending the last temp_array so do it here
     all_organized.append(temp_array)

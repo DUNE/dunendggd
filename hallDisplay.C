@@ -1,7 +1,6 @@
 void hallDisplay(TString filename, Int_t VisLevel=5, bool clip=true)
 {
-	TGeoManager *geo = new TGeoManager();
-	geo->Import(filename);
+	TGeoManager *geo = TGeoManager::Import(filename);
 	geo->DefaultColors();
 
 	cout<<"======================== Checking Overlaps ============================="<<endl;

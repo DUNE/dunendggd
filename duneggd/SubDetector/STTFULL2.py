@@ -10,7 +10,7 @@ class STTFULLBuilder(gegede.builder.Builder):
 
         self.sqrt3                    = 1.7320508
         self.start_time=time.time()
-        print("start_time:",self.start_time)
+        print(("start_time:",self.start_time))
         self.halfDimension, self.Material = ( halfDimension, Material )
 
         self.strawRadius            = Q('2.5mm')
@@ -55,16 +55,16 @@ class STTFULLBuilder(gegede.builder.Builder):
         self.endgap= self.kloeTrkRegRadius*2 - self.liqArThickness - self.totModsThickness
 
         
-        print("endgap:",self.endgap)
-        print("totfoilThickness:",self.totfoilThickness)
-        print("self.slabThickness:",self.slabThickness)
-        print("planeXXThickness:",self.planeXXThickness)
-        print("C3H6ModThickness:",self.C3H6ModThickness)
-        print("cModThickness:",self.cModThickness)
-        print("noSlabModThickness:",self.noSlabModThickness)
-        print("fvModsThickness:",self.fvModsThickness)
-        print("totModsThickness:",self.totModsThickness)
-        print("liqArThickness:",self.liqArThickness)
+        print(("endgap:",self.endgap))
+        print(("totfoilThickness:",self.totfoilThickness))
+        print(("self.slabThickness:",self.slabThickness))
+        print(("planeXXThickness:",self.planeXXThickness))
+        print(("C3H6ModThickness:",self.C3H6ModThickness))
+        print(("cModThickness:",self.cModThickness))
+        print(("noSlabModThickness:",self.noSlabModThickness))
+        print(("fvModsThickness:",self.fvModsThickness))
+        print(("totModsThickness:",self.totModsThickness))
+        print(("liqArThickness:",self.liqArThickness))
         
     def construct(self,geom):
 
@@ -91,7 +91,7 @@ class STTFULLBuilder(gegede.builder.Builder):
         ############################## the main tube    #######################################
         main_lv, main_hDim = ltools.main_lv( self, geom, "Tubs")
         print( "KLOESTTFULL::construct()")
-        print( "  main_lv = "+ main_lv.name)
+        print(( "  main_lv = "+ main_lv.name))
         self.add_volume( main_lv )
 
         ########################################  liq Argon #################################
@@ -139,8 +139,8 @@ class STTFULLBuilder(gegede.builder.Builder):
         
         nModule=1
         for imod in range(nModule):
-            print("### imod ### ",imod)
-            print("### type ### ",mod_types[imod])
+            print(("### imod ### ",imod))
+            print(("### type ### ",mod_types[imod]))
             ModThickness= modthicknesses[mod_types[imod]]
             loc=[usedLength - self.kloeTrkRegRadius + 0.5 * ModThickness,Q("0cm"),Q("0cm")]
             if (usedLength+0.5 * ModThickness) < self.kloeTrkRegRadius:
@@ -162,7 +162,7 @@ class STTFULLBuilder(gegede.builder.Builder):
             usedLength += ModThickness
 #            print("%2d %8s %10.3f %10.3f"%(imod,mod_types[imod],(usedLength-ModThickness).magnitude,usedLength.magnitude))
         end_time=time.time()
-        print("time diff:",end_time-self.start_time)
+        print(("time diff:",end_time-self.start_time))
 
 
     def construct_LAr_target(self,main_lv,geom):
@@ -295,7 +295,7 @@ class STTFULLBuilder(gegede.builder.Builder):
         twoStraw_lv.placements.append(straw2_pla.name)
 
         
-        print("Nstraw",Nstraw)
+        print(("Nstraw",Nstraw))
 
         for i in range(Nstraw):
             pos1=geom.structure.Position("pos_"+name+"_"+str(i), -self.planeXXThickness/2.0+self.strawRadius, halfCrosslength - (2*i+2)*self.strawRadius, Q('0m'))

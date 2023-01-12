@@ -57,7 +57,7 @@ class MuIDEndBuilder(gegede.builder.Builder):
         # Steel Sheets: just leave the default material of volMuID* steel 
         #   and leave spaces instead of placing explicit volumes
 	
-        print( 'Abs pos for '+ str(self.name) +' along Z: '+ str(self.muidAbsPos[2]))
+        print(( 'Abs pos for '+ str(self.name) +' along Z: '+ str(self.muidAbsPos[2])))
         
         for i in range(self.nPlanes):
             zpos = -0.5*self.muidDim[2]+(i+0.5)*rpcTrayDim[2]+i*self.steelPlateDim[2]+self.muidAbsPos[2]

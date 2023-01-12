@@ -99,9 +99,9 @@ class test_3DSTBuilder(gegede.builder.Builder):
     def getRPC(self, full3dst_lv, geom):
 
         print('RPC location')
-        print(self.rpcPos[0]) 
-        print(self.rpcPos[1]) 
-        print(self.rpcPos[2])
+        print((self.rpcPos[0])) 
+        print((self.rpcPos[1])) 
+        print((self.rpcPos[2]))
 
         rpcModBox = geom.shapes.Box('rpcModBox', #Q('1m'), Q('1m'),Q('1m'))
                                     dx=0.5*self.rpcModDim[0], 
@@ -190,9 +190,9 @@ class test_3DSTBuilder(gegede.builder.Builder):
     def getMagnet(self, full3dst_lv, magPos, geom):
 
         print('magnet location')
-        print(magPos[0])
-        print(magPos[1])
-        print(magPos[2])
+        print((magPos[0]))
+        print((magPos[1]))
+        print((magPos[2]))
 
         magOut = geom.shapes.Box( 'MagOut',                 dx=0.5*self.magOutDim[0],
                                   dy=0.5*self.magOutDim[1], dz=0.5*self.magOutDim[2])
@@ -230,9 +230,9 @@ class test_3DSTBuilder(gegede.builder.Builder):
     def getTPC(self, full3dst_lv, tpcPos, geom):
 
         print('location of TPC')
-        print(self.tpcPos[0])
-        print(self.tpcPos[1])
-        print(self.tpcPos[2])
+        print((self.tpcPos[0]))
+        print((self.tpcPos[1]))
+        print((self.tpcPos[2]))
 
         tpcBox = geom.shapes.Box( 'tpc',                 dx=0.5*self.tpcDim[0],
                               dy=0.5*self.tpcDim[1], dz=0.5*self.tpcDim[2])
@@ -280,9 +280,9 @@ class test_3DSTBuilder(gegede.builder.Builder):
     def getA3dst(self, full3dst_lv, a3dstPos, geom):
 
         print('location of 3DST')
-        print(a3dstPos[0])
-        print(a3dstPos[1])
-        print(a3dstPos[2])
+        print((a3dstPos[0]))
+        print((a3dstPos[1]))
+        print((a3dstPos[2]))
 
         nCubeX = self.nCubeX
         nCubeY = self.nCubeY
@@ -331,9 +331,9 @@ class test_3DSTBuilder(gegede.builder.Builder):
     def getEcal(self, full3dst_lv, ecalPos, geom):
 
         print('location of ECAL')
-        print(ecalPos[0])
-        print(ecalPos[1])
-        print(ecalPos[2])
+        print((ecalPos[0]))
+        print((ecalPos[1]))
+        print((ecalPos[2]))
 
         ecalMod = geom.shapes.Box( 'ecalBox',
                                   dx = 0.5*self.ecalModDim[0],

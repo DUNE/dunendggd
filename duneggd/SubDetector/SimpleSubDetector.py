@@ -36,4 +36,4 @@ class SimpleSubDetectorBuilder(gegede.builder.Builder):
                 TranspV = self.TranspV
             ltools.placeBuilders( self, geom, main_lv, TranspV )
         else:
-            print( "**Warning, no Elements to place inside "+ self.name)
+            print(( "**Warning, no Elements to place inside "+ self.name))

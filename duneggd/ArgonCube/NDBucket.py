@@ -43,7 +43,7 @@ class NDBucketBuilder(gegede.builder.Builder):
 
         main_lv, main_hDim = ltools.main_lv(self,geom,'Box')
         print('NDBucketBuilder::construct()')
-        print('main_lv = '+main_lv.name)
+        print(('main_lv = '+main_lv.name))
         self.add_volume(main_lv)
 
         # Construct a rectangular column of LAr that everything sits inside

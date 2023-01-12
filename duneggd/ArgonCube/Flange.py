@@ -67,7 +67,7 @@ class FlangeBuilder(gegede.builder.Builder):
 
         main_lv, main_hDim = ltools.main_lv(self,geom,'Box')
         print('FlangeBuilder::construct()')
-        print('main_lv = '+main_lv.name)
+        print(('main_lv = '+main_lv.name))
         self.add_volume(main_lv)
 
         # Construct FlangeTop Volume

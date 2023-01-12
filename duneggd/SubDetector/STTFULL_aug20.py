@@ -63,14 +63,14 @@ class STTFULLBuilder(gegede.builder.Builder):
         self.endgap= self.kloeTrkRegRadius*2 - self.liqArThickness - self.totModsThickness
 
 
-        print("endgap:",self.endgap)
-        print("totfoilThickness:",self.totfoilThickness)
-        print("self.slabThickness:",self.slabThickness)
-        print("planeXXThickness:",self.planeXXThickness)
-        print("C3H6ModThickness:",self.C3H6ModThickness)
-        print("cModThickness:",self.cModThickness)
-        print("totModsThickness:",self.totModsThickness)
-        print("liqArThickness:",self.liqArThickness)
+        print(("endgap:",self.endgap))
+        print(("totfoilThickness:",self.totfoilThickness))
+        print(("self.slabThickness:",self.slabThickness))
+        print(("planeXXThickness:",self.planeXXThickness))
+        print(("C3H6ModThickness:",self.C3H6ModThickness))
+        print(("cModThickness:",self.cModThickness))
+        print(("totModsThickness:",self.totModsThickness))
+        print(("liqArThickness:",self.liqArThickness))
         
 
     def construct(self,geom):
@@ -136,7 +136,7 @@ class STTFULLBuilder(gegede.builder.Builder):
         stt_shape=geom.shapes.PolyhedraRegular("shape_stt",numsides=24, rmin=Q('0cm'), rmax=self.kloeVesselRadius , dz=self.kloeVesselHalfDx)
         main_lv = geom.structure.Volume('STTtracker',   material=self.Material, shape=stt_shape)
         print( "KLOESTTFULL::construct()")
-        print( "  main_lv = "+ main_lv.name)
+        print(( "  main_lv = "+ main_lv.name))
         self.add_volume( main_lv )
 
         #        test_shape=geom.shapes.PolyhedraRegular("shape_test",numsides=24, rmin=self.kloeVesselRadius, rmax=self.kloeVesselRadius+Q("10cm"), dz=self.kloeVesselHalfDx)
@@ -421,7 +421,7 @@ class STTFULLBuilder(gegede.builder.Builder):
         
         Nstraw=int((2*halfCrosslength-self.strawRadius)/self.strawRadius/2.0)
 
-        print("%s %d %f"%(name,Nstraw*2, (halflength*2).magnitude))
+        print(("%s %d %f"%(name,Nstraw*2, (halflength*2).magnitude)))
         
         return main_lv
         straw_shape = geom.shapes.Tubs("shape_"+name+"_1st", rmin=Q("0m"), rmax=self.strawRadius, dz=halflength)

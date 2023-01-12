@@ -51,7 +51,7 @@ class NDHPgTPC_SPYv3_Builder(gegede.builder.Builder):
         dy_main=r+self.space #dimension in height
         dz_main=dz+self.space #dimension perp to the beam
 
-        print("Dimension of the MPD in along the beam ", dx_main*2, " dimension in height ", dy_main*2, " and dimension perp to the beam ", dz_main*2)
+        print(("Dimension of the MPD in along the beam ", dx_main*2, " dimension in height ", dy_main*2, " and dimension perp to the beam ", dz_main*2))
 
         main_shape = geom.shapes.Box('MPD', dx=dx_main, dy=dy_main, dz=dz_main)
         main_lv = geom.structure.Volume('vol'+main_shape.name, material='Air', shape=main_shape)
@@ -195,7 +195,7 @@ class NDHPgTPC_SPYv3_Builder(gegede.builder.Builder):
         byoke_vol = yoke_builder.get_volume("volYokeBarrel")
         yoke_shape = geom.store.shapes.get(byoke_vol.shape)
         nsides = yoke_shape.numsides
-        print("Number of yoke sides", nsides)
+        print(("Number of yoke sides", nsides))
 
         rot_z = Q("90.0deg")-Q("180.0deg")/nsides
         if nsides == 16:

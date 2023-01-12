@@ -72,7 +72,7 @@ class SANDBuilder(gegede.builder.Builder):
     def construct(self, geom):
         main_lv, main_hDim = ltools.main_lv( self, geom, "Box")
         print("KLOEBuilder::construct()")
-        print("main_lv = "+ main_lv.name)
+        print(("main_lv = "+ main_lv.name))
         self.add_volume( main_lv )
         self.build_yoke(main_lv, geom)
         self.build_solenoid(main_lv, geom)
@@ -102,7 +102,7 @@ class SANDBuilder(gegede.builder.Builder):
         pos = [Q('0m'),Q('0m'),Q('0m')]
 
         BField="(%f T, 0.0 T, 0.0 T)"%(self.CentralBField/Q("1.0T"))
-        print( "Setting internal Bfield to "+str(BField))
+        print(( "Setting internal Bfield to "+str(BField)))
         MagIntVol_volume.params.append(("BField",BField))
 
         MagIntVol_pos=geom.structure.Position("MagIntVol_pos", pos[0],pos[1], pos[2])
@@ -127,7 +127,7 @@ class SANDBuilder(gegede.builder.Builder):
         
         self.build_inner_volume(MagIntVol_volume, geom)
 
-        print("printing main_lv: " + str(main_lv))
+        print(("printing main_lv: " + str(main_lv)))
 
 
 #        TranspV = [0,0,1]
@@ -176,7 +176,7 @@ class SANDBuilder(gegede.builder.Builder):
 
 #        BField="(0.0 T, 0.0 T, %f T)"%(-BarrelBField/Q("1.0T"))
         BField="(%f T, 0.0 T, 0.0 T)"%(-BarrelBField/Q("1.0T"))
-        print("Setting KLOE Barrel Bfield to "+str(BField))
+        print(("Setting KLOE Barrel Bfield to "+str(BField)))
         barrel_lv.params.append(("BField",BField))
 
 
@@ -186,7 +186,7 @@ class SANDBuilder(gegede.builder.Builder):
         barrel_pla=geom.structure.Placement("KLOEYokeBarrel_pla",
                                             volume=barrel_lv,
                                             pos=barrel_pos)
-        print("appending "+barrel_pla.name)
+        print(("appending "+barrel_pla.name))
         main_lv.placements.append(barrel_pla.name)
 
         # build endcap
@@ -217,7 +217,7 @@ class SANDBuilder(gegede.builder.Builder):
                 ec_pla=geom.structure.Placement(name+"_pla",
                                                 volume=ec_lv,
                                                 pos=ec_pos)
-                print("appending "+ec_pla.name)
+                print(("appending "+ec_pla.name))
                 main_lv.placements.append(ec_pla.name)
 
 
@@ -265,7 +265,7 @@ class SANDBuilder(gegede.builder.Builder):
             ec_pla=geom.structure.Placement(name+"_pla",
                                             volume=ec_lv,
                                             pos=ec_pos)
-            print("appending "+ec_pla.name)
+            print(("appending "+ec_pla.name))
             main_lv.placements.append(ec_pla.name)
 
         # cryostat inner and outer walls
@@ -296,7 +296,7 @@ class SANDBuilder(gegede.builder.Builder):
             pla=geom.structure.Placement(name+"_pla",
                                             volume=lv,
                                             pos=pos)
-            print("appending "+pla.name)
+            print(("appending "+pla.name))
             main_lv.placements.append(pla.name)
 
 
@@ -324,7 +324,7 @@ class SANDBuilder(gegede.builder.Builder):
         pla=geom.structure.Placement(name+"_pla",
                                      volume=lv,
                                      pos=pos)
-        print("appending "+pla.name)
+        print(("appending "+pla.name))
         main_lv.placements.append(pla.name)
 
 
@@ -352,7 +352,7 @@ class SANDBuilder(gegede.builder.Builder):
         pla=geom.structure.Placement(name+"_pla",
                                      volume=lv,
                                      pos=pos)
-        print("appending "+pla.name)
+        print(("appending "+pla.name))
         main_lv.placements.append(pla.name)
 
     def build_ecal(self, main_lv, geom):
@@ -417,7 +417,7 @@ class SANDBuilder(gegede.builder.Builder):
                 #print( "Setting 3DST Bfield to "+str(BField))
                 #a3dst_lv.params.append(("BField",BField))
                 
-                print("Working on ", a3dst_lv.name)
+                print(("Working on ", a3dst_lv.name))
                 pos_name = self.name + a3dst_lv.name + '_pos'
                 pla_name = self.name + a3dst_lv.name + '_pla'
                 print(("Position name", pos_name))
@@ -529,8 +529,8 @@ class SANDBuilder(gegede.builder.Builder):
         if "KLOESTT" not in self.builders:
             print("we have a KLOESTT builder key")
             stt_builder=self.get_builder("KLOESTT")
-            print("self.BuildSTT=={}".format(self.BuildSTT))
-            print("stt_builder: {}".format(stt_builder))
+            print(("self.BuildSTT=={}".format(self.BuildSTT)))
+            print(("stt_builder: {}".format(stt_builder)))
             if (stt_builder!=None):
                 rot = [Q("0deg"),Q("90deg"),Q("0deg")]
                 loc = [Q('0m'),Q('0m'),Q('0m')]
@@ -548,8 +548,8 @@ class SANDBuilder(gegede.builder.Builder):
         if "KLOEGAR" not in self.builders:
             print("we have a KLOEGAR builder key")
             gar_builder=self.get_builder("KLOEGAR")
-            print("self.BuildGAR=={}".format(self.BuildGAR))
-            print("gar_builder: {}".format(gar_builder))
+            print(("self.BuildGAR=={}".format(self.BuildGAR)))
+            print(("gar_builder: {}".format(gar_builder)))
             if (gar_builder!=None) and (self.BuildGAR==True):
                 rot = [Q("0deg"),Q("0deg"),Q("0deg")]
                 loc = [Q('0m'),Q('0m'),Q('0m')]
@@ -572,7 +572,7 @@ class SANDBuilder(gegede.builder.Builder):
         pla=geom.structure.Placement(name+"_pla",
                                      volume=lv,
                                      pos=pos)
-        print( "appending "+pla.name)
+        print(( "appending "+pla.name))
 
         main_lv.placements.append(pla.name)
 
