@@ -20,8 +20,9 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 - Fixed Overlaps in TMS geometry.
 
 ## Changed
-
 - `checkOverlaps.C` now uses sampling method.
+##changed
+-'checkOverlaps.C' now uses 1 to run sampling method. Other than 1 to run standard method. 
 
 ## [TDR_Production_geometry_v_1.0.1]
 
