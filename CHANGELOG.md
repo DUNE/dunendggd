@@ -5,7 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
-##[checkOverlaps.c]
 -Standard method and sampling method have been integrated to overlaps of geometry.
 ## [Unreleased]
 
