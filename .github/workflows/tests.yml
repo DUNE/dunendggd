@@ -41,8 +41,11 @@ jobs:
       run: |
         ls -l
         head nd_hall_with_lar_tms_sand.gdml
-    - name: Run overlap check
+    - name: Run standard overlap check
       run: |
-        root -q -b 'checkOverlaps.C("nd_hall_with_lar_tms_sand.gdml")' 2>&1 | tee check.log
+        root -q -b 'checkOverlaps.C("nd_hall_with_lar_tms_sand.gdml", 0)' 2>&1 | tee check.log
         grep "Number of illegal overlaps/extrusions : 0" check.log
-      
+    - name: Run sampling overlap check
+      run: |
+        root -q -b 'checkOverlaps.C("nd_hall_with_lar_tms_sand.gdml", 1)' 2>&1 | tee check.log
+        grep "Number of illegal overlaps/extrusions : 0" check.log
