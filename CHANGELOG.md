@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
+
 ## [Unreleased]
 
 ## Fixed
 
 - Fixed use of TGeoManager::Import in scripts.
+
+## Changed
+
+- `checkOverlaps.C` now takes an optional argument to choose the overlap checking method.
+- CI now runs both types of overlap checks.
 
 ## [TDR_Production_geometry_v_1.0.2]
 
@@ -19,7 +25,6 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## Changed
 - `checkOverlaps.C` now uses sampling method.
-- `checkOverlaps.C` now takes an optional argument to choose the overlap checking method. 
 
 ## [TDR_Production_geometry_v_1.0.1]
 
