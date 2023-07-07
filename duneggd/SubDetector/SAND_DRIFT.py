@@ -71,10 +71,11 @@ class DRIFTBuilder(gegede.builder.Builder):
 
             self.nofExtraMods               = 2
 
+            # da qui
+
             self.WiresCounter               = {"Tracker":0, "SuperMod":0, "DriftChamber":0, "DriftModule":0}
 
             self.PrintRecap()
-
 
     def PrintRecap(self):   
 
@@ -144,7 +145,7 @@ class DRIFTBuilder(gegede.builder.Builder):
     def constructExtraMod(self, geom, volume):
          
         running_x = self.kloeVesselRadius - self.clearenceTrackerECAL
-
+         
         for i in range(self.nofExtraMods):
               
             extraMod_lv = self.constructSuperMod(geom, running_x, label = "_X"+str(i))
@@ -163,7 +164,7 @@ class DRIFTBuilder(gegede.builder.Builder):
         step           = [5,3,1]
     
         for i in range(self.nofSymMods):
-
+            
             SuperMod_lv = self.constructSuperMod(geom, abs(running_x), label = "_"+supermod_label[i])
             
             self.placeSubVolume(geom, volume, SuperMod_lv, pos_x = running_x - self.SuperModThickness/2, label = str(i)+"dw")
@@ -228,7 +229,7 @@ class DRIFTBuilder(gegede.builder.Builder):
         CMod_lv        = self.constructMod(geom, "C", half_heigth - self.frameThickness, label = label)
 
         self.WiresCounter["SuperMod"] += self.WiresCounter["DriftChamber"] 
-
+        
         C3H6Mod_lv     = self.constructMod(geom, "C3H6", half_heigth - self.frameThickness, label = label)
 
         self.WiresCounter["SuperMod"] += self.WiresCounter["DriftChamber"] * nofC3H6 
@@ -239,7 +240,7 @@ class DRIFTBuilder(gegede.builder.Builder):
         self.placeSubVolume(geom, SuperMod_lv, CMod_lv, pos_x = - half_thickness + self.ModThickness["CMod"]/2)
         
         for i in range(nofC3H6):
-
+        
             pos_x =  - half_thickness + self.ModThickness["CMod"] + self.ModThickness["C3H6Mod"] * (0.5 + i)
         
             self.placeSubVolume(geom, SuperMod_lv, C3H6Mod_lv, pos_x = pos_x, label=str(i))
@@ -320,7 +321,6 @@ class DRIFTBuilder(gegede.builder.Builder):
 
             self.WiresCounter["DriftChamber"] += self.WiresCounter["DriftModule"]
 
-            # running x = wire coordinate along beam axis
             self.placeSubVolume(geom, DriftChamber_lv, DriftModule_lv, pos_x = running_x, rot_x = rot_x, label = "_"+str(i))
 
             running_x           += self.DriftModuleThickness/2
@@ -345,8 +345,7 @@ class DRIFTBuilder(gegede.builder.Builder):
         running_y = half_h - 1.5*(self.WireWireDistance + self.FieldWireRadius) if staggered else half_h - (self.WireWireDistance + self.FieldWireRadius)
 
         while(running_y > - half_h):
-            
-            # runnin_y = x(module number = 2) or y(module number = 0,1) wire coordinate 
+
             self.placeSubVolume(geom, DriftModule_lv, running_wire, pos_y = running_y, label = "_" + str(wire_index).zfill(3))
             
             wire_index += 1
@@ -380,7 +379,7 @@ class DRIFTBuilder(gegede.builder.Builder):
         position = geom.structure.Position(name + "_pos", pos_x, pos_y, pos_z)
         rotation = geom.structure.Rotation(name + "_rot", rot_x, rot_y, rot_z)
         place    = geom.structure.Placement(name + "_place", volume = subvolume.name, pos = position.name, rot = rotation.name)
-
+        
         volume.placements.append(place.name)
    
     def getHalfHeight(self,dis2c):
