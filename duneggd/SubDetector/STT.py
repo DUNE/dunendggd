@@ -205,8 +205,7 @@ class STTBuilder(gegede.builder.Builder):
             module_sequence.append("C3H6Mod")
             modules_X_center.append(running_X + self.ModThickness["C3H6Mod"]/2)
             running_X += self.ModThickness["C3H6Mod"]
-                
-        
+                 
         for i in range(self.nofDownstreamTrkMod): 
             module_sequence.append("TrkMod")
             modules_X_center.append(running_X + self.ModThickness["TrkMod"]/2)
@@ -216,7 +215,6 @@ class STTBuilder(gegede.builder.Builder):
         self.module_sequence    = module_sequence
         self.modules_X_center   = modules_X_center
     
-
     def construct(self, geom):
 
         self.init()
@@ -247,7 +245,6 @@ class STTBuilder(gegede.builder.Builder):
         print("time to construct STT       | "+str(self.stop_time-self.start_time)+" seconds")
         print("")
         
-
     def build_STTSegment(self, geom):
 
         whole_shape         = geom.shapes.PolyhedraRegular("whole_shape_for_stt",numsides=self.nBarrelModules, rmin=Q('0cm'), rmax=self.kloeVesselRadius , dz=self.kloeVesselHalfDx, sphi=self.rotAngle)
@@ -276,7 +273,7 @@ class STTBuilder(gegede.builder.Builder):
                 return HalfHeight-(dis2c-projectedDisPre)*math.tan(i*theta)
             else:
                 HalfHeight-=2*d*math.sin(i*theta)
-    
+
     # def getHalfHeight(self,dis2c):
     #     PolyAngle   = 2*math.pi/self.nBarrelModules
     #     alpha0      = PolyAngle/2
@@ -317,7 +314,6 @@ class STTBuilder(gegede.builder.Builder):
         planeYY                 = self.constructStrawPlane(geom, planeYY_name, dy = self.kloeTrkRegHalfDx - self.FrameThickness,  dz = module_half_heigth - self.FrameThickness,    gas = self.StrawGas[module_type])
         self.nofStrawTubeConstructed += self.nofStrawCurrentMod * self.nofStrawPlanes[module_type]
         
-        
         if(module_type!="TrkMod"):
             frame        = self.constructFrame(geom,    base_name,    module_type,    dy = module_half_heigth,                                            dz = self.kloeTrkRegHalfDx)
             target       = self.constructTarget(geom,   base_name,    module_type,    dy = module_half_heigth - self.FrameThickness - self.AddGapForSlab, dz = self.kloeTrkRegHalfDx - self.FrameThickness - self.AddGapForSlab)
@@ -340,7 +336,6 @@ class STTBuilder(gegede.builder.Builder):
             if (self.radiator=="yes" and module_type=='C3H6Mod'): main_lv.placements.append(Radiator_pla.name)
             main_lv.placements.append(planeXX_pla.name)
             main_lv.placements.append(planeYY_pla.name)
-
 
         else:
 
@@ -367,7 +362,6 @@ class STTBuilder(gegede.builder.Builder):
         frame_lv         = geom.structure.Volume(frame_name, material="carbonComposite", shape=frame_shape)
         return frame_lv
 
-        
     def constructTarget(self, geom, base_name, module_type, dy, dz):
         target_name     = base_name + "_target"
         target_material = "Graphite" if module_type == 'CMod' else "C3H6"
@@ -400,7 +394,6 @@ class STTBuilder(gegede.builder.Builder):
             running_x += self.FoilThickness + self.AirGapThickness
         
         return radiator_lv
-
 
     def constructStrawPlane(self, geom, base_name, dy, dz, gas):
 
@@ -470,7 +463,6 @@ class STTBuilder(gegede.builder.Builder):
         wire_shape          = geom.shapes.Tubs(wire_name+"_shape", rmin = Q("0mm"), rmax = self.StrawWireRadius, dz=straw_half_length)
         wire_lv             = geom.structure.Volume(wire_name, material="Gold",shape=wire_shape)
         wire_pla            = geom.structure.Placement(wire_name+"_place", volume = wire_lv)
-
 
         if(self.StrawPlug!=Q("0mm")): straw_lv.placements.append(ring_pla.name)
         straw_lv.placements.append(Alcoat_pla.name)

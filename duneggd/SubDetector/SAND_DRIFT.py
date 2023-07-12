@@ -188,15 +188,15 @@ class DRIFTBuilder(gegede.builder.Builder):
 
         nofDriftMods = 2
 
-        half_heigth = self.getHalfHeight(running_x)
+        half_heigth  = self.getHalfHeight(running_x)
 
-        thickness = nofDriftMods * self.DriftModuleThickness + (nofDriftMods + 1) * self.MylarThickness
+        thickness    = nofDriftMods * self.DriftModuleThickness + (nofDriftMods + 1) * self.MylarThickness
 
-        tracking_lv = self.constructBox(geom, "Trk", thickness/2, half_heigth,self.kloeVesselHalfDx)
+        tracking_lv  = self.constructBox(geom, "Trk", thickness/2, half_heigth,self.kloeVesselHalfDx)
 
-        frame_lv    = self.constructFrame(geom, thickness/2, half_heigth, self.kloeVesselHalfDx, label = "Trk")
+        frame_lv     = self.constructFrame(geom, thickness/2, half_heigth, self.kloeVesselHalfDx, label = "Trk")
 
-        drift_lv    = self.constructBox(geom, "TrkDrift", thickness/2, half_heigth - self.frameThickness, self.kloeVesselHalfDx - self.frameThickness)
+        drift_lv     = self.constructBox(geom, "TrkDrift", thickness/2, half_heigth - self.frameThickness, self.kloeVesselHalfDx - self.frameThickness)
 
         self.FillDriftChamber(geom, drift_lv,"C", nofDriftModules = nofDriftMods, wireAngles = [Q("0deg"),Q("90deg")])
 
@@ -329,7 +329,6 @@ class DRIFTBuilder(gegede.builder.Builder):
 
         self.placeSubVolume(geom, DriftChamber_lv, MylarPlane_lv, pos_x = running_x, label = "_"+str(self.NofDriftModules+1))
 
-
     def FillDriftModule(self, geom, DriftModule_lv, module_number):
 
         half_dx, half_h, half_l = geom.get_shape(DriftModule_lv.shape)[1:]
@@ -356,7 +355,6 @@ class DRIFTBuilder(gegede.builder.Builder):
         
         self.WiresCounter["DriftModule"] = wire_index + 1
 
-    
     def constructWire(self, geom, base_name, length, wire_type):
 
         wire_name           = base_name+"_"+wire_type+"wire"
