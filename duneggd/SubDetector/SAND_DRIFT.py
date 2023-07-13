@@ -71,8 +71,6 @@ class DRIFTBuilder(gegede.builder.Builder):
 
             self.nofExtraMods               = 2
 
-            # da qui
-
             self.WiresCounter               = {"Tracker":0, "SuperMod":0, "DriftChamber":0, "DriftModule":0}
 
             self.PrintRecap()
@@ -145,9 +143,9 @@ class DRIFTBuilder(gegede.builder.Builder):
     def constructExtraMod(self, geom, volume):
          
         running_x = self.kloeVesselRadius - self.clearenceTrackerECAL
-         
+
         for i in range(self.nofExtraMods):
-              
+
             extraMod_lv = self.constructSuperMod(geom, running_x, label = "_X"+str(i))
 
             self.placeSubVolume(geom, volume, extraMod_lv, pos_x = running_x - self.SuperModThickness/2, label = str(i))
@@ -164,7 +162,7 @@ class DRIFTBuilder(gegede.builder.Builder):
         step           = [5,3,1]
     
         for i in range(self.nofSymMods):
-            
+
             SuperMod_lv = self.constructSuperMod(geom, abs(running_x), label = "_"+supermod_label[i])
             
             self.placeSubVolume(geom, volume, SuperMod_lv, pos_x = running_x - self.SuperModThickness/2, label = str(i)+"dw")
@@ -229,7 +227,7 @@ class DRIFTBuilder(gegede.builder.Builder):
         CMod_lv        = self.constructMod(geom, "C", half_heigth - self.frameThickness, label = label)
 
         self.WiresCounter["SuperMod"] += self.WiresCounter["DriftChamber"] 
-        
+
         C3H6Mod_lv     = self.constructMod(geom, "C3H6", half_heigth - self.frameThickness, label = label)
 
         self.WiresCounter["SuperMod"] += self.WiresCounter["DriftChamber"] * nofC3H6 
@@ -240,7 +238,7 @@ class DRIFTBuilder(gegede.builder.Builder):
         self.placeSubVolume(geom, SuperMod_lv, CMod_lv, pos_x = - half_thickness + self.ModThickness["CMod"]/2)
         
         for i in range(nofC3H6):
-        
+
             pos_x =  - half_thickness + self.ModThickness["CMod"] + self.ModThickness["C3H6Mod"] * (0.5 + i)
         
             self.placeSubVolume(geom, SuperMod_lv, C3H6Mod_lv, pos_x = pos_x, label=str(i))
