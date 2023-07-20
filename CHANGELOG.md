@@ -12,6 +12,10 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 - Removed old gdml files from repo.
 
+### Added
+
+- generate complete ND geo with SAND provided with a Drift Chamber using `build_hall.sh sand_opt3_DRIFT1`
+
 ## [TDR_Production_geometry_v_1.0.3]
 
 ### Fixed
