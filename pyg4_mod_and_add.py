@@ -53,7 +53,7 @@ def merge_files(inFileArC, inFileMin, outFile):
 if __name__ == "__main__":
 
     inFileArC = "test.gdml"
-    inFileMin = "minerva_corrected_hacked.gdml"
+    inFileMin = "minerva_v2_hacked.gdml"
     # outFile   = "Merged2x2MINERvA_test.gdml"    
     outFile   = "test.gdml"  
     merge_files(inFileArC, inFileMin, outFile)
