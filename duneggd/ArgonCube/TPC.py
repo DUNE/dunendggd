@@ -66,7 +66,7 @@ class TPCBuilder(gegede.builder.Builder):
                                         material=self.Material,
                                         shape=TPCActive_shape)
 
-        TPCActive_lv.params.append(("SensDet","TPCActive_shape"))
+        # TPCActive_lv.params.append(("SensDet","TPCActive_shape"))
         TPCActive_lv.params.append(("EField","(500.0 V/cm, 0.0 V/cm, 0.0 V/cm)"))
 
         # Place TPCActive
