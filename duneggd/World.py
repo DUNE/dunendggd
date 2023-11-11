@@ -8,7 +8,9 @@ from gegede import Quantity as Q
 #Changed DetEnc to Rock
 class WorldBuilder(gegede.builder.Builder):
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
-    def configure(self, RockPosition=None, RockRotation=None, **kwds):
+    def configure(self, halfDimension=None, Material=None, RockPosition=None, RockRotation=None, **kwds):
+        self.halfDimension = halfDimension
+        self.Material = Material
         self.RockPosition = RockPosition
         self.RockRotation = RockRotation
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
@@ -33,7 +35,7 @@ class WorldBuilder(gegede.builder.Builder):
         r90aboutX90aboutY = geom.structure.Rotation( 'r90aboutX90aboutY', '90deg', '90deg', '0deg')
         r90aboutX180aboutY = geom.structure.Rotation( 'r90aboutX180aboutY', '90deg', '180deg', '0deg')
 
-        main_lv = geom.structure.Volume( "vol"+self.name, material=None, shape=None)
+        main_lv, main_hDim = ltools.main_lv( self, geom, "Box")
         self.add_volume(main_lv)
 
         # get Detector Enclosure and its logic volume
