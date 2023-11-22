@@ -137,11 +137,11 @@ class SandECalBuilder(gegede.builder.Builder):
         # Real ENDCAP as 32 modules of different length and widht
         # curved at both ends by 90 degrees
 
-        if self.get_builder("SANDECALECMOD") == None:
-            print("SANDECALECMOD builder not found")
+        if self.get_builder("SANDECALENDCAP") == None:
+            print("SANDECALENDCAP builder not found")
             return
 
-        emcalo_endcap_builder = self.get_builder("SANDECALECMOD")
+        emcalo_endcap_builder = self.get_builder("SANDECALENDCAP")
         emcalo_endcap_lv = emcalo_endcap_builder.get_volume()
 
         for quarter in range (0,2):
@@ -178,11 +178,11 @@ class SandECalBuilder(gegede.builder.Builder):
         # Real ENDCAP as 32 modules of different length and widht
         # curved at both ends by 90 degrees
 
-        if self.get_builder("SANDECALECMOD") == None:
-            print("SANDECALECMOD builder not found")
+        if self.get_builder("SANDECALENDCAP") == None:
+            print("SANDECALENDCAP builder not found")
             return
 
-        emcalo_endcap_builder = self.get_builder("SANDECALECMOD")
+        emcalo_endcap_builder = self.get_builder("SANDECALENDCAP")
         emcalo_endcap_lv = emcalo_endcap_builder.get_volume()
 
         for quarter in range (0,2):
