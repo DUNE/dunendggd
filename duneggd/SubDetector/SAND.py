@@ -65,7 +65,11 @@ class SANDBuilder(gegede.builder.Builder):
         self.EndcapDZStart=Q("1.96m")
         self.EndcapDZEnd=Q("2.15m")
         self.EndcapDRmax=Q("1.73m")
-        self.EndcapDRmin=Q("0.51m")
+# Test 22/5/2023
+#        self.EndcapDRmax=Q("1.73m")
+#        self.EndcapDRmin=Q("0.51m")
+        self.EndcapDRmax=Q("1.66m")
+        self.EndcapDRmin=Q("0.61m")
 
 
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
@@ -81,7 +85,9 @@ class SANDBuilder(gegede.builder.Builder):
         MagIntVolRmax=Q("2.43m")
         MagIntVolRmin=Q("2.0m")
         MagIntVolHLmin=Q("1.96m")
-        MagIntVolHLmax=Q("2.15m")
+# Test 22/5/2023
+#        MagIntVolHLmax=Q("2.15m")
+        MagIntVolHLmax=Q("2.22m")
 
         vol1_shape = geom.shapes.Tubs("MagIntVol_vol1_shape", rmin=MagIntVolRmin, rmax=MagIntVolRmax, dz=MagIntVolHLmax)
         vol2_shape = geom.shapes.Tubs("MagIntVol_vol2_shape", rmin=Q('0.0m'), rmax=MagIntVolRmin, dz=MagIntVolHLmin)
@@ -186,7 +192,7 @@ class SANDBuilder(gegede.builder.Builder):
         barrel_pla=geom.structure.Placement("KLOEYokeBarrel_pla",
                                             volume=barrel_lv,
                                             pos=barrel_pos)
-        print(("appending "+barrel_pla.name))
+        print(("appending "+barrel_pla.name)) 
         main_lv.placements.append(barrel_pla.name)
 
         # build endcap
@@ -357,11 +363,11 @@ class SANDBuilder(gegede.builder.Builder):
 
     def build_ecal(self, main_lv, geom):
         
-        if "SANDECAL" not in self.builders:
-            print("SANDECAL builder not found")
+        if "SANDECALEC" not in self.builders:
+            print("SANDECALEC builder not found")
             return            
 
-        emcalo_builder=self.get_builder("SANDECAL")
+        emcalo_builder=self.get_builder("SANDECALEC")
         emcalo_lv=emcalo_builder.get_volume()
         
         #BField="(%f T, 0.0 T, 0.0 T)"%(-self.CentralBField/Q("1.0T"))

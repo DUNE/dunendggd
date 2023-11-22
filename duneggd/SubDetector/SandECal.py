@@ -15,6 +15,9 @@ class SandECalBuilder(gegede.builder.Builder):
         self.EndcapRmin = Q('20.8cm')
         self.BarrelRmin = Q('2m')
         self.BarrelDZ = Q('2.15m')
+        self.ECCurvRad = Q('10cm')
+        self.ECStraight = Q('20cm')
+        self.AlPlateThick= Q('2.5cm')
 
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
     def construct(self, geom):
@@ -23,50 +26,53 @@ class SandECalBuilder(gegede.builder.Builder):
         # barrel
         rmax_barrel = (self.BarrelRmin + self.caloThickness) / math.cos(ang)
         # endcap
-        rmax_ec = rmax_barrel
-        dz_ec = 0.5 * self.caloThickness
-        zpos_ec = self.EndcapZ + 0.5 * self.caloThickness
+        rmin_ec = Q('0cm')
+        rmax_ec = self.BarrelRmin
+        dz_ec = (self.caloThickness+self.ECCurvRad+self.ECStraight)/2.
+        xpos_ec = Q('0cm')
+        ypos_ec = Q('0cm')
+        zpos_ec = self.EndcapZ + dz_ec
 
-        #        barrel_shape = geom.shapes.Tubs("kloe_calo_barrel_shape", rmin=self.BarrelRmin, rmax=rmax_barrel, dz=self.BarrelDZ)
         barrel_shape = geom.shapes.PolyhedraRegular("kloe_calo_barrel_shape",
                                                     numsides=24,
                                                     rmin=self.BarrelRmin,
-                                                    rmax=self.BarrelRmin +
-                                                    self.caloThickness,
+                                                    rmax=self.BarrelRmin + 
+                                                    self.caloThickness+self.AlPlateThick,
                                                     dz=self.BarrelDZ,
                                                     sphi=Q('7.5deg'))
+
         endcap_shape = geom.shapes.Tubs("kloe_calo_endcap_shape",
-                                        rmin=Q('0m'),
+                                        rmin=rmin_ec,
                                         rmax=rmax_ec,
                                         dz=dz_ec)
 
-        calo_ec_R_pos = geom.structure.Position("calo_ec_R_pos", Q('0m'),
-                                                Q('0m'), zpos_ec)
+        calo_eca_pos = geom.structure.Position("calo_eca_pos", xpos_ec,
+                                                ypos_ec, -zpos_ec)
 
-        calo_shape_tmp = geom.shapes.Boolean("kloe_calo_shape_tmp",
-                                             type='union',
-                                             first=barrel_shape,
-                                             second=endcap_shape,
-                                             rot='noRotate',
-                                             pos=calo_ec_R_pos)
+        calo_ecb_pos = geom.structure.Position("calo_ecb_pos", xpos_ec,
+                                                ypos_ec, zpos_ec)
 
-        calo_ec_L_pos = geom.structure.Position("calo_ec_L_pos", Q('0m'),
-                                                Q('0m'), -zpos_ec)
+        calo_tmp = geom.shapes.Boolean("kloe_calo_tmp",
+                                         type='union',
+                                         first=barrel_shape,
+                                         second=endcap_shape,
+                                         pos=calo_eca_pos)
 
         calo_shape = geom.shapes.Boolean("kloe_calo_shape",
                                          type='union',
-                                         first=calo_shape_tmp,
+                                         first=calo_tmp,
                                          second=endcap_shape,
-                                         rot='r180aboutY',
-                                         pos=calo_ec_L_pos)
+                                         pos=calo_ecb_pos)
 
         calo_lv = geom.structure.Volume('kloe_calo_volume',
                                         material="Air",
                                         shape=calo_shape)
 
         self.add_volume(calo_lv)
+# Test 22/5/2023
         self.buildECALBarrel(calo_lv, geom)
-        self.buildECALEndCaps(calo_lv, geom)
+        self.buildECALEndCapA(calo_lv, geom)
+        self.buildECALEndCapB(calo_lv, geom)
 
     def buildECALBarrel(self, main_lv, geom):
 
@@ -99,7 +105,7 @@ class SandECalBuilder(gegede.builder.Builder):
             theta = j * ang
             ModPosition = [
                 Q('0mm'),
-                Q('0mm'), self.BarrelRmin + 0.5 * self.caloThickness
+                Q('0mm'), self.BarrelRmin + 0.5 * self.caloThickness + 0.5*self.AlPlateThick
             ]
             ModPositionNew = ltools.rotation(
                 axisy, theta, ModPosition
@@ -126,50 +132,85 @@ class SandECalBuilder(gegede.builder.Builder):
 
             ################################################
 
-    def buildECALEndCaps(self, main_lv, geom):
+    def buildECALEndCapA(self, main_lv, geom):
 
-        # ENDCAPs
-        # there are two endcaps which are 23 cm thick, roughly 2m outer radius,
-        # 0.208m inner radius and divided into 32 modules
-        # which run vertically, and curve 90degrees at the end to be read out
-        # this is nontrivial to model and will take some work and improvements
-        # to gegede
-        # just model as a disk with a hole
-        # segmentation is the same as for the barrel modules
+        # Real ENDCAP as 32 modules of different length and widht
+        # curved at both ends by 90 degrees
 
-        if self.get_builder("SANDECALENDCAP") == None:
-            print("SANDECALENDCAP builder not found")
+        if self.get_builder("SANDECALECMOD") == None:
+            print("SANDECALECMOD builder not found")
             return
 
-        emcalo_endcap_builder = self.get_builder("SANDECALENDCAP")
+        emcalo_endcap_builder = self.get_builder("SANDECALECMOD")
         emcalo_endcap_lv = emcalo_endcap_builder.get_volume()
 
-        for side in ['L', 'R']:
+        for quarter in range (0,2):
 
             pos = [Q('0m'), Q('0m'), Q('0m')]
-            pos[2] = self.EndcapZ + self.caloThickness / 2.0
-            if side == 'L':
-                pos[2] = -pos[2]
-                ECAL_end_rotation = geom.structure.Rotation(
-                    'ECAL_end_rotation' + '_' + str(side), Q('0deg'),
+            pos[2] = -(self.EndcapZ + (self.caloThickness + self.ECCurvRad + self.ECStraight) / 2.0)
+            if (quarter == 0):
+                ECAL_endA_rotation = geom.structure.Rotation(
+                    'ECAL_endA_rotation' + '_' + str(quarter), Q('0deg'),
                     Q('180deg'), Q('0deg'))
 
             else:
-                ECAL_end_rotation = geom.structure.Rotation(
-                    'ECAL_end_rotation' + '_' + str(side), Q('0deg'),
+                ECAL_endA_rotation = geom.structure.Rotation(
+                    'ECAL_endA_rotation' + '_' + str(quarter), Q('0deg'),
+                    Q('180deg'), Q('180deg'))
+
+            ECAL_endA_position = geom.structure.Position(
+                'ECAL_endA_position' + '_' + str(quarter), pos[0], pos[1], pos[2])
+
+            print(("Building Kloe ECAL Endcap A quarter " + str(quarter)))  # keep compatibility with Python3 pylint: disable=superfluous-parens
+
+            ########################################################################################
+            ECAL_endA_place = geom.structure.Placement("ECAL_endA_pla" + '_' +
+                                                      str(quarter),
+                                                      volume=emcalo_endcap_lv,
+                                                      pos=ECAL_endA_position,
+                                                      rot=ECAL_endA_rotation)
+
+            main_lv.placements.append(ECAL_endA_place.name)
+            ########################################################################################
+
+    def buildECALEndCapB(self, main_lv, geom):
+
+        # Real ENDCAP as 32 modules of different length and widht
+        # curved at both ends by 90 degrees
+
+        if self.get_builder("SANDECALECMOD") == None:
+            print("SANDECALECMOD builder not found")
+            return
+
+        emcalo_endcap_builder = self.get_builder("SANDECALECMOD")
+        emcalo_endcap_lv = emcalo_endcap_builder.get_volume()
+
+        for quarter in range (0,2):
+
+            pos = [Q('0m'), Q('0m'), Q('0m')]
+            pos[2] = self.EndcapZ + (self.caloThickness + self.ECCurvRad + self.ECStraight) / 2.0
+            if (quarter == 0):
+                ECAL_endB_rotation = geom.structure.Rotation(
+                    'ECAL_endB_rotation' + '_' + str(quarter), Q('0deg'),
                     Q('0deg'), Q('0deg'))
 
-            ECAL_end_position = geom.structure.Position(
-                'ECAL_end_position' + '_' + str(side), pos[0], pos[1], pos[2])
+            else:
+                ECAL_endB_rotation = geom.structure.Rotation(
+                    'ECAL_endB_rotation' + '_' + str(quarter), Q('0deg'),
+                    Q('0deg'), Q('180deg'))
 
-            print(("Building Kloe ECAL Endcap module " + str(side)))  # keep compatibility with Python3 pylint: disable=superfluous-parens
+            ECAL_endB_position = geom.structure.Position(
+                'ECAL_endB_position' + '_' + str(quarter), pos[0], pos[1], pos[2])
+
+            print(("Building Kloe ECAL Endcap B quarter " + str(quarter)))  # keep compatibility with Python3 pylint: disable=superfluous-parens
 
             ########################################################################################
-            ECAL_end_place = geom.structure.Placement("ECAL_end_pla" + '_' +
-                                                      str(side),
+            ECAL_endB_place = geom.structure.Placement("ECAL_endB_pla" + '_' +
+                                                      str(quarter),
                                                       volume=emcalo_endcap_lv,
-                                                      pos=ECAL_end_position,
-                                                      rot=ECAL_end_rotation)
+                                                      pos=ECAL_endB_position,
+                                                      rot=ECAL_endB_rotation)
 
-            main_lv.placements.append(ECAL_end_place.name)
+            main_lv.placements.append(ECAL_endB_place.name)
             ########################################################################################
+

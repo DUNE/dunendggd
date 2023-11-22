@@ -12,7 +12,7 @@ setup(name = 'dunendggd',
       install_requires = [
         "gegede >= 0.4",
         "pint >= 0.5.1",      # for units
-        "lxml >= 3.3.5",      # for GDML export],
+        "lxml >= 3.3.5",      # for GDML export
       ],
   )
 
