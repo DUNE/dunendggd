@@ -1,7 +1,6 @@
 void geoInfo(TString filename, TString volumeName)
 {
-        TGeoManager *geom = new TGeoManager();
-        geom->Import(filename);
+        TGeoManager *geom = TGeoManager::Import(filename);
 
         int n_volumes = geom -> GetListOfVolumes()->GetEntries();
         for(int i=0; i<n_volumes; i++){

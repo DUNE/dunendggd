@@ -181,7 +181,8 @@ class tmsBuilder(gegede.builder.Builder):
                                       dy = 0.5*Q("5.022m"),
                                       dz = 0.5*Q("0.040m"))        
 
-        Module_layer_lv = geom.structure.Volume( 'modulelayervol', material='Air', shape=Module_layer )
+        Module_layer_lv1 = geom.structure.Volume( 'modulelayervol1', material='Air', shape=Module_layer )
+        Module_layer_lv2 = geom.structure.Volume( 'modulelayervol2', material='Air', shape=Module_layer )
 
         #Poition modules in layer                                                                                            
         Mod_ri_rot = geom.structure.Rotation( 'Modrirot', '0deg','0deg','3deg')
@@ -224,23 +225,23 @@ class tmsBuilder(gegede.builder.Builder):
         mod_ri_pla4 = geom.structure.Placement( 'modripla4'+self.name, volume=  ModuleBox_lv, pos=mod_pos4, rot = Mod_ri_rot)
         mod_le_pla4 = geom.structure.Placement( 'modlepla4'+self.name, volume=  ModuleBox_lv, pos=mod_pos4, rot = Mod_left_rot)
 
-        Module_layer_lv.placements.append(mod_ri_pla1.name)
-        Module_layer_lv.placements.append(mod_le_pla1.name)
+        Module_layer_lv1.placements.append(mod_ri_pla1.name)
+        Module_layer_lv2.placements.append(mod_le_pla1.name)
 
-        Module_layer_lv.placements.append(mod_ri_pla2.name)
-        Module_layer_lv.placements.append(mod_le_pla2.name)
+        Module_layer_lv1.placements.append(mod_ri_pla2.name)
+        Module_layer_lv2.placements.append(mod_le_pla2.name)
 
-        Module_layer_lv.placements.append(mod_ri_pla3.name)
-        Module_layer_lv.placements.append(mod_le_pla3.name)
+        Module_layer_lv1.placements.append(mod_ri_pla3.name)
+        Module_layer_lv2.placements.append(mod_le_pla3.name)
 
-        Module_layer_lv.placements.append(mod_ri_pla4.name)
-        Module_layer_lv.placements.append(mod_le_pla4.name)
+        Module_layer_lv1.placements.append(mod_ri_pla4.name)
+        Module_layer_lv2.placements.append(mod_le_pla4.name)
 
         #Place Layers into RMS vol
         Module_layers_thin = 40
         thinModlayer_pos = [geom.structure.Position('g')]*Module_layers_thin
-
-        thin_Modlayer_pla = [geom.structure.Placement('h',volume=Module_layer_lv,pos=thinModlayer_pos[1])]*Module_layers_thin
+        thin_Modlayer_pla = [geom.structure.Placement('h',volume=Module_layer_lv1,pos=thinModlayer_pos[1])]*Module_layers_thin
+        # thin_Modlayer_pla2 = [geom.structure.Placement('k',volume=Module_layer_lv2,pos=thinModlayer_pos[2])]*Module_layers_thin
 
         for module in range(Module_layers_thin):
             zpos = -Q("3.4645m") -Q("0.0275m") + module * Q("0.055m")
@@ -248,7 +249,11 @@ class tmsBuilder(gegede.builder.Builder):
                                                            x = xpos_planes,
                                                            y = ypos_planes,
                                                            z = zpos)
-            thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv, pos=thinModlayer_pos[module] )
+            if module % 2 == 0 :
+               thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thinModlayer_pos[module] )
+
+            else:
+                thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thinModlayer_pos[module] )
             tms_lv.placements.append(thin_Modlayer_pla[module].name)
 
 
@@ -256,23 +261,20 @@ class tmsBuilder(gegede.builder.Builder):
         Module_layers_thick = 60
         thickModlayer_pos = [geom.structure.Position('i')]*Module_layers_thick
 
-        thick_Modlayer_pla = [geom.structure.Placement('j',volume=Module_layer_lv,pos=thickModlayer_pos[1])]*Module_layers_thick
-            
+        thick_Modlayer_pla = [geom.structure.Placement('j',volume=Module_layer_lv1,pos=thickModlayer_pos[1])]*Module_layers_thick
+        #thick_Modlayer_pla2 = [geom.structure.Placement('l',volume=Module_layer_lv2,pos=thickModlayer_pos[2])]*Module_layers_thick    
         for module in range(0,Module_layers_thick):
             zpos = -Q("1.292m") + Q("0.025m")  + module * Q("0.08m") # subtract 0.015m from zpos=-Q("1.292m")+Q("0.040m")
-
             thickModlayer_pos[module] = geom.structure.Position( 'thickModlayerposition'+str(module),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
                                                            z = zpos)
-            thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv, pos=thickModlayer_pos[module] )
+            if module % 2 == 0 :
+                 thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thickModlayer_pos[module] )
+                
+            else:             
+                thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thickModlayer_pos[module] )
             tms_lv.placements.append(thick_Modlayer_pla[module].name)
-
-
-
-
-
-
 
         #Add TMS to self
         self.add_volume(tms_lv)    

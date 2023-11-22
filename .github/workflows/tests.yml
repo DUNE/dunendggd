@@ -1,0 +1,51 @@
+name: Automated tests
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    name: Build default geometry
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup gegede
+      run: pip install git+https://github.com/brettviren/gegede.git@86ca28190516a23203cd883aafb0548a61664ceb
+    - name: Setup
+      run: pip install .
+    - name: Build defaul gdml
+      run: ./build_hall.sh
+    - name: Upload default geometry
+      uses: actions/upload-artifact@v3
+      with:
+        name: Default Geometry
+        path: |
+          nd_hall_with_lar_tms_sand.gdml
+          anti_fiducial_nd_hall_with_lar_tms_sand.gdml
+  check_overlaps:
+    name: Check geometry for overlaps
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install ROOT
+      run: sudo snap install root-framework
+    - name: Download default geometry
+      uses: actions/download-artifact@v3.0.1
+      with:
+        name: Default Geometry
+    - name: Debug artifact
+      run: |
+        ls -l
+        head nd_hall_with_lar_tms_sand.gdml
+    - name: Run standard overlap check
+      run: |
+        root -q -b 'checkOverlaps.C("nd_hall_with_lar_tms_sand.gdml", 0)' 2>&1 | tee check.log
+        grep "Number of illegal overlaps/extrusions : 0" check.log
+    - name: Run sampling overlap check
+      run: |
+        root -q -b 'checkOverlaps.C("nd_hall_with_lar_tms_sand.gdml", 1)' 2>&1 | tee check.log
+        grep "Number of illegal overlaps/extrusions : 0" check.log

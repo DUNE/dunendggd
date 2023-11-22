@@ -167,6 +167,14 @@ def define_materials( g ):
                                            ("CO2",    0.3),
                                            ("argon",  0.7)                                    
                                        ))
+    # DriftChamber Gas : Ar/CO2 85/15 at 1 atm + 10mbar = 1.01 atm
+
+    fracCO2_drift = 0.15
+    fracAr_drift  = 1 - fracCO2_drift
+    dGasDrift = (fracCO2_drift * densCO2 + fracAr_drift * densAr) * 1.01
+    dGasDrift = str(dGasDrift)+"*g/cc"
+    driftGas = g.matter.Mixture("driftGas", density = dGasDrift, components = (("CO2",fracCO2_drift),("argon",fracAr_drift)))
+
     # Materials for the targets and st planes following
     H2O      = g.matter.Molecule("Water",       density="1.0*kg/l",   elements=(("oxygen",1),("hydrogen",2)))
     ArTarget = g.matter.Molecule("ArgonTarget", density="0.2297*g/cc", elements=(("argon",1),))

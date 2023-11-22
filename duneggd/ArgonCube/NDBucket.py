@@ -93,9 +93,11 @@ class NDBucketBuilder(gegede.builder.Builder):
 
         Backplate_y = -self.Bucket_dy + (self.InnerDetector_builder.halfDimension['dy'] + self.Backplate_ExtraY)
 
+        FieldcageGap = Q('8.89mm')/2
+
         for i, (side, sign) in enumerate((('L', -1), ('R', 1))):
             pos = [
-                sign*(self.Bucket_dx-2*self.Backplate_OffsetX+self.Backplate_dx),
+                sign*(self.Bucket_dx-Q('5mm')/2-self.Backplate_dx-2*FieldcageGap),
                 Backplate_y,
                 Q('0cm')
             ]
@@ -139,8 +141,6 @@ class NDBucketBuilder(gegede.builder.Builder):
 
             ArgonColumn_lv.placements.append(FieldcageTop_pla.name)
 
-        # G10 gap fillers connecting backplate to fieldcage
-        FieldcageGap = (self.Bucket_dx - self.InnerDetector_builder.halfDimension['dx']) / 2 - self.Backplate_dx * 3/2
 
         FieldcageGap_shape = geom.shapes.Box('FieldcageGap_shape',
                                        dx=FieldcageGap,
@@ -153,7 +153,7 @@ class NDBucketBuilder(gegede.builder.Builder):
 
 
 
-        px = self.InnerDetector_builder.halfDimension['dx'] + FieldcageGap
+        px = self.Bucket_dx-Q('5mm')/2-FieldcageGap
         py = Backplate_y
         pz = self.InnerDetector_builder.halfDimension['dz'] - self.HalfDetector_builder.Fieldcage_dd
 
