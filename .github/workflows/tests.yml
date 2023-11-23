@@ -52,6 +52,7 @@ jobs:
   put_online:
     name: Put geometries online for visual inspection
     runs-on: ubuntu-latest
+    needs: build
     steps:
     - uses: actions/checkout@v3
     - name: Install ROOT
