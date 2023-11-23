@@ -49,3 +49,31 @@ jobs:
       run: |
         root -q -b 'checkOverlaps.C("nd_hall_with_lar_tms_sand.gdml", 1)' 2>&1 | tee check.log
         grep "Number of illegal overlaps/extrusions : 0" check.log
+  put_online:
+    name: Put geometries online for visual inspection
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install ROOT
+      run: sudo snap install root-framework
+    - name: Download default geometry
+      uses: actions/download-artifact@v3.0.1
+      with:
+        name: Default Geometry
+    - name: Convert gdml files to root
+      run: |
+        for F in *.gdml
+        do
+          root "gdml2root.C(\"$F\", \"jsroot/${F%.gdml}.root\")"
+        done
+    - name: Replace heading in html
+      run: |
+        sed -i -e "s|master|$GITHUB_REF_NAME|" jsroot/index.htm
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v2
+      with:
+        # Upload jsroot folder
+        path: 'jsroot'
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v2
