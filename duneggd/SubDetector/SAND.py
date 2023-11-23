@@ -363,11 +363,11 @@ class SANDBuilder(gegede.builder.Builder):
 
     def build_ecal(self, main_lv, geom):
         
-        if "SANDECALEC" not in self.builders:
-            print("SANDECALEC builder not found")
+        if "SANDECAL" not in self.builders:
+            print("SANDECAL builder not found")
             return            
 
-        emcalo_builder=self.get_builder("SANDECALEC")
+        emcalo_builder=self.get_builder("SANDECAL")
         emcalo_lv=emcalo_builder.get_volume()
         
         #BField="(%f T, 0.0 T, 0.0 T)"%(-self.CentralBField/Q("1.0T"))
