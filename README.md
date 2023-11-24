@@ -57,6 +57,14 @@ To do a quick check or your geometry file you can use ROOT-CERN:
 root -l 'geoDisplay.C("example.gdml")'
 ```
 
+# Online Visualization
+
+You can also use the JSROOT webpage on https://dune.github.io/dunendggd/ to
+visualize a geometry. That page should already contain the default geometries
+from the last CI test, but you can also upload root files containing geometries
+yourself. You can use the `gdml2root.C` macro to convert gdml files to root
+files.
+
 # Contact
 - **dunendggd:** Package managers
   - Lukas Koch
