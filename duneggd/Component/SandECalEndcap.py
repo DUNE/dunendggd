@@ -34,7 +34,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
         KLOEEndcapECALDepth = self.EndcapDim[2]
         KLOEEndcapCurvRadius = self.EndcapDim[3]
         KLOEEndcapStraight = self.EndcapDim[4]
-	KLOECellWidth = self.EndcapDim[5]
+        KLOECellWidth = self.EndcapDim[5]
         KLOEEndcapModDy = self.EndcapModDim
         AlPlateThick = self.BackPlateThick
         ColPerMod = 6
