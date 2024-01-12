@@ -15,7 +15,7 @@ class SandECalBarrelModBuilder(gegede.builder.Builder):
 		  PasSlabThickness=None,
 		  ActiveSlabThickness=None,
 		  nSlabs=None,
-                  BackPlateThick=None,
+          BackPlateThick=None,
 		  **kwds):
         self.trapezoidDim = trapezoidDim
         self.ScintMat = ScintMat
