@@ -15,6 +15,7 @@ class SandECalBarrelModBuilder(gegede.builder.Builder):
 		  PasSlabThickness=None,
 		  ActiveSlabThickness=None,
 		  nSlabs=None,
+                  BackPlateThick=None,
 		  **kwds):
         self.trapezoidDim = trapezoidDim
         self.ScintMat = ScintMat
@@ -22,31 +23,52 @@ class SandECalBarrelModBuilder(gegede.builder.Builder):
         self.PasSlabThickness = PasSlabThickness
         self.ActiveSlabThickness = ActiveSlabThickness
         self.nSlabs = nSlabs
+        self.BackPlateThick = BackPlateThick
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
     def construct(self, geom):
 
+        AlPlateThick = self.BackPlateThick
+
         ECAL_shape = geom.shapes.Trapezoid('ECAL_shape',
 					   dx1=self.trapezoidDim[0],
-					   dx2=self.trapezoidDim[1],
+					   dx2=self.trapezoidDim[1]+Q('0.33cm'),
 					   dy1=self.trapezoidDim[2],
 					   dy2=self.trapezoidDim[2],
-					   dz=self.trapezoidDim[3])
+					   dz=self.trapezoidDim[3]+AlPlateThick/2.)
 
         ECAL_lv = geom.structure.Volume('ECAL_lv', material='Air', shape=ECAL_shape)
         self.add_volume(ECAL_lv)
 #       ECAL_position = geom.structure.Position('ECAL_position', Position[0], Position[1], Position[2])
 #       ECAL_place = geom.structure.Placement('ECAL_place', volume = ECAL_lv, pos=ECAL_position)
 
+            ######## Aluminum back plate##################
+
+        ECAL_Alplate_shape = geom.shapes.Box('ECAL_Alplate_shape',
+                                           dx = self.trapezoidDim[1],
+                                           dy = self.trapezoidDim[2],
+                                           dz = AlPlateThick/2.)
+      
+        ECAL_Alplate_lv = geom.structure.Volume('ECAL_Alplate_lv', material = 'Aluminum', 
+                                              shape = ECAL_Alplate_shape)
+      
+        ECAL_Alplate_pos = geom.structure.Position('ECAL_Alplate_pos', Q('0cm'), Q('0cm'),
+                                                   self.trapezoidDim[3])
+      
+        ECAL_Alplate_place = geom.structure.Placement('ECAL_Alplate_place', 
+                                                    volume = ECAL_Alplate_lv, pos = ECAL_Alplate_pos)
+      
+        ECAL_lv.placements.append(ECAL_Alplate_place.name)
+
         for i in range(self.nSlabs): #nSlabs
             #tan = math.tan(math.pi/self.Segmentation)
             tan = 0.5*(self.trapezoidDim[1] - self.trapezoidDim[0])/self.trapezoidDim[3]
             xposSlab=Q('0cm')
             yposSlab=Q('0cm')
-            zposSlabActive = (-self.trapezoidDim[3] +
+            zposSlabActive = (-self.trapezoidDim[3]-AlPlateThick/2. +
 		             (i+0.5)*self.ActiveSlabThickness +
                              i*self.PasSlabThickness)
             #print("active slab position= "+ str(zposSlabActive))
-            zposSlabPassive = (-self.trapezoidDim[3] +
+            zposSlabPassive = (-self.trapezoidDim[3]-AlPlateThick/2. +
                               (i+1.)*self.ActiveSlabThickness +
                               (i+0.5)*self.PasSlabThickness)
             #print("passive slab position= "+ str(zposSlabPassive))

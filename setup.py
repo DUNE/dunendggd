@@ -12,7 +12,7 @@ setup(name = 'dunendggd',
       install_requires = [
         "gegede >= 0.6.1",    # In reality we need the '0.7' tag, but its setup.py still reports itself as 0.6.1
         "pint >= 0.5.1",      # for units
-        "lxml >= 3.3.5",      # for GDML export],
+        "lxml >= 3.3.5",      # for GDML export
       ],
   )
 
