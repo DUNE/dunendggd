@@ -10,13 +10,13 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
     def configure(self, 
 		  EndcapDim=None, 
-                  EndcapModDim=None,
+          EndcapModDim=None,
 		  ActiveMat=None, 
 		  PasMat=None, 
 		  PasSlabThickness=None, 
 		  ActiveSlabThickness=None, 
 		  nSlabs=None, 
-                  BackPlateThick=None,
+          BackPlateThick=None,
 		  **kwds):
         self.EndcapDim = EndcapDim
         self.EndcapModDim = EndcapModDim
@@ -30,7 +30,6 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
     def construct(self, geom):
         
         rmax_ec = self.EndcapDim[0]
-        KLOEEndcapZ =  self.EndcapDim[1]
         KLOEEndcapECALDepth = self.EndcapDim[2]
         KLOEEndcapCurvRadius = self.EndcapDim[3]
         KLOEEndcapStraight = self.EndcapDim[4]
@@ -51,29 +50,25 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
 
         ECAL_endcap_lv = geom.structure.Volume('ECAL_endcap_lv', material='Air', shape=ECAL_endcap_shape)
         self.add_volume(ECAL_endcap_lv)
-
-#        ZPosMod = -(KLOEEndcapCurvRadius + KLOEEndcapStraight)/2.
+        
         ZPosMod = (-ECTubsSize+KLOEEndcapECALDepth)/2.
 
         for mod in range(0,16):
             print(("Building ECAL Endcap Module "+str(mod)))
+            
+            # width of the module
             if(mod > 1 and mod < 12):
                 ColPerMod = 3
             elif (mod > 11):
                 ColPerMod = 2
-
+                
+            # y position of the module
             if(mod < 2):
                 YPosMod = Q('111.35cm')
             else:
                 YPosMod = Q('0cm')
 
-            ECAL_end_main_shape = geom.shapes.Box('ECAL_mod_'+str(mod)+'_shape',
-                                     dx=KLOECellWidth*ColPerMod/2.,
-                                     dy=KLOEEndcapModDy[mod],
-                                     dz=KLOEEndcapECALDepth / 2.0)
-
-            ECAL_end_main_lv = geom.structure.Volume('ECAL_end_main_'+str(mod)+'_lv', material='Air', shape=ECAL_end_main_shape)
-
+            # x position of the module
             if(mod == 2):
                 XPosMod += KLOECellWidth*4.5
             elif(mod == 12):
@@ -81,39 +76,47 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
             elif(mod > 0):
                 XPosMod += KLOECellWidth*ColPerMod
 
-            ECAL_end_main_Pos = geom.structure.Position(
-                    'ECAL_end_main_'+str(mod)+'_pos',
-                    XPosMod, YPosMod, ZPosMod)
+            # create endcap module vertical part volume
+            ECAL_ec_mod_vert_shape = geom.shapes.Box('ECAL_mod_'+str(mod)+'_shape',
+                                     dx=KLOECellWidth*ColPerMod/2.,
+                                     dy=KLOEEndcapModDy[mod],
+                                     dz=0.5*(KLOEEndcapECALDepth + AlPlateThick))
 
-            ECAL_end_main_Rot = geom.structure.Rotation('ECAL_end_main_'+str(mod)+'_rot',
+            ECAL_ec_mod_vert_lv = geom.structure.Volume('ECAL_ec_mod_vert_'+str(mod)+'_lv', material='Air', shape=ECAL_ec_mod_vert_shape)
+
+            # arrange the vertical part volume
+            ECAL_ec_mod_vert_pos = geom.structure.Position(
+                    'ECAL_ec_mod_vert_'+str(mod)+'_pos',
+                    XPosMod, YPosMod, ZPosMod + 0.5*AlPlateThick)
+
+            ECAL_ec_mod_vert_rot = geom.structure.Rotation('ECAL_ec_mod_vert_'+str(mod)+'_rot',
                                                 Q('0deg'),Q('180deg'),Q('0deg'))
 
-            ECAL_end_main_Place = geom.structure.Placement(
-                    'ECAL_end_main_'+str(mod)+'_pla',
-                    volume=ECAL_end_main_lv,
-                    pos=ECAL_end_main_Pos,
-                    rot=ECAL_end_main_Rot) 
+            ECAL_ec_mod_vert_pla = geom.structure.Placement(
+                    'ECAL_ec_mod_vert_'+str(mod)+'_pla',
+                    volume=ECAL_ec_mod_vert_lv,
+                    pos=ECAL_ec_mod_vert_pos,
+                    rot=ECAL_ec_mod_vert_rot) 
 
-            ECAL_endcap_lv.placements.append(ECAL_end_main_Place.name )
+            ECAL_endcap_lv.placements.append(ECAL_ec_mod_vert_pla.name )
 
            ##########creating the Aluminium plate for the endcap modules##########
 
-            ECAL_end_Alplate_Shape = geom.shapes.Box('endECALAlplate_'+str(mod),
+            ECAL_end_Alplate_shape = geom.shapes.Box('endECALAlplate_'+str(mod),
                                                      dx = KLOECellWidth*ColPerMod/2.,
                                                      dy = KLOEEndcapModDy[mod],
                                                      dz = AlPlateThick/2.)
 
             ECAL_end_Alplate_lv = geom.structure.Volume('endvolECALAlplate_'+str(mod),
-                                                        material = 'Aluminum', shape = ECAL_end_Alplate_Shape)
+                                                        material = 'Aluminum', shape = ECAL_end_Alplate_shape)
 
-            ECAL_end_Alplate_Pos = geom.structure.Position('endECALAlplatepos_'+str(mod),
-                                                           XPosMod, YPosMod, ZPosMod+KLOEEndcapECALDepth/2.
-                                                                                          +AlPlateThick/2.)
+            ECAL_end_Alplate_pos = geom.structure.Position('endECALAlplatepos_'+str(mod),
+                                                          Q('0.0cm'), Q('0.0cm'), 0.5*KLOEEndcapECALDepth)
 
-            ECAL_end_Alplate_Place = geom.structure.Placement('endECALAlplatepla_'+str(mod),
-                                                              volume = ECAL_end_Alplate_lv, pos = ECAL_end_Alplate_Pos)
+            ECAL_end_Alplate_pla = geom.structure.Placement('endECALAlplatepla_'+str(mod),
+                                                              volume = ECAL_end_Alplate_lv, pos = ECAL_end_Alplate_pos)
 
-            ECAL_endcap_lv.placements.append( ECAL_end_Alplate_Place.name)
+            ECAL_ec_mod_vert_lv.placements.append( ECAL_end_Alplate_pla.name)
  
             ###########################################
 
@@ -153,7 +156,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
                     volume=endECALActiveSlab_lv,
                     pos=endECALActiveSlabPos)
 
-                ECAL_end_main_lv.placements.append( endECALActiveSlabPlace.name )
+                ECAL_ec_mod_vert_lv.placements.append( endECALActiveSlabPlace.name )
             
                 ##########creating and appending passive slabs to the ECAL endcap##########
 
@@ -177,36 +180,36 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
                     volume=endECALPassiveSlab_lv,
                     pos=endECALPassiveSlabPos) 
 
-                ECAL_end_main_lv.placements.append( endECALPassiveSlabPlace.name )
+                ECAL_ec_mod_vert_lv.placements.append( endECALPassiveSlabPlace.name )
 
            ##########creating and appending the curved part to the ECAL endcap##########
 
-            ECAL_end_curv_shape = geom.shapes.Tubs('ECAL_end_curv_'+str(mod)+'_shape',
-                                              rmin = KLOEEndcapCurvRadius,
+            ECAL_ec_mod_curv_shape = geom.shapes.Tubs('ECAL_ec_mod_curv_'+str(mod)+'_shape',
+                                              rmin = KLOEEndcapCurvRadius - AlPlateThick,
                                               rmax = KLOEEndcapCurvRadius + KLOEEndcapECALDepth, 
                                               dz = KLOECellWidth*ColPerMod/2.,
                                               sphi = math.pi/2.,
                                               dphi = math.pi/2.)
 
-            ECAL_end_curv_lv = geom.structure.Volume('ECAL_end_curv_'+str(mod)+'_lv', material='Air', shape=ECAL_end_curv_shape)
+            ECAL_ec_mod_curv_lv = geom.structure.Volume('ECAL_ec_mod_curv_'+str(mod)+'_lv', material='Air', shape=ECAL_ec_mod_curv_shape)
 
             Curv_y_pos = KLOEEndcapModDy[mod] + YPosMod
             Curv_z_pos = ZPosMod+KLOEEndcapECALDepth/2.+KLOEEndcapCurvRadius
 
-            ECAL_end_curv_top_Pos = geom.structure.Position(
-                    'ECAL_end_curv_'+str(mod)+'_top_pos',
+            ECAL_ec_mod_curv_top_pos = geom.structure.Position(
+                    'ECAL_ec_mod_curv_'+str(mod)+'_top_pos',
                     XPosMod, Curv_y_pos, Curv_z_pos)
 
-            ECAL_end_curv_top_Rot = geom.structure.Rotation('ECAL_end_curv_'+str(mod)+'_top_rot',
+            ECAL_ec_mod_curv_top_rot = geom.structure.Rotation('ECAL_ec_mod_curv_'+str(mod)+'_top_rot',
                                                 Q('0deg'),Q('90deg'),Q('0deg'))
 
-            ECAL_end_curv_top_Place = geom.structure.Placement(
-                    'ECAL_end_curv_'+str(mod)+'_top_pla',
-                    volume=ECAL_end_curv_lv,
-                    pos=ECAL_end_curv_top_Pos,
-                    rot=ECAL_end_curv_top_Rot) 
+            ECAL_ec_mod_curv_top_pla = geom.structure.Placement(
+                    'ECAL_ec_mod_curv_'+str(mod)+'_top_pla',
+                    volume=ECAL_ec_mod_curv_lv,
+                    pos=ECAL_ec_mod_curv_top_pos,
+                    rot=ECAL_ec_mod_curv_top_rot) 
 
-            ECAL_endcap_lv.placements.append(ECAL_end_curv_top_Place.name )
+            ECAL_endcap_lv.placements.append(ECAL_ec_mod_curv_top_pla.name )
         
             if(mod < 2):
                 Curv_y_bottom = -KLOEEndcapModDy[mod] + YPosMod
@@ -215,58 +218,44 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
 
             print(("Curv_y_bottom ="+str(Curv_y_bottom)))
 
-            ECAL_end_curv_bot_Pos = geom.structure.Position(
-                    'ECAL_end_curv_'+str(mod)+'_bot_pos',
+            ECAL_ec_mod_curv_bot_pos = geom.structure.Position(
+                    'ECAL_ec_mod_curv_'+str(mod)+'_bot_pos',
                     XPosMod, Curv_y_bottom, Curv_z_pos)
 
-            ECAL_end_curv_bot_Rot = geom.structure.Rotation('ECAL_end_curv_'+str(mod)+'_bot_rot',
+            ECAL_ec_mod_curv_bot_rot = geom.structure.Rotation('ECAL_ec_mod_curv_'+str(mod)+'_bot_rot',
                                                 Q('90deg'),Q('90deg'),Q('0deg'))
  
-            ECAL_end_curv_bot_Place = geom.structure.Placement(
-                    'ECAL_end_curv_'+str(mod)+'_bot_pla',
-                    volume=ECAL_end_curv_lv,
-                    pos=ECAL_end_curv_bot_Pos,
-                    rot=ECAL_end_curv_bot_Rot) 
+            ECAL_ec_mod_curv_bot_pla = geom.structure.Placement(
+                    'ECAL_ec_mod_curv_'+str(mod)+'_bot_pla',
+                    volume=ECAL_ec_mod_curv_lv,
+                    pos=ECAL_ec_mod_curv_bot_pos,
+                    rot=ECAL_ec_mod_curv_bot_rot) 
 
-            ECAL_endcap_lv.placements.append(ECAL_end_curv_bot_Place.name )
+            ECAL_endcap_lv.placements.append(ECAL_ec_mod_curv_bot_pla.name )
       
            ##########Aluminium plate for the endcap curved part##########
 
-            ECAL_end_Curv_Alplate_Shape = geom.shapes.Tubs('ECAL_end_curv_Alplate_'+str(mod),
+            ECAL_ec_mod_curv_Alplate_shape = geom.shapes.Tubs('ECAL_ec_mod_curv_Alplate_'+str(mod),
                                                            rmin = KLOEEndcapCurvRadius-AlPlateThick,
                                                            rmax = KLOEEndcapCurvRadius, 
                                                            dz = KLOECellWidth*ColPerMod/2.,
                                                            sphi = math.pi/2.,
                                                            dphi = math.pi/2.)
 
-            ECAL_end_Curv_Alplate_lv = geom.structure.Volume('ECAL_end_curv_Alplate_'+str(mod)+'_lv', 
-                                                             material = 'Aluminum', shape = ECAL_end_Curv_Alplate_Shape)
+            ECAL_ec_mod_curv_Alplate_lv = geom.structure.Volume('ECAL_ec_mod_curv_Alplate_'+str(mod)+'_lv', 
+                                                             material = 'Aluminum', shape = ECAL_ec_mod_curv_Alplate_shape)
 
-            ECAL_end_Curv_Alplate_top_Pos = geom.structure.Position('ECAL_end_curv_Alplate_'+str(mod)+'_top_pos', 
-                                                            XPosMod, Curv_y_pos, ZPosMod+KLOEEndcapECALDepth/2.
-                                                                                          +KLOEEndcapCurvRadius)
+            ECAL_ec_mod_curv_Alplate_pos = geom.structure.Position('ECAL_ec_mod_curv_Alplate_'+str(mod)+'_pos', 
+                                                            Q('0.0cm'),Q('0.0cm'),Q('0.0cm'))
 
-            ECAL_end_Curv_Alplate_top_Rot = geom.structure.Rotation('ECAL_end_curv_Alplate_'+str(mod)+'_top_rot',
-                                                            Q('0deg'),Q('90deg'),Q('0deg'))
+            ECAL_ec_mod_curv_Alplate_rot = geom.structure.Rotation('ECAL_ec_mod_curv_Alplate_'+str(mod)+'_rot',
+                                                            Q('0deg'),Q('0deg'),Q('0deg'))
 
-            ECAL_end_Curv_Alplate_top_Place = geom.structure.Placement('ECAL_end_curv_Alplate_'+str(mod)+'_top_pla',
-                                                                        volume = ECAL_end_Curv_Alplate_lv, pos = ECAL_end_Curv_Alplate_top_Pos, 
-                                                                        rot = ECAL_end_Curv_Alplate_top_Rot)
+            ECAL_ec_mod_curv_Alplate_pla = geom.structure.Placement('ECAL_ec_mod_curv_Alplate_'+str(mod)+'_pla',
+                                                                        volume = ECAL_ec_mod_curv_Alplate_lv, pos = ECAL_ec_mod_curv_Alplate_pos, 
+                                                                        rot = ECAL_ec_mod_curv_Alplate_rot)
 
-            ECAL_endcap_lv.placements.append(ECAL_end_Curv_Alplate_top_Place.name)
-
-            ECAL_end_Curv_Alplate_bot_Pos = geom.structure.Position('ECAL_end_curv_Alplate_'+str(mod)+'_bot_pos', 
-                                                            XPosMod, Curv_y_bottom, ZPosMod+KLOEEndcapECALDepth/2.
-                                                                                          +KLOEEndcapCurvRadius)
-
-            ECAL_end_Curv_Alplate_bot_Rot = geom.structure.Rotation('ECAL_end_curv_Alplate_'+str(mod)+'_bot_rot',
-                                                Q('90deg'),Q('90deg'),Q('0deg'))
-
-            ECAL_end_Curv_Alplate_bot_Place = geom.structure.Placement('ECAL_end_curv_Alplate_'+str(mod)+'_bot_pla',
-                                                                        volume = ECAL_end_Curv_Alplate_lv, pos = ECAL_end_Curv_Alplate_bot_Pos, 
-                                                                        rot = ECAL_end_Curv_Alplate_bot_Rot)
-
-            ECAL_endcap_lv.placements.append(ECAL_end_Curv_Alplate_bot_Place.name)
+            ECAL_ec_mod_curv_lv.placements.append(ECAL_ec_mod_curv_Alplate_pla.name)
 
             ################
 
@@ -318,7 +307,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
                     volume=endECALcurvActiveSlab_lv,
                     pos=endECALcurvActiveSlabPos)
 
-                ECAL_end_curv_lv.placements.append( endECALcurvActiveSlabPlace.name )
+                ECAL_ec_mod_curv_lv.placements.append( endECALcurvActiveSlabPlace.name )
             
                 ##########creating and appending passive slabs to the ECAL endcap##########
 
@@ -344,99 +333,80 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
                     volume=endECALcurvPassiveSlab_lv,
                     pos=endECALcurvPassiveSlabPos) 
 
-                ECAL_end_curv_lv.placements.append( endECALcurvPassiveSlabPlace.name )
+                ECAL_ec_mod_curv_lv.placements.append( endECALcurvPassiveSlabPlace.name )
  
             ##########creating and appending the short strtaight part to the ECAL endcap##########
 
-            ECAL_end_straight_shape = geom.shapes.Box('ECAL_end_straight_'+str(mod)+'_shape',
+            ECAL_ec_mod_hor_shape = geom.shapes.Box('ECAL_ec_mod_hor_'+str(mod)+'_shape',
                                      dx=KLOECellWidth*ColPerMod/2.,
                                      dy=KLOEEndcapStraight/2.,
-                                     dz=KLOEEndcapECALDepth / 2.0)
+                                     dz=0.5*(KLOEEndcapECALDepth + AlPlateThick))
 
-            ECAL_end_straight_lv = geom.structure.Volume('ECAL_end_straight_'+str(mod)+'_lv', material='Air', shape=ECAL_end_straight_shape)
+            ECAL_ec_mod_hor_lv = geom.structure.Volume('ECAL_ec_mod_hor_'+str(mod)+'_lv', material='Air', shape=ECAL_ec_mod_hor_shape)
 
-            Straight_y_pos = Curv_y_pos + KLOEEndcapCurvRadius+KLOEEndcapECALDepth/2.
+            Straight_y_pos = Curv_y_pos + KLOEEndcapCurvRadius + 0.5*(KLOEEndcapECALDepth - AlPlateThick)
             Straight_z_pos = Curv_z_pos + KLOEEndcapStraight/2.
 
-            ECAL_end_straight_top_Pos = geom.structure.Position('ECAL_end_straight_'+str(mod)+'_top_pos',
+            ECAL_ec_mod_hor_top_pos = geom.structure.Position('ECAL_ec_mod_hor_'+str(mod)+'_top_pos',
                                                     XPosMod,
-						    Straight_y_pos,
+						                            Straight_y_pos,
                                                     Straight_z_pos)
 
-            ECAL_end_straight_top_Rot = geom.structure.Rotation('ECAL_end_straight_'+str(mod)+'_top_rot',
+            ECAL_ec_mod_hor_top_rot = geom.structure.Rotation('ECAL_ec_mod_hor_'+str(mod)+'_top_rot',
                                                 Q('90deg'),Q('0deg'),Q('0deg'))
 
-            ECAL_end_straight_top_Place = geom.structure.Placement(
-                     'ECAL_end_straight_'+str(mod)+'_top_pla',
-                    volume=ECAL_end_straight_lv,
-                    pos=ECAL_end_straight_top_Pos,
-                    rot=ECAL_end_straight_top_Rot) 
+            ECAL_ec_mod_hor_top_pla = geom.structure.Placement(
+                     'ECAL_ec_mod_hor_'+str(mod)+'_top_pla',
+                    volume=ECAL_ec_mod_hor_lv,
+                    pos=ECAL_ec_mod_hor_top_pos,
+                    rot=ECAL_ec_mod_hor_top_rot) 
 
-            ECAL_endcap_lv.placements.append(ECAL_end_straight_top_Place.name )
+            ECAL_endcap_lv.placements.append(ECAL_ec_mod_hor_top_pla.name )
 
             if(mod > 1):
-                ECAL_end_straight_bot_Pos = geom.structure.Position('ECAL_end_straight_'+str(mod)+'_bot_pos',
+                ECAL_ec_mod_hor_bot_pos = geom.structure.Position('ECAL_ec_mod_hor_'+str(mod)+'_bot_pos',
                                                     XPosMod,
-						    -Straight_y_pos,
+						                            -Straight_y_pos,
                                                     Straight_z_pos)
 
-                ECAL_end_straight_bot_Rot = geom.structure.Rotation('ECAL_end_straight_'+str(mod)+'_bot_rot',
+                ECAL_ec_mod_hor_bot_rot = geom.structure.Rotation('ECAL_ec_mod_hor_'+str(mod)+'_bot_rot',
                                                 Q('-90deg'),Q('0deg'),Q('0deg'))
 
-                ECAL_end_straight_bot_Place = geom.structure.Placement(
-                     'ECAL_end_straight_'+str(mod)+'_bot_pla',
-                    volume=ECAL_end_straight_lv,
-                    pos=ECAL_end_straight_bot_Pos,
-                    rot=ECAL_end_straight_bot_Rot) 
+                ECAL_ec_mod_hor_bot_pla = geom.structure.Placement(
+                     'ECAL_ec_mod_hor_'+str(mod)+'_bot_pla',
+                    volume=ECAL_ec_mod_hor_lv,
+                    pos=ECAL_ec_mod_hor_bot_pos,
+                    rot=ECAL_ec_mod_hor_bot_rot) 
 
-                ECAL_endcap_lv.placements.append(ECAL_end_straight_bot_Place.name )
+                ECAL_endcap_lv.placements.append(ECAL_ec_mod_hor_bot_pla.name )
 
              ##########Aluminium plate for the endcap short straight part##########
 
-            ECAL_end_straight_Alplate_Shape = geom.shapes.Box(
-                'ECAL_end_straight_Alplate_'+str(mod)+'_shape', 
+            ECAL_ec_mod_hor_Alplate_shape = geom.shapes.Box(
+                'ECAL_ec_mod_hor_Alplate_'+str(mod)+'_shape', 
                 dx = KLOECellWidth*ColPerMod/2., dy=KLOEEndcapStraight/2., 
                 dz = AlPlateThick/2.)
 
-            ECAL_end_straight_Alplate_lv = geom.structure.Volume(
-                'ECAL_end_straight_Alplate_'+str(mod)+'_lv', 
-                material = 'Aluminum', shape = ECAL_end_straight_Alplate_Shape)
+            ECAL_ec_mod_hor_Alplate_lv = geom.structure.Volume(
+                'ECAL_ec_mod_hor_Alplate_'+str(mod)+'_lv', 
+                material = 'Aluminum', shape = ECAL_ec_mod_hor_Alplate_shape)
 
-            ECAL_end_straight_Alplate_top_Pos = geom.structure.Position(
-                'ECAL_end_straight_Alplate_'+str(mod)+'_top_pos', 
-                XPosMod, Straight_y_pos-KLOEEndcapECALDepth/2.-AlPlateThick/2., 
-                Straight_z_pos)
+            ECAL_ec_mod_hor_Alplate_pos = geom.structure.Position(
+                'ECAL_ec_mod_hor_Alplate_'+str(mod)+'_pos', 
+                XPosMod, 0.5*KLOEEndcapECALDepth, Straight_z_pos)
 
-            ECAL_end_straight_Alplate_top_Rot = geom.structure.Rotation(
-                'ECAL_end_straight_Alplate_'+str(mod)+'_top_rot',
+            ECAL_ec_mod_hor_Alplate_rot = geom.structure.Rotation(
+                'ECAL_ec_mod_hor_Alplate_'+str(mod)+'_rot',
                  Q('90deg'),Q('0deg'),Q('0deg'))
 
-            ECAL_end_straight_Alplate_top_Place = geom.structure.Placement(
-                'ECAL_end_straight_Alplate_'+str(mod)+'_top_pla',
-                volume = ECAL_end_straight_Alplate_lv, 
-                pos = ECAL_end_straight_Alplate_top_Pos, 
-                rot = ECAL_end_straight_Alplate_top_Rot)
+            ECAL_ec_mod_hor_Alplate_pla = geom.structure.Placement(
+                'ECAL_ec_mod_hor_Alplate_'+str(mod)+'_pla',
+                volume = ECAL_ec_mod_hor_Alplate_lv, 
+                pos = ECAL_ec_mod_hor_Alplate_pos, 
+                rot = ECAL_ec_mod_hor_Alplate_rot)
 
-            ECAL_endcap_lv.placements.append(ECAL_end_straight_Alplate_top_Place.name)
+            ECAL_endcap_lv.placements.append(ECAL_ec_mod_hor_Alplate_pla.name)
                
-            if(mod > 1):
-                ECAL_end_straight_Alplate_bot_Pos = geom.structure.Position(
-                    'ECAL_end_straight_Alplate_'+str(mod)+'_bot_pos',
-                    XPosMod, -(Straight_y_pos-KLOEEndcapECALDepth/2.-AlPlateThick/2.), 
-                    Straight_z_pos)
-
-                ECAL_end_straight_Alplate_bot_Rot = geom.structure.Rotation(
-                    'ECAL_end_straight_Alplate_'+str(mod)+'_bot_rot',
-                    Q('-90deg'),Q('0deg'),Q('0deg'))
-                
-                ECAL_end_straight_Alplate_bot_Place = geom.structure.Placement(
-                    'ECAL_end_straight_Alplate_'+str(mod)+'_bot_pla',
-                    volume = ECAL_end_straight_Alplate_lv, 
-                    pos = ECAL_end_straight_Alplate_bot_Pos, 
-                    rot = ECAL_end_straight_Alplate_bot_Rot)
-
-                ECAL_endcap_lv.placements.append(ECAL_end_straight_Alplate_bot_Place.name)
-
            ###########
 
             for i in range(self.nSlabs): #nSlabs
@@ -475,7 +445,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
                     volume=endECALstraightActiveSlab_lv,
                     pos=endECALstraightActiveSlabPos)
 
-                ECAL_end_straight_lv.placements.append( endECALstraightActiveSlabPlace.name )
+                ECAL_ec_mod_hor_lv.placements.append( endECALstraightActiveSlabPlace.name )
             
                 ##########creating and appending passive slabs to the ECAL endcap##########
 
@@ -499,5 +469,5 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
                     volume=endECALstraightPassiveSlab_lv,
                     pos=endECALstraightPassiveSlabPos) 
 
-                ECAL_end_straight_lv.placements.append( endECALstraightPassiveSlabPlace.name )
+                ECAL_ec_mod_hor_lv.placements.append( endECALstraightPassiveSlabPlace.name )
 
