@@ -11,7 +11,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
     def configure(self, 
 		  EndcapDim=None, 
           EndcapModDim=None,
-		  ActiveMat=None, 
+		  ScintMat=None, 
 		  PasMat=None, 
 		  PasSlabThickness=None, 
 		  ActiveSlabThickness=None, 
@@ -20,7 +20,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
 		  **kwds):
         self.EndcapDim = EndcapDim
         self.EndcapModDim = EndcapModDim
-        self.ActiveMat = ActiveMat
+        self.ScintMat = ScintMat
         self.PasMat = PasMat
         self.PasSlabThickness = PasSlabThickness
         self.ActiveSlabThickness = ActiveSlabThickness
@@ -230,7 +230,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
 
         endECALActiveSlab_lv = geom.structure.Volume(
             'endvolECALActiveSlab_' +str(mod),
-            material=self.ActiveMat,
+            material=self.ScintMat,
             shape=endECALActiveSlab)
         endECALActiveSlab_lv.params.append(("SensDet","EMCalSci"))
 
@@ -368,7 +368,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
 
             endECALcurvActiveSlab_lv = geom.structure.Volume(
                 'endvolECALcurvActiveSlab_' +str(mod)+ '_' + str(i),
-                material=self.ActiveMat,
+                material=self.ScintMat,
                 shape=endECALcurvActiveSlab)
             endECALcurvActiveSlab_lv.params.append(("SensDet","EMCalSci"))
 
@@ -461,7 +461,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
 
         endECALstraightActiveSlab_lv = geom.structure.Volume(
             'endvolECALstraightActiveSlab_' +str(mod),
-            material=self.ActiveMat,
+            material=self.ScintMat,
             shape=endECALstraightActiveSlab)
         endECALstraightActiveSlab_lv.params.append(("SensDet","EMCalSci"))
 
