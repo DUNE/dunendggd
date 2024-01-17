@@ -192,7 +192,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
                                                     pos=ECAL_ec_mod_hor_bot_pos1,
                                                     rot=ECAL_ec_mod_hor_bot_rot1)
             
-            ECAL_ec_mod_lv = geom.structure.Volume('ECAL_ec_mod_step1_'+str(mod)+'_lv', material='Air', shape=ECAL_ec_mod_shape)            
+            ECAL_ec_mod_lv = geom.structure.Volume('ECAL_ec_mod_'+str(mod)+'_lv', material='Air', shape=ECAL_ec_mod_shape)            
                 
             ###############################################################################
             ########## creating and appending the vertical part to the ECAL endcap ########
