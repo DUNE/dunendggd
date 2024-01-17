@@ -274,6 +274,23 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
                     rot=ECAL_ec_mod_rot) 
             
             ECAL_endcap_lv.placements.append(ECAL_ec_mod_pla.name )
+            
+            mod += 16
+            ECAL_ec_mod_pos = geom.structure.Position(
+                    'ECAL_ec_mod_'+str(mod)+'_pos',
+                    -XPosMod, -YPosMod, ZPosMod + 0.5*AlPlateThick)
+
+            ECAL_ec_mod_rot = geom.structure.Rotation('ECAL_ec_mod_'+str(mod)+'_rot',
+                                                Q('0deg'),Q('0deg'),Q('180deg'))
+
+            ECAL_ec_mod_pla = geom.structure.Placement(
+                    'ECAL_ec_mod_'+str(mod)+'_pla',
+                    volume=ECAL_ec_mod_lv,
+                    pos=ECAL_ec_mod_pos,
+                    rot=ECAL_ec_mod_rot)
+            
+            ECAL_endcap_lv.placements.append(ECAL_ec_mod_pla.name )
+                
 
     # create the vertical part of the ECAL endcap module
     def get_ec_module_vert(self, geom, mod, nCols):

@@ -69,10 +69,9 @@ class SandECalBuilder(gegede.builder.Builder):
                                         shape=calo_shape)
 
         self.add_volume(calo_lv)
-# Test 22/5/2023
+
         self.buildECALBarrel(calo_lv, geom)
-        self.buildECALEndCapA(calo_lv, geom)
-        self.buildECALEndCapB(calo_lv, geom)
+        self.buildECALEndCaps(calo_lv, geom)
 
     def buildECALBarrel(self, main_lv, geom):
 
@@ -128,11 +127,10 @@ class SandECalBuilder(gegede.builder.Builder):
                                                   volume=emcalo_module_lv,
                                                   pos=ECAL_position,
                                                   rot=ECAL_rotation)
+            
             main_lv.placements.append(ECAL_place.name)
 
-            ################################################
-
-    def buildECALEndCapA(self, main_lv, geom):
+    def buildECALEndCaps(self, main_lv, geom):
 
         # Real ENDCAP as 32 modules of different length and widht
         # curved at both ends by 90 degrees
@@ -144,73 +142,32 @@ class SandECalBuilder(gegede.builder.Builder):
         emcalo_endcap_builder = self.get_builder("SANDECALENDCAP")
         emcalo_endcap_lv = emcalo_endcap_builder.get_volume()
 
-        for quarter in range (0,2):
+        pos = [Q('0m'), Q('0m'), Q('0m')]
+        pos[2] = -(self.EndcapZ + (self.caloThickness + self.ECCurvRad + self.ECStraight) / 2.0)
+        
+        ECAL_endA_rotation = geom.structure.Rotation(
+            'ECAL_endA_rotation', Q('0deg'), Q('180deg'), Q('0deg'))
 
-            pos = [Q('0m'), Q('0m'), Q('0m')]
-            pos[2] = -(self.EndcapZ + (self.caloThickness + self.ECCurvRad + self.ECStraight) / 2.0)
-            if (quarter == 0):
-                ECAL_endA_rotation = geom.structure.Rotation(
-                    'ECAL_endA_rotation' + '_' + str(quarter), Q('0deg'),
-                    Q('180deg'), Q('0deg'))
+        ECAL_endA_position = geom.structure.Position(
+            'ECAL_endA_position', pos[0], pos[1], pos[2])
+        
+        ECAL_endB_rotation = geom.structure.Rotation(
+            'ECAL_endB_rotation', Q('0deg'), Q('0deg'), Q('0deg'))
 
-            else:
-                ECAL_endA_rotation = geom.structure.Rotation(
-                    'ECAL_endA_rotation' + '_' + str(quarter), Q('0deg'),
-                    Q('180deg'), Q('180deg'))
+        ECAL_endB_position = geom.structure.Position(
+            'ECAL_endB_position', pos[0], pos[1], -pos[2])
 
-            ECAL_endA_position = geom.structure.Position(
-                'ECAL_endA_position' + '_' + str(quarter), pos[0], pos[1], pos[2])
+        print(("Building Kloe ECAL Endcap"))  # keep compatibility with Python3 pylint: disable=superfluous-parens
 
-            print(("Building Kloe ECAL Endcap A quarter " + str(quarter)))  # keep compatibility with Python3 pylint: disable=superfluous-parens
+        ECAL_endA_place = geom.structure.Placement("ECAL_endA_pla",
+                                            volume=emcalo_endcap_lv,
+                                            pos=ECAL_endA_position,
+                                            rot=ECAL_endA_rotation)
+        
+        ECAL_endB_place = geom.structure.Placement("ECAL_endB_pla",
+                                            volume=emcalo_endcap_lv,
+                                            pos=ECAL_endB_position,
+                                            rot=ECAL_endB_rotation)
 
-            ########################################################################################
-            ECAL_endA_place = geom.structure.Placement("ECAL_endA_pla" + '_' +
-                                                      str(quarter),
-                                                      volume=emcalo_endcap_lv,
-                                                      pos=ECAL_endA_position,
-                                                      rot=ECAL_endA_rotation)
-
-            main_lv.placements.append(ECAL_endA_place.name)
-            ########################################################################################
-
-    def buildECALEndCapB(self, main_lv, geom):
-
-        # Real ENDCAP as 32 modules of different length and widht
-        # curved at both ends by 90 degrees
-
-        if self.get_builder("SANDECALENDCAP") == None:
-            print("SANDECALENDCAP builder not found")
-            return
-
-        emcalo_endcap_builder = self.get_builder("SANDECALENDCAP")
-        emcalo_endcap_lv = emcalo_endcap_builder.get_volume()
-
-        for quarter in range (0,2):
-
-            pos = [Q('0m'), Q('0m'), Q('0m')]
-            pos[2] = self.EndcapZ + (self.caloThickness + self.ECCurvRad + self.ECStraight) / 2.0
-            if (quarter == 0):
-                ECAL_endB_rotation = geom.structure.Rotation(
-                    'ECAL_endB_rotation' + '_' + str(quarter), Q('0deg'),
-                    Q('0deg'), Q('0deg'))
-
-            else:
-                ECAL_endB_rotation = geom.structure.Rotation(
-                    'ECAL_endB_rotation' + '_' + str(quarter), Q('0deg'),
-                    Q('0deg'), Q('180deg'))
-
-            ECAL_endB_position = geom.structure.Position(
-                'ECAL_endB_position' + '_' + str(quarter), pos[0], pos[1], pos[2])
-
-            print(("Building Kloe ECAL Endcap B quarter " + str(quarter)))  # keep compatibility with Python3 pylint: disable=superfluous-parens
-
-            ########################################################################################
-            ECAL_endB_place = geom.structure.Placement("ECAL_endB_pla" + '_' +
-                                                      str(quarter),
-                                                      volume=emcalo_endcap_lv,
-                                                      pos=ECAL_endB_position,
-                                                      rot=ECAL_endB_rotation)
-
-            main_lv.placements.append(ECAL_endB_place.name)
-            ########################################################################################
-
+        main_lv.placements.append(ECAL_endA_place.name)
+        main_lv.placements.append(ECAL_endB_place.name)
