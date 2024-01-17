@@ -8,8 +8,8 @@ from gegede import Quantity as Q
 
 class SandECalBuilder(gegede.builder.Builder):
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
-    def configure(self, **kwds):
-        self.NCaloModBarrel = 24
+    def configure(self, NCaloModBarrel=None, **kwds):
+        self.NCaloModBarrel = NCaloModBarrel
         self.caloThickness = Q('23cm')
         self.EndcapZ = Q('1.69m')
         self.EndcapRmin = Q('20.8cm')
