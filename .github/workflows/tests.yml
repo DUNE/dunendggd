@@ -18,8 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: Setup gegede
-      run: pip install git+https://github.com/brettviren/gegede.git@86ca28190516a23203cd883aafb0548a61664ceb
     - name: Setup
       run: pip install .
     - name: Build defaul gdml
