@@ -8,6 +8,10 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
+### Changed
+
+- Bump gegede to version 0.8.0
+
 ### Removed
 
 - Removed old gdml files from repo.

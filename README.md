@@ -6,16 +6,6 @@ dunendggd is based on [GeGeDe](https://github.com/brettviren/gegede) and started
 
 # Setup
 
-## Prerequisites
-
-This package requires `gegede`.
-Unfortunately, the latest version of `gegede` which supports Python 3 [is _not_ on PyPI](https://github.com/brettviren/gegede/issues/18) yet.
-This means we have to install a suitable version directly from GitHub:
-
-```bash
-pip install git+https://github.com/brettviren/gegede.git@86ca28190516a23203cd883aafb0548a61664ceb
-```
-
 ## Installing dunendggd
 
 This package can be installed as user using `pip`:
