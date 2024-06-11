@@ -60,7 +60,7 @@ The macro `locateVolume.C` can be used to check positions of volumes in the
 global coordinate system:
 
 ```
-$ root -b -q 'locateVolume.C("nd_hall_with_lar_tms_sand.gdml", "volWorld/rockBox_lv_0/volDetEnclosure_0/volTMS_0/thinlayervol_0/thinvolTMS_0#1")'
+$ root -b -q 'locateVolume.C("nd_hall_with_lar_tms_sand.gdml", "volWorld/rockBox_lv_0/volDetEnclosure_0/volTMS_0/thinlayervol_0/thinvolTMS_0")'
    ------------------------------------------------------------------
   | Welcome to ROOT 6.30/04                        https://root.cern |
   | (c) 1995-2024, The ROOT Team; conception: R. Brun, F. Rademakers |
