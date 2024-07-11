@@ -443,6 +443,44 @@ gegede-cli duneggd/Config/WORLDggd.cfg \
            -w World -o SAND_opt3_STT1.gdml
 fi
 
+# SAND Default STT (Jul'24)
+if [ $option = "all" -o $option = "sand_def_stt" ];
+then
+gegede-cli duneggd/Config/WORLDggd.cfg \
+           duneggd/Config/ND_Hall_Air_Volume.cfg \
+           duneggd/Config/ND_Hall_Rock.cfg \
+           duneggd/Config/ND_ElevatorStruct.cfg \
+           duneggd/Config/SAND_MAGNET.cfg \
+           duneggd/Config/SAND_INNERVOLOPT4.cfg \
+           duneggd/Config/SAND_ECAL.cfg \
+           duneggd/Config/SAND_STT/STT_Default.cfg \
+           duneggd/Config/SAND_GRAIN.cfg \
+           duneggd/Config/ND_CraneRailStruct1.cfg \
+           duneggd/Config/ND_CraneRailStruct2.cfg \
+           duneggd/Config/ND_HallwayStruct.cfg \
+           duneggd/Config/ND_CryoStruct.cfg \
+           duneggd/Config/ND-GAr/ND-GAr-SPYv3_noTPC.cfg \
+           duneggd/Config/ND-GAr/ND-GAr-SPYv3.cfg \
+           duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
+           duneggd/Config/ArgonCube/ArgonCubeDetector.cfg \
+           -w World -o SAND_STT_Default.gdml
+fi
+
+# Only SAND Default STT (Jul'24)
+if [ $option = "all" -o $option = "only_sand_def_stt" ];
+then
+gegede-cli duneggd/Config/WORLDggd.cfg \
+           duneggd/Config/ND_Hall_Air_Volume_Only_SAND.cfg \
+           duneggd/Config/ND_Hall_Rock.cfg \
+           duneggd/Config/ND_ElevatorStruct.cfg \
+           duneggd/Config/SAND_MAGNET.cfg \
+           duneggd/Config/SAND_INNERVOLOPT4.cfg \
+           duneggd/Config/SAND_ECAL.cfg \
+           duneggd/Config/SAND_STT/STT_Default.cfg \
+           duneggd/Config/SAND_GRAIN.cfg \
+           -w World -o only_SAND_STT_Default.gdml
+fi
+
 # SAND OPT 3 DRIFT1
 if [ $option = "all" -o $option = "sand_opt3_DRIFT1" ];
 then
