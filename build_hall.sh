@@ -25,9 +25,9 @@ gegede-cli duneggd/Config/WORLDggd.cfg \
            duneggd/Config/ND_HallwayStruct.cfg \
            duneggd/Config/ND_CryoStruct.cfg \
            duneggd/Config/SAND_MAGNET.cfg \
-           duneggd/Config/SAND_INNERVOLOPT2.cfg \
+           duneggd/Config/SAND_INNERVOLOPT4.cfg \
            duneggd/Config/SAND_ECAL.cfg \
-           duneggd/Config/SAND_STT/STT1.cfg \
+           duneggd/Config/SAND_STT/STT_Default.cfg \
            duneggd/Config/SAND_GRAIN.cfg \
            duneggd/Config/TMS.cfg \
            duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
@@ -47,9 +47,9 @@ gegede-cli duneggd/Config/WORLDggd.cfg \
            duneggd/Config/ND_HallwayStruct.cfg \
            duneggd/Config/ND_CryoStruct.cfg \
            duneggd/Config/SAND_MAGNET.cfg \
-           duneggd/Config/SAND_INNERVOLOPT2.cfg \
+           duneggd/Config/SAND_INNERVOLOPT4.cfg \
            duneggd/Config/SAND_ECAL.cfg \
-           duneggd/Config/SAND_STT/STT1.cfg \
+           duneggd/Config/SAND_STT/STT_Default.cfg \
            duneggd/Config/SAND_GRAIN.cfg \
            duneggd/Config/TMS.cfg \
            duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
