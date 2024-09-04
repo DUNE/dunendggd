@@ -38,7 +38,7 @@ jobs:
     - name: Install ROOT
       run: sudo snap install root-framework
     - name: Download default geometry
-      uses: actions/download-artifact@v4.1.7
+      uses: actions/download-artifact@v4
       with:
         name: Default Geometry
     - name: Debug artifact
@@ -62,7 +62,7 @@ jobs:
     - name: Install ROOT
       run: sudo snap install root-framework
     - name: Download default geometry
-      uses: actions/download-artifact@v4.1.7
+      uses: actions/download-artifact@v4
       with:
         name: Default Geometry
     - name: Convert gdml files to root
