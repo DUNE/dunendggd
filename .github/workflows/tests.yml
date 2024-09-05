@@ -23,7 +23,7 @@ jobs:
     - name: Build defaul gdml
       run: ./build_hall.sh
     - name: Upload default geometry
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Default Geometry
         path: |
