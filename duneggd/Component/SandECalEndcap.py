@@ -363,7 +363,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
             xposSlab=Q('0cm')
             yposSlab=Q('0cm')                  
         
-            zposSlabActive =( -KLOEEndcapECALDepth * 0.5 + 
+            zposSlabActive =( -(KLOEEndcapECALDepth+AlPlateThick) * 0.5 + 
                             (i + 0.5) * self.ActiveSlabThickness +
                             i * self.PasSlabThickness )
 
@@ -538,7 +538,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
 
         ECAL_ec_mod_hor_Alplate_pos = geom.structure.Position(
             'ECAL_ec_mod_hor_Alplate_'+str(mod)+'_pos', 
-            Q('0.0cm'), Q('0.0cm'), 0.5*KLOEEndcapECALDepth)
+            Q('0.0cm'), Q('0.0cm'), -0.5*KLOEEndcapECALDepth)
 
         ECAL_ec_mod_hor_Alplate_rot = geom.structure.Rotation(
             'ECAL_ec_mod_hor_Alplate_'+str(mod)+'_rot',
@@ -581,7 +581,7 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
             xposSlab=Q('0cm')
             yposSlab=Q('0cm')
 
-            zposSlabActive =( -KLOEEndcapECALDepth * 0.5 + 
+            zposSlabActive =( (-KLOEEndcapECALDepth+AlPlateThick) * 0.5 + 
                             (i + 0.5) * self.ActiveSlabThickness +
                             i * self.PasSlabThickness )
 
