@@ -466,6 +466,20 @@ gegede-cli duneggd/Config/WORLDggd.cfg \
            -w World -o SAND_opt3_DRIFT1.gdml
 fi
 
+
+# SAND OPT 3 DRIFT1i FOR DEVEL
+if [ $option = "all" -o $option = "dev_sand_opt3_DRIFT1" ];
+then
+gegede-cli duneggd/Config/WORLDggd.cfg \
+           duneggd/Config/ND_Hall_Air_Volume_Only_SAND.cfg \
+           duneggd/Config/ND_Hall_Rock.cfg \
+           duneggd/Config/SAND_MAGNET.cfg \
+           duneggd/Config/SAND_INNERVOLOPTDRIFT1.cfg \
+           duneggd/Config/SAND_ECAL.cfg \
+           -w World -o dev_SAND_opt3_DRIFT1.gdml
+fi
+
+
 # SAND OPT 1 drift
 if [ $option = "all" -o $option = "only_sand_drift" ];
 then
