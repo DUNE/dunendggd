@@ -581,13 +581,13 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
             xposSlab=Q('0cm')
             yposSlab=Q('0cm')
 
-            zposSlabActive =( (-KLOEEndcapECALDepth+AlPlateThick) * 0.5 + 
-                            (i + 0.5) * self.ActiveSlabThickness +
-                            i * self.PasSlabThickness )
+            zposSlabActive =( (KLOEEndcapECALDepth+AlPlateThick) * 0.5 - 
+                            ((i + 0.5) * self.ActiveSlabThickness +
+                            i * self.PasSlabThickness) )
 
-            zposSlabPassive = (zposSlabActive + 
-                            0.5 * self.ActiveSlabThickness +
-                            0.5 * self.PasSlabThickness)
+            zposSlabPassive = (zposSlabActive - 
+                            (0.5 * self.ActiveSlabThickness +
+                            0.5 * self.PasSlabThickness))
 
             ##########creating and appending active slabs to the ECAL endcap##########
 
