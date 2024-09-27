@@ -166,14 +166,25 @@ class tmsBuilder(gegede.builder.Builder):
                                      dz = 0.5*Q("0.01m"))
 
         ModuleBox_horizontal = geom.shapes.Box( 'ModuleBox_horizontal',
-                                    dx = 0.5*Q("3.096m"),
-                                    dy = 0.5*Q("0.03542m")*32,  #!!! new 6 module design
-                                    dz = 0.5*Q("0.017m"))       #!!! new layers are thicker
+                                    dx = 0.5*Q("3.096m") + Q("0.001m"),
+                                    dy = 0.5*Q("0.03542m")*32 + Q("0.001m"),  #!!! new 6 module design
+                                    dz = 0.5*Q("0.017m") + Q("0.001m"))       #!!! new layers are thicker and have a aluminium enclosure around them
 
         ModuleBox_lv = geom.structure.Volume( 'ModuleBoxvol', material='Air', shape=ModuleBox )
 
         ModuleBox_lv_horizontal = geom.structure.Volume( 'ModuleBoxvol_horizontal', material = 'Air', shape = ModuleBox)
+        
+        # add aluminium box as an enclosure
+        Aluminium_case = geom.shapes.Box( 'AluCase',
+                                    dx = 0.5*(Q("3.096m") + Q("0.001m")),
+                                    dy = 0.5*(Q("0.03542m")*32 + Q("0.001m")),
+                                    dz = 0.5*(Q("0.017m") + Q("0.001m")))
 
+        Aluminium_case = geom.structure.Volume( 'AluCasevol', material = 'Aluminum', shape = Aluminium_case)
+
+        ModuleBox_lv_horizontal.placement.append(Aluminium_case.name)
+
+        # now create and place the bars
         sci_bars = 48
         sci_Bar_pos = [geom.structure.Position('e')]*sci_bars
         sci_Bar_pla = [geom.structure.Placement('f',volume=scinBox_lv, pos=sci_Bar_pos[1])]*sci_bars
@@ -191,20 +202,24 @@ class tmsBuilder(gegede.builder.Builder):
 
         for bar in range(sci_bars):
             xpos = -Q("0.83237m")+ bar * Q("0.03542m")
-            ypos_horizontal = -Q("0.55491m") + bar * Q("0.03542m")  #!!! width of modules changes with new module design (first number is module_width/2)
             sci_Bar_pos[bar] = geom.structure.Position( 'sci_barposition'+str(bar),
                                                            x = xpos,
                                                            y = ypos_bar,
                                                            z = zpos_bar)
+
+            sci_Bar_pla[bar] = geom.structure.Placement( 'scibarpla'+self.name+str(bar), volume=scinBox_lv, pos=sci_Bar_pos[bar] )
+            ModuleBox_lv.placements.append(sci_Bar_pla[bar].name)
+
+        
+        for bar in range(sci_bars_new):
+            ypos_horizontal = -Q("0.55491m") + bar * Q("0.03542m")  #!!! width of modules changes with new module design (first number is module_width/2)
             sci_Bar_pos_horizontal[bar] = geom.structure.Position( 'sci_barposition_horizontal'+str(bar),
                                                             x = xpos_bar_horizontal,
                                                             y = ypos_horizontal,
                                                             z = zpos_bar_horizontal)
-
-            sci_Bar_pla[bar] = geom.structure.Placement( 'scibarpla'+self.name+str(bar), volume=scinBox_lv, pos=sci_Bar_pos[bar] )
             sci_Bar_pla_horizontal[bar] = geom.structure.Placement( 'scibarpla_horizontal'+self.name+str(bar), volume=scinBox_lv_horizontal, pos = sci_Bar_pos_horizontal[bar])
-            ModuleBox_lv.placements.append(sci_Bar_pla[bar].name)
             ModuleBox_lv_horizontal.placements.append(sci_Bar_pla_horizontal[bar].name)
+
 
         # Place Modules into scint layers
         modules_in_layer = 4
