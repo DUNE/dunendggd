@@ -1,0 +1,4 @@
+To-do:
+
+Remove Configure builder for shape print statements.
+Remove the useless shape.

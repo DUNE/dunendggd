@@ -7,13 +7,12 @@ void geoInfo(TString filename, TString volumeName)
 		TGeoIterator next(geom->GetVolume(i));
 		if (geom->GetVolume(i)->GetName() != volumeName) continue;
 		cout<<"name : "<<geom->GetVolume(i)->GetName()<<" "<<endl;
-        	cout<<"shape : "<<geom->GetVolume(i)->GetShape();
+        	//<<"shape : "<<geom->GetVolume(i)->GetShape();
 		TGeoNode*current; TGeoVolume *vol;
 		TString path;
-		std::cout << "about to start while loop" <<endl;
-		std::cout << "about to start while loop" << next();
+		std::cout << "about to start while loop";
 		while ((current=next())) {
-			std::cout << "in the loop     " << endl;
+		        std::cout << "we're in the loop now boys!";
 			vol = current->GetVolume();
   			next.GetPath(path);
   			const TGeoMatrix *global = next.GetCurrentMatrix();
@@ -21,11 +20,7 @@ void geoInfo(TString filename, TString volumeName)
   			const double *local_bbox_orig = ((TGeoBBox*)vol->GetShape())->GetOrigin(); 
   			double master_orig[3];
   			global->LocalToMaster(local_bbox_orig, master_orig);
-			
   			std::cout << path << ": volume=" << vol->GetName() << "   material: "<< vol->GetMaterial()->GetName()<<"  position: (" << master_orig[0] <<   ", " << master_orig[1] << ", " << master_orig[2] << ")\n";
-			std::cout << path << ": volume=" << vol->GetName() << "   material: "<< vol->GetMaterial()->GetName()<<"  position: (" << local_bbox_orig[0] <<   ", " << local_bbox_orig[1] << ", " << local_bbox_orig[2] << ")\n";
-			
-
 		}
 	}
 }
