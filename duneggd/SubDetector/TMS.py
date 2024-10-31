@@ -127,7 +127,7 @@ class tmsBuilder(gegede.builder.Builder):
         double_lf_pla = geom.structure.Placement( 'doublelfpla'+self.name, volume=doubleBox1_lv, pos=lf_pos )
         double_ctr_pla = geom.structure.Placement( 'doublectrpla'+self.name, volume=doubleBox2_lv, pos=ctr_pos )
 
-        double_layer_lv.placements.append(double_rt_pla_name)
+        double_layer_lv.placements.append(double_rt_pla.name)
         double_layer_lv.placements.append(double_lf_pla.name)
         double_layer_lv.placements.append(double_ctr_pla.name)
 
