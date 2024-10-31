@@ -178,8 +178,8 @@ class tmsBuilder(gegede.builder.Builder):
                                                            x = xpos_planes,
                                                            y = ypos_planes,
                                                            z = zpos)
-            double_layer_pla[plane] = geom.structure.Placement( 'doublelayerpl'+self.name+str(plane), volume=double_layer_lv, pos=doublelayer_pos[plane] )
-            tms_lv.placements.append(double_layer_pl[plane].name)
+            double_layer_pla[plane] = geom.structure.Placement( 'doublelayerpla'+self.name+str(plane), volume=double_layer_lv, pos=doublelayer_pos[plane] )
+            tms_lv.placements.append(double_layer_pla[plane].name)
 
 
         # Scintillator
@@ -239,9 +239,8 @@ class tmsBuilder(gegede.builder.Builder):
         sci_Bar_pos = [geom.structure.Position('g')]*sci_bars
         sci_Bar_pla = [geom.structure.Placement('h',volume=scinBox_lv, pos=sci_Bar_pos[1])]*sci_bars
 
-        sci_bars_new = 32
-        sci_Bar_pos_ortho = [geom.structure.Position('i')]*sci_bars_new
-        sci_Bar_pla_ortho = [geom.structure.Placement('j', volume = scinBox_lv_ortho, pos = sci_Bar_pos_ortho[1])]*sci_bars_new
+        sci_Bar_pos_ortho = [geom.structure.Position('i')]*sci_bars
+        sci_Bar_pla_ortho = [geom.structure.Placement('j', volume = scinBox_lv_ortho, pos = sci_Bar_pos_ortho[1])]*sci_bars
 
         # y and z positions are the same for each bar
         zpos_bar = Q("0m") 
