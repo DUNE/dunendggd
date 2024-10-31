@@ -230,9 +230,9 @@ class tmsBuilder(gegede.builder.Builder):
 
         Aluminium_case_ortho = geom.structure.Volume( 'AluCasevol_ortho', material = 'Aluminium', shape = Aluminium_case_ortho)
 
-        ModuleBox_lv.placement.append(Aluminium_case.name)
+        ModuleBox_lv.placements.append(Aluminium_case.name)
 
-        ModuleBox_lv_ortho.placement.append(Aluminium_case_ortho.name)
+        ModuleBox_lv_ortho.placements.append(Aluminium_case_ortho.name)
 
         # now create and place the bars
         sci_bars = 32
