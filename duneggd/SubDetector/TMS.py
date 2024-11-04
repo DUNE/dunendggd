@@ -496,7 +496,7 @@ class tmsBuilder(gegede.builder.Builder):
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=doubleModlayer_pos[module] )
     
                 else:
-                    double_modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=doubleModlayer_pos[module] )
+                    double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=doubleModlayer_pos[module] )
 
             tms_lv.placements.append(double_Modlayer_pla[module].name)
 
