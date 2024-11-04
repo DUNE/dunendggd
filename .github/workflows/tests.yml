@@ -29,6 +29,7 @@ jobs:
         path: |
           nd_hall_with_lar_tms_sand.gdml
           anti_fiducial_nd_hall_with_lar_tms_sand.gdml
+        if-no-files-found: error
   check_overlaps:
     name: Check geometry for overlaps
     runs-on: ubuntu-latest
