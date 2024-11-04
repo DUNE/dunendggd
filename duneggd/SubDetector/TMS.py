@@ -444,7 +444,7 @@ class tmsBuilder(gegede.builder.Builder):
         #thick_Modlayer_pla2 = [geom.structure.Placement('l',volume=Module_layer_lv2,pos=thickModlayer_pos[2])]*Module_layers_thick    
 
         for module in range(0,Module_layers_thick):
-            zpos = -Q("0.400m") - Q("0.0325m")  + module * Q("0.09m") # subtract 0.015m from zpos=-Q("1.292m")+Q("0.040m")
+            zpos = -Q("0.4325m") + Q("0.025m")  + module * Q("0.09m") # subtract 0.015m from zpos=-Q("1.292m")+Q("0.040m")
             thickModlayer_pos[module] = geom.structure.Position( 'thickModlayerposition'+str(module),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
@@ -477,7 +477,7 @@ class tmsBuilder(gegede.builder.Builder):
         double_Modlayer_pla = [geom.structure.Placement('p',volume=Module_layer_lv1,pos=doubleModlayer_pos[1])]*Module_layers_double
 
         for module in range(0,Module_layers_double):
-            zpos = +Q("2.6275m") + Q("0.045m") + module * Q("0.130m")
+            zpos = +Q("2.6252m") + Q("0.095m") + module * Q("0.130m")
             doubleModlayer_pos[module] = geom.structure.Position( 'doubleModlayerposition'+str(module),
                                                             x = xpos_planes,
                                                             y = ypos_planes,
