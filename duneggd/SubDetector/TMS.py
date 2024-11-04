@@ -227,12 +227,18 @@ class tmsBuilder(gegede.builder.Builder):
         #                            dz = 0.5*(Q("0.017m") + Q("0.001m")))
 
         #Aluminium_case = geom.structure.Volume( 'AluCasevol', material='Aluminum', shape=Aluminium_case)
+        #ModuleBox_lv.placements.append(geom.structure.Placement( 'AluCasePla'+self.name, volume=ModuleBox_lv,
+        #                                                        pos=geom.structure.Position( 'AluCasePos',
+        #                                                                                    xpos = Q("0m"),
+        #                                                                                    ypos = Q("0m"),
+        #                                                                                    zpos = Q("0m"))))
 
         #Aluminium_case_ortho = geom.structure.Volume( 'AluCasevol_ortho', material='Aluminium', shape=Aluminium_case_ortho)
-
-        #ModuleBox_lv.placements.append(Aluminium_case.name)
-
-        #ModuleBox_lv_ortho.placements.append(Aluminium_case_ortho.name)
+        #ModuleBox_lv_ortho.placements.append(geom.structure.Placement( 'AluCaseOrthoPla'+self.name, volume=ModuleBox_lv_ortho,
+        #                                                        pos=geom.structure.Position( 'AluCaseOrthoPos',
+        #                                                                                    xpos = Q("0m"),
+        #                                                                                    ypos = Q("0m"),
+        #                                                                                    zpos = Q("0m")))) 
 
         # now create and place the bars
         sci_bars = 32
@@ -295,7 +301,7 @@ class tmsBuilder(gegede.builder.Builder):
                                             Q("0m"))
 
         mod_pos3 = geom.structure.Position( 'modpos3'+self.name,
-                                           -0.5*Q("0.03542m")*32+Q("0.005m"),
+                                           -0.5*Q("0.03542m")*32-Q("0.005m"),
                                            Q("0m"),
                                            Q("0m"))
 
