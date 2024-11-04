@@ -260,7 +260,7 @@ class tmsBuilder(gegede.builder.Builder):
             ModuleBox_lv.placements.append(sci_Bar_pla[bar].name)
 
         
-        for bar in range(sci_bars_new):
+        for bar in range(sci_bars):
             ypos_ortho = -Q("0.55491m") + bar * Q("0.03542m")  #!!! width of modules changes with new module design (first number is module_width/2)
             sci_Bar_pos_ortho[bar] = geom.structure.Position( 'sci_barposition_ortho'+str(bar),
                                                             x = xpos_bar_ortho,
