@@ -197,7 +197,7 @@ class tmsBuilder(gegede.builder.Builder):
         scinBox_lv = geom.structure.Volume( 'scinBoxlv'+self.name, material='Scintillator', shape=scinBox)
         scinBox_lv.params.append(("SensDet", tms_lv.name))
 
-        scinBox_lv_ortho = geom.structure.Volume( 'scinBoxlv_ortho'+self.name, material = 'Scintillator', shape =  scinBox_ortho)
+        scinBox_lv_ortho = geom.structure.Volume( 'scinBoxlv_ortho'+self.name, material = 'Scintillator', shape=scinBox_ortho)
         scinBox_lv_ortho.params.append(("SensDet", tms_lv.name))
 
         # Place Bars into Modules
@@ -213,26 +213,26 @@ class tmsBuilder(gegede.builder.Builder):
 
         ModuleBox_lv = geom.structure.Volume( 'ModuleBoxvol', material='Air', shape=ModuleBox )
 
-        ModuleBox_lv_ortho = geom.structure.Volume( 'ModuleBoxvol_ortho', material = 'Air', shape = ModuleBox)
+        ModuleBox_lv_ortho = geom.structure.Volume( 'ModuleBoxvol_ortho', material='Air', shape=ModuleBox_ortho)
         
         # add aluminium box as an enclosure
-        Aluminium_case = geom.shapes.Box( 'AluCase',
-                                    dx = 0.5*(Q("0.03542m")*32 + Q("0.001m")),
-                                    dy = 0.5*(Q("3.096m") + Q("0.001m")),
-                                    dz = 0.5*(Q("0.017m") + Q("0.001m")))
+        #Aluminium_case = geom.shapes.Box( 'AluCase',
+        #                            dx = 0.5*(Q("0.03542m")*32 + Q("0.001m")),
+        #                            dy = 0.5*(Q("3.096m") + Q("0.001m")),
+        #                            dz = 0.5*(Q("0.017m") + Q("0.001m")))
 
-        Aluminium_case_ortho = geom.shapes.Box( 'AluCase_ortho',
-                                    dx = 0.5*(Q("3.096m") + Q("0.001m")),
-                                    dy = 0.5*(Q("0.03542m")*32 + Q("0.001m")),
-                                    dz = 0.5*(Q("0.017m") + Q("0.001m")))
+        #Aluminium_case_ortho = geom.shapes.Box( 'AluCase_ortho',
+        #                            dx = 0.5*(Q("3.096m") + Q("0.001m")),
+        #                            dy = 0.5*(Q("0.03542m")*32 + Q("0.001m")),
+        #                            dz = 0.5*(Q("0.017m") + Q("0.001m")))
 
-        Aluminium_case = geom.structure.Volume( 'AluCasevol', material = 'Aluminum', shape = Aluminium_case)
+        #Aluminium_case = geom.structure.Volume( 'AluCasevol', material='Aluminum', shape=Aluminium_case)
 
-        Aluminium_case_ortho = geom.structure.Volume( 'AluCasevol_ortho', material = 'Aluminium', shape = Aluminium_case_ortho)
+        #Aluminium_case_ortho = geom.structure.Volume( 'AluCasevol_ortho', material='Aluminium', shape=Aluminium_case_ortho)
 
-        ModuleBox_lv.placements.append(Aluminium_case.name)
+        #ModuleBox_lv.placements.append(Aluminium_case.name)
 
-        ModuleBox_lv_ortho.placements.append(Aluminium_case_ortho.name)
+        #ModuleBox_lv_ortho.placements.append(Aluminium_case_ortho.name)
 
         # now create and place the bars
         sci_bars = 32
@@ -240,7 +240,7 @@ class tmsBuilder(gegede.builder.Builder):
         sci_Bar_pla = [geom.structure.Placement('h',volume=scinBox_lv, pos=sci_Bar_pos[1])]*sci_bars
 
         sci_Bar_pos_ortho = [geom.structure.Position('i')]*sci_bars
-        sci_Bar_pla_ortho = [geom.structure.Placement('j', volume = scinBox_lv_ortho, pos = sci_Bar_pos_ortho[1])]*sci_bars
+        sci_Bar_pla_ortho = [geom.structure.Placement('j', volume=scinBox_lv_ortho, pos=sci_Bar_pos_ortho[1])]*sci_bars
 
         # y and z positions are the same for each bar
         zpos_bar = Q("0m") 
@@ -259,8 +259,6 @@ class tmsBuilder(gegede.builder.Builder):
             sci_Bar_pla[bar] = geom.structure.Placement( 'scibarpla'+self.name+str(bar), volume=scinBox_lv, pos=sci_Bar_pos[bar] )
             ModuleBox_lv.placements.append(sci_Bar_pla[bar].name)
 
-        
-        for bar in range(sci_bars):
             ypos_ortho = -Q("0.55491m") + bar * Q("0.03542m")  #!!! width of modules changes with new module design (first number is module_width/2)
             sci_Bar_pos_ortho[bar] = geom.structure.Position( 'sci_barposition_ortho'+str(bar),
                                                             x = xpos_bar_ortho,
@@ -272,7 +270,6 @@ class tmsBuilder(gegede.builder.Builder):
 
         # Place Modules into scint layers
         modules_in_layer = 6
-        modules_in_layer_new = 6
         Module_layer = geom.shapes.Box( 'Modulelayerbox',
                                       dx = 0.5*Q("7.036m"), #7.04 
                                       dy = 0.5*Q("5.022m"),
