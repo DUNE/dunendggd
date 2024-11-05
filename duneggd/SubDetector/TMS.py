@@ -159,7 +159,7 @@ class tmsBuilder(gegede.builder.Builder):
         thick_layer_pla = [geom.structure.Placement('d',volume=thick_layer_lv, pos=thicklayer_pos[1])]*n_thick_steel
         
         for plane in range(n_thick_steel):
-            zpos = -Q("0.400m")+ plane * Q("0.09m") #subtrack 0.015 m from zpos = -Q("1.292m") 
+            zpos = -Q("0.3875m")+ plane * Q("0.09m") #subtrack 0.0155 m from zpos = -Q("1.292m") 
             thicklayer_pos[plane] = geom.structure.Position( 'thicklayerposition'+str(plane),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
@@ -173,7 +173,7 @@ class tmsBuilder(gegede.builder.Builder):
         double_layer_pla = [geom.structure.Placement('f',volume=double_layer_lv, pos=doublelayer_pos[1])]*n_double_steel    #f was scintillator so far!!!
 
         for plane in range(n_double_steel):
-            zpos = +Q("2.660m") + plane * Q("0.130m")
+            zpos = +Q("2.6925m") + plane * Q("0.130m")
             doublelayer_pos[plane] = geom.structure.Position( 'doublelayerposition'+str(plane),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
@@ -202,14 +202,14 @@ class tmsBuilder(gegede.builder.Builder):
 
         # Place Bars into Modules
         ModuleBox = geom.shapes.Box( 'ModuleBox',
-                                     dx = 0.5*Q("0.03542m")*32 + Q("0.001m"), # 0.04*42
-                                     dy = 0.5*Q("3.096m") + Q("0.001m"),
-                                     dz = 0.5*Q("0.017m") + Q("0.001m"))
+                                     dx = 0.5*Q("0.03542m")*32,# + Q("0.001m"), # 0.04*42
+                                     dy = 0.5*Q("3.096m"),# + Q("0.001m"),
+                                     dz = 0.5*Q("0.017m"))# + Q("0.001m"))
 
         ModuleBox_ortho = geom.shapes.Box( 'ModuleBox_ortho',
-                                    dx = 0.5*Q("3.096m") + Q("0.001m"),
-                                    dy = 0.5*Q("0.03542m")*32 + Q("0.001m"),  #!!! new 6 module design
-                                    dz = 0.5*Q("0.017m") + Q("0.001m"))       #!!! new layers are thicker and have a aluminium enclosure around them
+                                    dx = 0.5*Q("3.096m"),# + Q("0.001m"),
+                                    dy = 0.5*Q("0.03542m")*32,# + Q("0.001m"),  #!!! new 6 module design
+                                    dz = 0.5*Q("0.017m"))# + Q("0.001m"))       #!!! new layers are thicker and have a aluminium enclosure around them
 
         ModuleBox_lv = geom.structure.Volume( 'ModuleBoxvol', material='Air', shape=ModuleBox )
 
@@ -444,7 +444,7 @@ class tmsBuilder(gegede.builder.Builder):
         #thick_Modlayer_pla2 = [geom.structure.Placement('l',volume=Module_layer_lv2,pos=thickModlayer_pos[2])]*Module_layers_thick    
 
         for module in range(0,Module_layers_thick):
-            zpos = -Q("0.4325m") + Q("0.025m")  + module * Q("0.09m") # subtract 0.015m from zpos=-Q("1.292m")+Q("0.040m")
+            zpos = -Q("0.3875m") - Q("0.045m")  + module * Q("0.09m") # subtract 0.015m from zpos=-Q("1.292m")+Q("0.040m")
             thickModlayer_pos[module] = geom.structure.Position( 'thickModlayerposition'+str(module),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
@@ -472,12 +472,12 @@ class tmsBuilder(gegede.builder.Builder):
 
         
         #Place Layers into RMS vol between double layers
-        Module_layers_double = 7
+        Module_layers_double = 9
         doubleModlayer_pos = [geom.structure.Position('o')]*Module_layers_double
         double_Modlayer_pla = [geom.structure.Placement('p',volume=Module_layer_lv1,pos=doubleModlayer_pos[1])]*Module_layers_double
 
         for module in range(0,Module_layers_double):
-            zpos = +Q("2.6252m") + Q("0.095m") + module * Q("0.130m")
+            zpos = +Q("2.6925m") - Q("0.065m") + module * Q("0.130m")
             doubleModlayer_pos[module] = geom.structure.Position( 'doubleModlayerposition'+str(module),
                                                             x = xpos_planes,
                                                             y = ypos_planes,
