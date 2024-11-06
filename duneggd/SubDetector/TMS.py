@@ -65,7 +65,7 @@ class tmsBuilder(gegede.builder.Builder):
         tmsbox = geom.shapes.Box( 'tmsbox',
                                    dx = 0.5*Q("7.036m"),
                                    dy = 0.5*Q("6.90m"), # 8.825
-                                   dz = 0.5*Q("7.382m"))#7.05m"))
+                                   dz = 0.5*Q("7.45m"))#7.05m"))
         
         
         thinBox1_lv = geom.structure.Volume( 'thinvol'+self.name, material=self.mat, shape=thinBox1 )
