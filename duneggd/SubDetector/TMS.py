@@ -65,7 +65,7 @@ class tmsBuilder(gegede.builder.Builder):
         tmsbox = geom.shapes.Box( 'tmsbox',
                                    dx = 0.5*Q("7.036m"),
                                    dy = 0.5*Q("6.90m"), # 8.825
-                                   dz = 0.5*Q("7.30m"))#7.05m"))
+                                   dz = 0.5*Q("7.382m"))#7.05m"))
         
         
         thinBox1_lv = geom.structure.Volume( 'thinvol'+self.name, material=self.mat, shape=thinBox1 )
@@ -87,7 +87,7 @@ class tmsBuilder(gegede.builder.Builder):
         double_layer_lv = geom.structure.Volume( 'doublelayervol', material='Air', shape=double_layer )
         tms_lv = geom.structure.Volume( 'vol'+self.name, material='Air', shape=tmsbox )
             
-        #Poition steel in layer volumes (Thin)
+        #Position steel in layer volumes (Thin)
         lf_pos = geom.structure.Position( 'lfpos'+self.name,
                                           0.5*(self.thinbox1Dimension[0]+self.thinbox2Dimension[0])+self.gapPosition[0],
                                           Q("0m"),
@@ -256,7 +256,7 @@ class tmsBuilder(gegede.builder.Builder):
         xpos_bar_ortho = Q("0m")
 
         for bar in range(sci_bars):
-            xpos = -Q("0.55491m")+ bar * Q("0.03542m")
+            xpos = -Q("0.54901m")+ bar * Q("0.03542m")
             sci_Bar_pos[bar] = geom.structure.Position( 'sci_barposition'+str(bar),
                                                            x = xpos,
                                                            y = ypos_bar,
@@ -265,7 +265,7 @@ class tmsBuilder(gegede.builder.Builder):
             sci_Bar_pla[bar] = geom.structure.Placement( 'scibarpla'+self.name+str(bar), volume=scinBox_lv, pos=sci_Bar_pos[bar] )
             ModuleBox_lv.placements.append(sci_Bar_pla[bar].name)
 
-            ypos_ortho = -Q("0.55491m") + bar * Q("0.03542m")  #!!! width of modules changes with new module design (first number is module_width/2)
+            ypos_ortho = -Q("0.54901m") + bar * Q("0.03542m")  #!!! width of modules changes with new module design (first number is module_width/2)
             sci_Bar_pos_ortho[bar] = geom.structure.Position( 'sci_barposition_ortho'+str(bar),
                                                             x = xpos_bar_ortho,
                                                             y = ypos_ortho,
@@ -322,12 +322,12 @@ class tmsBuilder(gegede.builder.Builder):
 
         mod_pos1_ortho = geom.structure.Position( 'modpos1_ortho'+self.name,
                                             -Q("1.548m")-Q("0.005m"),   #!!! this assumes a gap in the middle of 10mm
-                                            +1.0*Q("0.03542m")*32+Q("0.005m"),  #!!! the 1.0 should be two half modules to the center of the 32 bar module at top/bottom
+                                            +Q("0.03542m")*32+Q("0.1m"),  #!!! the 1.0 should be two half modules to the center of the 32 bar module at top/bottom
                                             Q("0m"))
 
         mod_pos2_ortho = geom.structure.Position( 'modpos2_ortho'+self.name,
                                             +Q("1.548m")+Q("0.005m"),
-                                            +1.0*Q("0.03542m")*32+Q("0.005m"),
+                                            +Q("0.03542m")*32+Q("0.1m"),
                                             Q("0m"))
 
         mod_pos3_ortho = geom.structure.Position( 'modpos3_ortho'+self.name,
@@ -342,12 +342,12 @@ class tmsBuilder(gegede.builder.Builder):
 
         mod_pos5_ortho = geom.structure.Position( 'modpos5_ortho'+self.name,  #two extra modules due to the higher number of modules per layer
                                             -Q("1.548m")-Q("0.005m"),
-                                            -1.0*Q("0.03542m")*32+Q("0.005m"),
+                                            -Q("0.03542m")*32-Q("0.1m"),
                                             Q("0m"))
 
         mod_pos6_ortho = geom.structure.Position( 'modpos6_ortho'+self.name,
                                             +Q("1.548m")+Q("0.005m"),
-                                            -1.0*Q("0.03542m")*32+Q("0.005m"),
+                                            -Q("0.03542m")*32-Q("0.1m"),
                                             Q("0m"))
 
 
@@ -419,13 +419,13 @@ class tmsBuilder(gegede.builder.Builder):
             if hybrid:
                 #hybrid version (XUV)
                 if module % 3 == 0 :
-                    thin_Modlayer_pos[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thinModlayer_pos[module] )
+                    thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thinModlayer_pos[module] )
     
-                elif (module % 2) == 0:
-                    thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thinModlayer_pos[module] )
+                #elif (module % 2) == 0:
+                #    thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thinModlayer_pos[module] )
     
-                elif (module % 2) == 1:
-                    thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thinModlayer_pos[module] )
+                #elif (module % 2) == 1:
+                #    thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thinModlayer_pos[module] )
             else:
                 #stereo version (UV)
                 if module % 2 == 0 :
@@ -455,11 +455,11 @@ class tmsBuilder(gegede.builder.Builder):
                 if (module-1) % 3 == 0 :    #this handling is done to ensure a even distribution of ortho layers also across the different thicknesses (XuvXu->vXuvXuv)
                     thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thickModlayer_pos[module] )
 
-                elif ((module-1) % 2) == 0:
-                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thickModlayer_pos[module] )
+                #elif ((module-1) % 2) == 0:
+                #    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thickModlayer_pos[module] )
 
-                elif ((module-1) % 2) == 1:
-                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thickModlayer_pos[module] )
+                #elif ((module-1) % 2) == 1:
+                #    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thickModlayer_pos[module] )
             else:
                 #stereo version (UV)
                 if module % 2 == 0 :
@@ -488,11 +488,11 @@ class tmsBuilder(gegede.builder.Builder):
                 if module % 3 == 0 :    #here the handling is not necessary as it just works
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=doubleModlayer_pos[module] )
 
-                elif (module % 2) == 0:
-                    double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=doubleModlayer_pos[module] )
+                #elif (module % 2) == 0:
+                #    double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=doubleModlayer_pos[module] )
 
-                elif (module % 2) == 1:
-                    double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=doubleModlayer_pos[module] )
+                #elif (module % 2) == 1:
+                #    double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=doubleModlayer_pos[module] )
             else:
                 #stereo version (UV)
                 if module % 2 == 0:
