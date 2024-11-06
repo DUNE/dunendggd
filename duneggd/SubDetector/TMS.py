@@ -191,7 +191,7 @@ class tmsBuilder(gegede.builder.Builder):
         
         scinBox_ortho = geom.shapes.Box( 'scinbox_ortho'+self.name,
                                     dx = 0.5*Q("3.096m"),
-                                    dy = 0.5*Q("0.3542m"),
+                                    dy = 0.5*Q("0.03542m"),
                                     dz = 0.5*Q("0.017m"))
 
         scinBox_lv = geom.structure.Volume( 'scinBoxlv'+self.name, material='Scintillator', shape=scinBox)
@@ -273,11 +273,10 @@ class tmsBuilder(gegede.builder.Builder):
             sci_Bar_pla_ortho[bar] = geom.structure.Placement( 'scibarpla_ortho'+self.name+str(bar), volume=scinBox_lv_ortho, pos = sci_Bar_pos_ortho[bar])
             ModuleBox_lv_ortho.placements.append(sci_Bar_pla_ortho[bar].name)
 
-
         # Place Modules into scint layers
         modules_in_layer = 6
         Module_layer = geom.shapes.Box( 'Modulelayerbox',
-                                      dx = 0.5*Q("7.036.m"), #7.04 
+                                      dx = 0.5*Q("7.036m"), #7.04 
                                       dy = 0.5*Q("5.022m"),
                                       dz = 0.5*Q("0.050m")) #!!! this number needs to increase for the new design to 0.050m        
 
@@ -322,12 +321,12 @@ class tmsBuilder(gegede.builder.Builder):
 
         mod_pos1_ortho = geom.structure.Position( 'modpos1_ortho'+self.name,
                                             -Q("1.548m")-Q("0.005m"),   #!!! this assumes a gap in the middle of 10mm
-                                            +Q("0.03542m")*32+Q("0.1m"),  #!!! the 1.0 should be two half modules to the center of the 32 bar module at top/bottom
+                                            +1.0*Q("0.03542m")*32+Q("0.01m"),  #!!! the 1.0 should be two half modules to the center of the 32 bar module at top/bottom
                                             Q("0m"))
 
         mod_pos2_ortho = geom.structure.Position( 'modpos2_ortho'+self.name,
                                             +Q("1.548m")+Q("0.005m"),
-                                            +Q("0.03542m")*32+Q("0.1m"),
+                                            +1.0*Q("0.03542m")*32+Q("0.01m"),
                                             Q("0m"))
 
         mod_pos3_ortho = geom.structure.Position( 'modpos3_ortho'+self.name,
@@ -342,12 +341,12 @@ class tmsBuilder(gegede.builder.Builder):
 
         mod_pos5_ortho = geom.structure.Position( 'modpos5_ortho'+self.name,  #two extra modules due to the higher number of modules per layer
                                             -Q("1.548m")-Q("0.005m"),
-                                            -Q("0.03542m")*32-Q("0.1m"),
+                                            -1.0*Q("0.03542m")*32-Q("0.01m"),
                                             Q("0m"))
 
         mod_pos6_ortho = geom.structure.Position( 'modpos6_ortho'+self.name,
                                             +Q("1.548m")+Q("0.005m"),
-                                            -Q("0.03542m")*32-Q("0.1m"),
+                                            -1.0*Q("0.03542m")*32-Q("0.01m"),
                                             Q("0m"))
 
 
