@@ -420,10 +420,10 @@ class tmsBuilder(gegede.builder.Builder):
                 if module % 3 == 0 :
                     thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thinModlayer_pos[module] )
     
-                elif (module % 2) == 0:
+                elif module % 3 == 1:
                     thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thinModlayer_pos[module] )
     
-                elif (module % 2) == 1:
+                elif module % 3 == 2:
                     thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thinModlayer_pos[module] )
             else:
                 #stereo version (UV)
@@ -451,14 +451,14 @@ class tmsBuilder(gegede.builder.Builder):
             
             if hybrid:
                 #hybrid version (XUV)
-                if (module-1) % 3 == 0 :    #this handling is done to ensure a even distribution of ortho layers also across the different thicknesses (XuvXu->vXuvXuv)
-                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thickModlayer_pos[module] )
+                if module % 3 == 0 :    #this handling is done to ensure a even distribution of ortho layers also across the different thicknesses (XuvXu->vXuvXuv)
+                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thickModlayer_pos[module] )   #v
 
-                elif ((module-1) % 2) == 0:
-                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thickModlayer_pos[module] )
+                elif module % 3 == 1:
+                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thickModlayer_pos[module] )   #x
 
-                elif ((module-1) % 2) == 1:
-                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thickModlayer_pos[module] )
+                elif module % 3 == 2:
+                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thickModlayer_pos[module] )   #u
             else:
                 #stereo version (UV)
                 if module % 2 == 0 :
@@ -487,10 +487,10 @@ class tmsBuilder(gegede.builder.Builder):
                 if module % 3 == 0 :    #here the handling is not necessary as it just works
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=doubleModlayer_pos[module] )
 
-                elif (module % 2) == 0:
+                elif module % 3 == 1:
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=doubleModlayer_pos[module] )
 
-                elif (module % 2) == 1:
+                elif module % 3 == 2:
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=doubleModlayer_pos[module] )
             else:
                 #stereo version (UV)
