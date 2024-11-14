@@ -448,7 +448,7 @@ class tmsBuilder(gegede.builder.Builder):
         thinModlayer_pos = [geom.structure.Position('k')]*Module_layers_thin
         thin_Modlayer_pla = [geom.structure.Placement('l',volume=Module_layer_lv1,pos=thinModlayer_pos[1])]*Module_layers_thin
 
-        hybrid = True
+        hybrid = False
     
         for module in range(Module_layers_thin):
             zpos = -Q("3.650m") -Q("0.0325m") + module * Q("0.065m") + Q("0.0075m")     # first layer of thin steel - half thin steel thickness - half gap
