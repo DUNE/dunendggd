@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to a modified version of [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
+### Added
+
+- Updated STT geometry with Default and Backup options. Can be built as a standalone geometry. `build_hall.sh only_sand_def_stt` `build_hall.sh only_sand_bck_stt`
+
 ## [Unreleased]
 
 ### Changed
