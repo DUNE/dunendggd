@@ -444,7 +444,7 @@ gegede-cli duneggd/Config/WORLDggd.cfg \
 fi
 
 
-if [ $option = "all" -o $option = "only_sand_def_stt" ];
+if [ $option = "all" -o $option = "only_sand_complete_stt" ];
 then
 gegede-cli duneggd/Config/WORLDggd.cfg \
            duneggd/Config/ND_Hall_Air_Volume_Only_SAND.cfg \
@@ -455,10 +455,10 @@ gegede-cli duneggd/Config/WORLDggd.cfg \
            duneggd/Config/SAND_ECAL.cfg \
            duneggd/Config/SAND_STT/STT_Default.cfg \
            duneggd/Config/SAND_GRAIN.cfg \
-           -w World -o only_SAND_STT_Default.gdml
+           -w World -o only_SAND_STT_Complete.gdml
 fi
 
-if [ $option = "all" -o $option = "only_sand_bck_stt" ];
+if [ $option = "all" -o $option = "only_sand_initial_stt" ];
 then
 gegede-cli duneggd/Config/WORLDggd.cfg \
            duneggd/Config/ND_Hall_Air_Volume_Only_SAND.cfg \
@@ -469,7 +469,7 @@ gegede-cli duneggd/Config/WORLDggd.cfg \
            duneggd/Config/SAND_ECAL.cfg \
            duneggd/Config/SAND_STT/STT_Backup.cfg \
            duneggd/Config/SAND_GRAIN.cfg \
-           -w World -o only_SAND_STT_Backup.gdml
+           -w World -o only_SAND_STT_Initial.gdml
 fi
 
 
