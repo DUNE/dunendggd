@@ -30,16 +30,17 @@ Don't forget to check your variable `PATH`:
 export PATH=~/.local/bin/:${PATH}
 ```
 
-# Example
-To run an example containing basic detectors, you could process like:
+# Building default geometries
+
+The default geometries are defined in the `Makefile`. To build them just invoke
 ```bash
-gegede-cli duneggd/Config/PRIMggd_example.cfg duneggd/Config/DETENCLOSURE-prim-only.cfg duneggd/Config/WORLDggd.cfg -w World -o example.gdml
+make prod
 ```
 
-To run a full example containing surrounded magnet
-```bash
-gegede-cli duneggd/Config/PRIMggd_example.cfg duneggd/Config/SECggd_example.cfg duneggd/Config/DETENCLOSURE.cfg duneggd/Config/WORLDggd.cfg -w World -o full_example.gdml
-```
+Have a look in the `Makefile` to see what kind of geometries are defined there.
+
+Hint: The `nosand` geometries build much, _much_ faster than the geometries
+including the `sand` detector.
 
 # Quick Visualization
 To do a quick check or your geometry file you can use ROOT-CERN:
