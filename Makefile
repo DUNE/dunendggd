@@ -155,7 +155,7 @@ SAND_opt2_STT3.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
 
-SAND_opt3_STT1.gdml: gegede-cli duneggd/Config/WORLDggd.cfg \
+SAND_opt3_STT1.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_Hall_Air_Volume.cfg \
 	duneggd/Config/ND_Hall_Rock.cfg \
 	duneggd/Config/ND_ElevatorStruct.cfg \
