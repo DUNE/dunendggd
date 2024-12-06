@@ -21,14 +21,12 @@ jobs:
     - name: Setup
       run: pip install .
     - name: Build defaul gdml
-      run: ./build_hall.sh
+      run: make -j2
     - name: Upload default geometry
       uses: actions/upload-artifact@v4
       with:
         name: Default Geometry
-        path: |
-          nd_hall_with_lar_tms_sand.gdml
-          anti_fiducial_nd_hall_with_lar_tms_sand.gdml
+        path: "*.gdml"
         if-no-files-found: error
   check_overlaps:
     name: Check geometry for overlaps
@@ -45,15 +43,21 @@ jobs:
     - name: Debug artifact
       run: |
         ls -l
-        head nd_hall_with_lar_tms_sand.gdml
+        head *.gdml
     - name: Run standard overlap check
       run: |
-        root -q -b 'checkOverlaps.C("nd_hall_with_lar_tms_sand.gdml", 0)' 2>&1 | tee check.log
-        grep "Number of illegal overlaps/extrusions : 0" check.log
+        for F in *.gdml
+        do
+            root -q -b "checkOverlaps.C(\"${F}\", 0)" 2>&1 | tee check.log
+            grep "Number of illegal overlaps/extrusions : 0" check.log
+        done
     - name: Run sampling overlap check
       run: |
-        root -q -b 'checkOverlaps.C("nd_hall_with_lar_tms_sand.gdml", 1)' 2>&1 | tee check.log
-        grep "Number of illegal overlaps/extrusions : 0" check.log
+        for F in *.gdml
+        do
+            root -q -b "checkOverlaps.C(\"${F}\", 1)" 2>&1 | tee check.log
+            grep "Number of illegal overlaps/extrusions : 0" check.log
+        done
   put_online:
     name: Put geometries online for visual inspection
     runs-on: ubuntu-latest
