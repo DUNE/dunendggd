@@ -8,9 +8,10 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ### Added
 
-- Updated STT geometry with Default and Backup options. Can be built as a standalone geometry. `build_hall.sh only_sand_def_stt` `build_hall.sh only_sand_bck_stt`
-
 ## [Unreleased]
+
+### Added
+- Updated with standalone build of initial and complete STT configurations. `only_SAND_STT_Initial.gdml` `only_SAND_STT_Complete.gdml`
 
 ### Changed
 
