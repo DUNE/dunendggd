@@ -204,24 +204,24 @@ only_SAND_DRIFT.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/SAND_GRAIN.cfg
 
 only_SAND_STT_Initial.gdml: duneggd/Config/WORLDggd.cfg \
-           duneggd/Config/ND_Hall_Air_Volume_Only_SAND.cfg \
-           duneggd/Config/ND_Hall_Rock.cfg \
-           duneggd/Config/ND_ElevatorStruct.cfg \
-           duneggd/Config/SAND_MAGNET.cfg \
-           duneggd/Config/SAND_INNERVOLOPT_BackupSTT.cfg \
-           duneggd/Config/SAND_ECAL.cfg \
-           duneggd/Config/SAND_STT/STT_Backup.cfg \
-           duneggd/Config/SAND_GRAIN.cfg 
+    duneggd/Config/ND_Hall_Air_Volume_Only_SAND.cfg \
+    duneggd/Config/ND_Hall_Rock.cfg \
+    duneggd/Config/ND_ElevatorStruct.cfg \
+    duneggd/Config/SAND_MAGNET.cfg \
+    duneggd/Config/SAND_INNERVOLOPT_BackupSTT.cfg \
+    duneggd/Config/SAND_ECAL.cfg \
+    duneggd/Config/SAND_STT/STT_Backup.cfg \
+    duneggd/Config/SAND_GRAIN.cfg 
 
 only_SAND_STT_Complete.gdml: duneggd/Config/WORLDggd.cfg \
-		   duneggd/Config/ND_Hall_Air_Volume_Only_SAND.cfg \
-		   duneggd/Config/ND_Hall_Rock.cfg \
-		   duneggd/Config/ND_ElevatorStruct.cfg \
-		   duneggd/Config/SAND_MAGNET.cfg \
-		   duneggd/Config/SAND_INNERVOLOPT_DefaultSTT.cfg \
-		   duneggd/Config/SAND_ECAL.cfg \
-		   duneggd/Config/SAND_STT/STT_Default.cfg \
-		   duneggd/Config/SAND_GRAIN.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_Only_SAND.cfg \
+	duneggd/Config/ND_Hall_Rock.cfg \
+	duneggd/Config/ND_ElevatorStruct.cfg \
+	duneggd/Config/SAND_MAGNET.cfg \
+	duneggd/Config/SAND_INNERVOLOPT_DefaultSTT.cfg \
+	duneggd/Config/SAND_ECAL.cfg \
+	duneggd/Config/SAND_STT/STT_Default.cfg \
+	duneggd/Config/SAND_GRAIN.cfg \
 
 
 nd_hall_no_dets.gdml: duneggd/Config/WORLDggd.cfg \
