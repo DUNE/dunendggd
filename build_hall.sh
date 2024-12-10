@@ -476,7 +476,9 @@ gegede-cli duneggd/Config/WORLDggd.cfg \
            duneggd/Config/SAND_MAGNET.cfg \
            duneggd/Config/SAND_INNERVOLOPTDRIFT1.cfg \
            duneggd/Config/SAND_ECAL.cfg \
-           -w World -o dev_SAND_opt3_DRIFT1.gdml
+            duneggd/Config/SAND_DRIFT_CHAMBER/DRIFT1.cfg \
+           duneggd/Config/SAND_GRAIN.cfg \
+           -w World -o MagIntVol_corrected_1012_dev_SAND_complete_opt3_DRIFT1.gdml
 fi
 
 
