@@ -84,7 +84,9 @@ class SANDBuilder(gegede.builder.Builder):
 	# Magnetized internal volume
         MagIntVolRmax=Q("2.43m")
         MagIntVolRmin=Q("2.0m")
-        MagIntVolHLmin=Q("1.96m")
+# Test 26/09/2024
+        # MagIntVolHLmin=Q("1.96m")
+        MagIntVolHLmin=Q("2.22m")
 # Test 22/5/2023
 #        MagIntVolHLmax=Q("2.15m")
         MagIntVolHLmax=Q("2.22m")
