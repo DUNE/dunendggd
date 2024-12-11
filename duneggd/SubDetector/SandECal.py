@@ -19,6 +19,26 @@ class SandECalBuilder(gegede.builder.Builder):
         self.ECStraight = Q('20cm')
         self.AlPlateThick= Q('2.5cm')
 
+        ### Below values should be the same as the one in SANDBuilder
+        ### and will be used to construct subtraction boolean volume
+        ### to avoid overlap with yoke endcap elements (C,D)
+        
+        # part C is a TUBS, 2.15<|x|<2.58m, rmin=0.84m, rmax=1.34m
+        self.EndcapCZStart=Q("2.15m")
+        self.EndcapCZEnd=Q("2.58m")
+        self.EndcapCRmax=Q("1.34m")
+        self.EndcapCRmin=Q("0.84m")
+        
+        # part D is a TUBS, 1.96<|x|<2.15m, rmin=0.512m, rmax=1.73m
+        self.EndcapDZStart=Q("1.96m")
+        self.EndcapDZEnd=Q("2.15m")
+        # Here we reduce the size of the D element of the yoke endcap
+        # to avoid overlap with the curved element of the ecal endcap module
+        # self.EndcapDRmax=Q("1.73m")
+        # self.EndcapDRmin=Q("0.51m")
+        self.EndcapDRmax=Q("1.66m")
+        self.EndcapDRmin=Q("0.62m")
+
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
     def construct(self, geom):
         ang = math.pi / self.NCaloModBarrel
@@ -45,6 +65,10 @@ class SandECalBuilder(gegede.builder.Builder):
                                         rmin=rmin_ec,
                                         rmax=rmax_ec,
                                         dz=dz_ec)
+        
+        
+        # volume to be removed from MagIntVol_vol to make room for yoke endcap
+        yoke_endcap_shape = geom.shapes.Tubs("yoke_endcap_shape_cl", rmin=self.EndcapDRmin, rmax=self.EndcapDRmax, dz=0.5 * (self.EndcapCZEnd - self.EndcapDZStart))
 
         calo_eca_pos = geom.structure.Position("calo_eca_pos", xpos_ec,
                                                 ypos_ec, -zpos_ec)
@@ -52,17 +76,33 @@ class SandECalBuilder(gegede.builder.Builder):
         calo_ecb_pos = geom.structure.Position("calo_ecb_pos", xpos_ec,
                                                 ypos_ec, zpos_ec)
 
-        calo_tmp = geom.shapes.Boolean("kloe_calo_tmp",
+        calo_tmp1 = geom.shapes.Boolean("kloe_calo_tmp1",
                                          type='union',
                                          first=barrel_shape,
                                          second=endcap_shape,
                                          pos=calo_eca_pos)
 
-        calo_shape = geom.shapes.Boolean("kloe_calo_shape",
+        calo_tmp2 = geom.shapes.Boolean("kloe_calo_tmp2",
                                          type='union',
-                                         first=calo_tmp,
+                                         first=calo_tmp1,
                                          second=endcap_shape,
                                          pos=calo_ecb_pos)
+        
+        yoke_ec_pos = geom.structure.Position("yoke_ec_pos_cl", Q('0m'), Q('0m'), 0.5 * (self.EndcapDZStart + self.EndcapCZEnd))
+
+        calo_tmp3 = geom.shapes.Boolean("kloe_calo_tmp3",
+                                         type='subtraction',
+                                         first=calo_tmp2,
+                                         second=yoke_endcap_shape,
+                                         pos=yoke_ec_pos)
+        
+        yoke_ec_pos = geom.structure.Position("yoke_ec_pos", Q('0m'), Q('0m'), -0.5 * (self.EndcapDZStart + self.EndcapCZEnd))
+
+        calo_shape = geom.shapes.Boolean("kloe_calo_tmp4",
+                                         type='subtraction',
+                                         first=calo_tmp3,
+                                         second=yoke_endcap_shape,
+                                         pos=yoke_ec_pos)
 
         calo_lv = geom.structure.Volume('kloe_calo_volume',
                                         material="Air",

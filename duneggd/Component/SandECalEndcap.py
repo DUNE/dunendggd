@@ -29,6 +29,26 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
         self.nSlabs = nSlabs
         self.BackPlateThick = BackPlateThick
 
+        ### Below values should be the same as the one in SANDBuilder
+        ### and will be used to construct subtraction boolean volume
+        ### to avoid overlap with yoke endcap elements (C,D)
+        
+        # part C is a TUBS, 2.15<|x|<2.58m, rmin=0.84m, rmax=1.34m
+        self.EndcapCZStart=Q("2.15m")
+        self.EndcapCZEnd=Q("2.58m")
+        self.EndcapCRmax=Q("1.34m")
+        self.EndcapCRmin=Q("0.84m")
+        
+        # part D is a TUBS, 1.96<|x|<2.15m, rmin=0.512m, rmax=1.73m
+        self.EndcapDZStart=Q("1.96m")
+        self.EndcapDZEnd=Q("2.15m")
+        # Here we reduce the size of the D element of the yoke endcap
+        # to avoid overlap with the curved element of the ecal endcap module
+        # self.EndcapDRmax=Q("1.73m")
+        # self.EndcapDRmin=Q("0.51m")
+        self.EndcapDRmax=Q("1.66m")
+        self.EndcapDRmin=Q("0.62m")
+
     # ^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
     def construct(self, geom):
 
@@ -47,10 +67,21 @@ class SandECalEndcapBuilder(gegede.builder.Builder):
 
         ##########creating main straight part of the ECAL endcap module##########
 
-        ECAL_endcap_shape = geom.shapes.Tubs(
-            "ECAL_endcap_shape", rmin=Q("0m"), rmax=rmax_ec, dz=ECTubsSize / 2.0
+        ECAL_endcap_shape_base = geom.shapes.Tubs(
+            "ECAL_endcap_shape_base", rmin=Q("0m"), rmax=rmax_ec, dz=ECTubsSize / 2.0
         )
+        
+        # volume to be removed from MagIntVol_vol to make room for yoke endcap
+        yoke_endcap_shape = geom.shapes.Tubs("yoke_endcap_shape_ec", rmin=self.EndcapDRmin, rmax=self.EndcapDRmax, dz=0.5 * (self.EndcapCZEnd - self.EndcapDZStart))
+        
+        yoke_ec_pos = geom.structure.Position("yoke_ec_pos_ec", Q('0m'), Q('0m'), 0.5 * (self.EndcapDZStart + self.EndcapCZEnd) - Q('1.955m'))
 
+        ECAL_endcap_shape = geom.shapes.Boolean("ECAL_endcap_shape",
+                                         type='subtraction',
+                                         first=ECAL_endcap_shape_base,
+                                         second=yoke_endcap_shape,
+                                         pos=yoke_ec_pos)
+        
         ECAL_endcap_lv = geom.structure.Volume(
             "ECAL_endcap_lv", material="Air", shape=ECAL_endcap_shape
         )

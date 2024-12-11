@@ -64,12 +64,12 @@ class SANDBuilder(gegede.builder.Builder):
         # part D is a TUBS, 1.96<|x|<2.15m, rmin=0.512m, rmax=1.73m
         self.EndcapDZStart=Q("1.96m")
         self.EndcapDZEnd=Q("2.15m")
-        self.EndcapDRmax=Q("1.73m")
-# Test 22/5/2023
-#        self.EndcapDRmax=Q("1.73m")
-#        self.EndcapDRmin=Q("0.51m")
+        # Here we reduce the size of the D element of the yoke endcap
+        # to avoid overlap with the curved element of the ecal endcap module
+        # self.EndcapDRmax=Q("1.73m")
+        # self.EndcapDRmin=Q("0.51m")
         self.EndcapDRmax=Q("1.66m")
-        self.EndcapDRmin=Q("0.61m")
+        self.EndcapDRmin=Q("0.62m")
 
 
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
@@ -84,27 +84,46 @@ class SANDBuilder(gegede.builder.Builder):
 	# Magnetized internal volume
         MagIntVolRmax=Q("2.43m")
         MagIntVolRmin=Q("2.0m")
-# Test 26/09/2024
-        # MagIntVolHLmin=Q("1.96m")
         MagIntVolHLmin=Q("2.22m")
-# Test 22/5/2023
-#        MagIntVolHLmax=Q("2.15m")
-        MagIntVolHLmax=Q("2.22m")
+        MagIntVolHLmax=Q("2.15m")
+        
+    # Option below results in 1 overlap: MagIntVol_volume extruded by: MagIntVol_volume/kloe_calo_volume_0
+        # MagIntVolHLmin=Q("1.96m")
+        # MagIntVolHLmax=Q("2.15m")
 
         vol1_shape = geom.shapes.Tubs("MagIntVol_vol1_shape", rmin=MagIntVolRmin, rmax=MagIntVolRmax, dz=MagIntVolHLmax)
         vol2_shape = geom.shapes.Tubs("MagIntVol_vol2_shape", rmin=Q('0.0m'), rmax=MagIntVolRmin, dz=MagIntVolHLmin)
         
-        pos = geom.structure.Position("MagIntVol_boolean_shape_pos", Q('0m'), Q('0m'), Q('0m'))
+        # volume to be removed from MagIntVol_vol to make room for yoke endcap
+        vol3_shape = geom.shapes.Tubs("MagIntVol_vol3_shape", rmin=self.EndcapDRmin, rmax=self.EndcapDRmax, dz=0.5 * (self.EndcapCZEnd - self.EndcapDZStart))
         
-        MagIntVol_shape = geom.shapes.Boolean("MagIntVol_shape", type='union',
+        pos = geom.structure.Position("MagIntVol_boolean_shape_pos1", Q('0m'), Q('0m'), Q('0m'))
+        
+        MagIntVol_shape1 = geom.shapes.Boolean("MagIntVol_shape", type='union',
 				   first=vol1_shape, 
 				   second=vol2_shape, 
 				   rot='noRotate', 
 				   pos=pos)
         
+        pos = geom.structure.Position("MagIntVol_boolean_shape_pos2", Q('0m'), Q('0m'), 0.5 * (self.EndcapDZStart + self.EndcapCZEnd))
+        
+        MagIntVol_shape2 = geom.shapes.Boolean("MagIntVol_shape2", type='subtraction',
+				   first=MagIntVol_shape1, 
+				   second=vol3_shape, 
+				   rot='noRotate', 
+				   pos=pos)
+        
+        pos = geom.structure.Position("MagIntVol_boolean_shape_pos3", Q('0m'), Q('0m'), -0.5 * (self.EndcapDZStart + self.EndcapCZEnd))
+        
+        MagIntVol_shape3 = geom.shapes.Boolean("MagIntVol_shape3", type='subtraction',
+				   first=MagIntVol_shape2, 
+				   second=vol3_shape, 
+				   rot='noRotate', 
+				   pos=pos)
+        
         MagIntVol_volume = geom.structure.Volume('MagIntVol_volume',
 						 material='Air',
-						 shape=MagIntVol_shape)
+						 shape=MagIntVol_shape3)
 
 
         pos = [Q('0m'),Q('0m'),Q('0m')]
