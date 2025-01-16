@@ -23,28 +23,28 @@ class tmsBuilder(gegede.builder.Builder):
                                     dx = 0.5*self.thinbox1Dimension[0],
                                     dy = 0.5*self.thinbox1Dimension[1],
                                     dz = 0.5*self.thinbox1Dimension[2])
-        #thinBox2 = geom.shapes.Box( 'box2'+self.name,
-        #                            dx = 0.5*self.thinbox2Dimension[0],
-        #                            dy = 0.5*self.thinbox2Dimension[1],
-        #                            dz = 0.5*self.thinbox2Dimension[2])
+        thinBox2 = geom.shapes.Box( 'box2'+self.name,
+                                    dx = 0.5*self.thinbox1Dimension[0],
+                                    dy = 0.5*self.thinbox1Dimension[1],
+                                    dz = 0.5*self.thinbox1Dimension[2])
         
         thickBox1 = geom.shapes.Box( 'thickbox'+self.name,
                                      dx = 0.5*self.thinbox1Dimension[0],
                                      dy = 0.5*self.thinbox1Dimension[1],
                                      dz = 0.5*Q("0.040m"))
-        #thickBox2 = geom.shapes.Box( 'thickbox2'+self.name,
-        #                            dx = 0.5*self.thinbox2Dimension[0],
-        #                            dy = 0.5*self.thinbox2Dimension[1],
-        #                             dz = 0.5*Q("0.040m"))
+        thickBox2 = geom.shapes.Box( 'thickbox2'+self.name,
+                                    dx = 0.5*self.thinbox1Dimension[0],
+                                    dy = 0.5*self.thinbox1Dimension[1],
+                                    dz = 0.5*Q("0.040m"))
 
         doubleBox1 = geom.shapes.Box( 'doublebox'+self.name,
                                     dx = 0.5*self.thinbox1Dimension[0],
                                     dy = 0.5*self.thinbox1Dimension[1],
                                     dz = 0.5*Q("0.080m"))
-        #doubleBox2 = geom.shapes.Box( 'doublebox2'+self.name,
-        #                            dx = 0.5*self.thinbox2Dimension[0],
-        #                            dy = 0.5*self.thinbox2Dimension[1],
-        #                            dz = 0.5*Q("0.080m"))
+        doubleBox2 = geom.shapes.Box( 'doublebox2'+self.name,
+                                    dx = 0.5*self.thinbox1Dimension[0],
+                                    dy = 0.5*self.thinbox1Dimension[1],
+                                    dz = 0.5*Q("0.080m"))
 
 
 
@@ -69,17 +69,17 @@ class tmsBuilder(gegede.builder.Builder):
         
         
         thinBox1_lv = geom.structure.Volume( 'thinvol'+self.name, material=self.mat, shape=thinBox1 )
-        #thinBox2_lv = geom.structure.Volume( 'thinvol2'+self.name, material=self.mat, shape=thinBox2 )
+        thinBox2_lv = geom.structure.Volume( 'thinvol2'+self.name, material=self.mat, shape=thinBox2 )
         thickBox1_lv = geom.structure.Volume( 'thickvol'+self.name, material=self.mat, shape=thickBox1 )
-        #thickBox2_lv = geom.structure.Volume( 'thickvol2'+self.name, material=self.mat, shape=thickBox2 )
+        thickBox2_lv = geom.structure.Volume( 'thickvol2'+self.name, material=self.mat, shape=thickBox2 )
         doubleBox1_lv = geom.structure.Volume( 'doublevol'+self.name, material=self.mat, shape=doubleBox1 )
-        #doubleBox2_lv = geom.structure.Volume( 'doublevol2'+self.name, material=self.mat, shape=doubleBox2 )
+        doubleBox2_lv = geom.structure.Volume( 'doublevol2'+self.name, material=self.mat, shape=doubleBox2 )
         thinBox1_lv.params.append(('BField',self.BFieldDownHigh))
-        #thinBox2_lv.params.append(('BField',self.BFieldUpHigh))
-        thickBox1_lv.params.append(('BField',self.BFieldDownLow))
-        #thickBox2_lv.params.append(('BField',self.BFieldUpLow))
-        doubleBox1_lv.params.append(('BField',self.BFieldDownLow))
-        #doubleBox2_lv.params.append(('BField',self.BFieldUpLow))
+        thinBox2_lv.params.append(('BField',self.BFieldUpHigh))
+        thickBox1_lv.params.append(('BField',self.BFieldDownHigh))
+        thickBox2_lv.params.append(('BField',self.BFieldUpHigh))
+        doubleBox1_lv.params.append(('BField',self.BFieldDownHigh))
+        doubleBox2_lv.params.append(('BField',self.BFieldUpHigh))
 
         thin_layer_lv = geom.structure.Volume( 'thinlayervol', material='Air', shape=thin_layer )
         thick_layer_lv = geom.structure.Volume( 'thicklayervol', material='Air', shape=thick_layer )
@@ -129,8 +129,8 @@ class tmsBuilder(gegede.builder.Builder):
         #thin_layer_lv.placements.append(ctr_pla.name)
         
         pla_1 = geom.structure.Placement( 'plane1'+self.name, volume=thinBox1_lv, pos=steel_pos1 )
-        pla_2 = geom.structure.Placement( 'plane2'+self.name, volume=thinBox1_lv, pos=steel_pos2 )
-        pla_3 = geom.structure.Placement( 'plane3'+self.name, volume=thinBox1_lv, pos=steel_pos3 )
+        pla_2 = geom.structure.Placement( 'plane2'+self.name, volume=thinBox2_lv, pos=steel_pos2 )
+        pla_3 = geom.structure.Placement( 'plane3'+self.name, volume=thinBox2_lv, pos=steel_pos3 )
         pla_4 = geom.structure.Placement( 'plane4'+self.name, volume=thinBox1_lv, pos=steel_pos4 )
 
         thin_layer_lv.placements.append(pla_1.name)
@@ -148,8 +148,8 @@ class tmsBuilder(gegede.builder.Builder):
         #thick_layer_lv.placements.append(thick_ctr_pla.name)
         
         thick_pla_1 = geom.structure.Placement( 'thickplane1'+self.name, volume=thickBox1_lv, pos=steel_pos1 )
-        thick_pla_2 = geom.structure.Placement( 'thickplane2'+self.name, volume=thickBox1_lv, pos=steel_pos2 )
-        thick_pla_3 = geom.structure.Placement( 'thickplane3'+self.name, volume=thickBox1_lv, pos=steel_pos3 )
+        thick_pla_2 = geom.structure.Placement( 'thickplane2'+self.name, volume=thickBox2_lv, pos=steel_pos2 )
+        thick_pla_3 = geom.structure.Placement( 'thickplane3'+self.name, volume=thickBox2_lv, pos=steel_pos3 )
         thick_pla_4 = geom.structure.Placement( 'thickplane4'+self.name, volume=thickBox1_lv, pos=steel_pos4 )
 
         thick_layer_lv.placements.append(thick_pla_1.name)
@@ -167,8 +167,8 @@ class tmsBuilder(gegede.builder.Builder):
         #double_layer_lv.placements.append(double_ctr_pla.name)
 
         double_pla_1 = geom.structure.Placement( 'doubleplane1'+self.name, volume=doubleBox1_lv, pos=steel_pos1 )
-        double_pla_2 = geom.structure.Placement( 'doubleplane2'+self.name, volume=doubleBox1_lv, pos=steel_pos2 )
-        double_pla_3 = geom.structure.Placement( 'doubleplane3'+self.name, volume=doubleBox1_lv, pos=steel_pos3 )
+        double_pla_2 = geom.structure.Placement( 'doubleplane2'+self.name, volume=doubleBox2_lv, pos=steel_pos2 )
+        double_pla_3 = geom.structure.Placement( 'doubleplane3'+self.name, volume=doubleBox2_lv, pos=steel_pos3 )
         double_pla_4 = geom.structure.Placement( 'doubleplane4'+self.name, volume=doubleBox1_lv, pos=steel_pos4 )
 
         double_layer_lv.placements.append(double_pla_1.name)
@@ -448,7 +448,7 @@ class tmsBuilder(gegede.builder.Builder):
         thinModlayer_pos = [geom.structure.Position('k')]*Module_layers_thin
         thin_Modlayer_pla = [geom.structure.Placement('l',volume=Module_layer_lv1,pos=thinModlayer_pos[1])]*Module_layers_thin
 
-        hybrid = False
+        hybrid = True
     
         for module in range(Module_layers_thin):
             zpos = -Q("3.650m") -Q("0.0325m") + module * Q("0.065m") + Q("0.0075m")     # first layer of thin steel - half thin steel thickness - half gap
