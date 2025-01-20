@@ -64,10 +64,9 @@ class SANDBuilder(gegede.builder.Builder):
         # part D is a TUBS, 1.96<|x|<2.15m, rmin=0.512m, rmax=1.73m
         self.EndcapDZStart=Q("1.96m")
         self.EndcapDZEnd=Q("2.15m")
+        
         # Here we reduce the size of the D element of the yoke endcap
         # to avoid overlap with the curved element of the ecal endcap module
-        # self.EndcapDRmax=Q("1.73m")
-        # self.EndcapDRmin=Q("0.51m")
         self.EndcapDRmax=Q("1.66m")
         self.EndcapDRmin=Q("0.62m")
 
@@ -155,38 +154,6 @@ class SANDBuilder(gegede.builder.Builder):
         self.build_inner_volume(MagIntVol_volume, geom)
 
         print(("printing main_lv: " + str(main_lv)))
-
-
-#        TranspV = [0,0,1]
-#        begingap = ltools.getBeginGap( self )
-
-        # initial position, based on the dimension projected on transportation vector
-
-#        pos = [Q('0m'),Q('0m'),-main_hDim[2]]
-#        pos = [Q('0m'),Q('0m'),Q('0m')]
-#        rot = [Q('0deg'),Q('90deg'),Q('0deg')]
-#        main_lv = main_lv.get_Volume()
-#        main_pos = gemo.structure.Poition( main_lv.name_pos, Pos[0], Pos[1], Pos[2] )
-#        main_rot = geom.structure.Rotation( main_lv.name_rot, Rot[0], Rot[1], Rot[2] )
-#        main_pla = geom.structure.Placement (main_lv.name_pla, volume=main_lv, pos=main_pos, rot=main_rot )
-#        main_lv.placements.append( main_pla.name )
-
-#        print( "KLOE subbuilders")
-#        for i,sb in enumerate(self.get_builders()):
-#            sb_lv = sb.get_volume()
-#            print( "Working on ", i, sb_lv.name)
-#            sb_dim = ltools.getShapeDimensions( sb_lv, geom )
-
-#            pos[2] = pos[2] + sb_dim[2] + self.InsideGap[i]
-            # defining position, placement, and finally insert into main logic volume.
-#            pos_name=self.name+sb_lv.name+'_pos_'+str(i)
-#            pla_name=self.name+sb_lv.name+'_pla_'+str(i)
-#            print( "Position name", pos_name)
-#            print( "Placement name", pla_name)
-#            sb_pos = geom.structure.Position(pos_name,pos[0], pos[1], pos[2])
-#            sb_pla = geom.structure.Placement(pla_name,volume=sb_lv, pos=sb_pos)
-#            print( "Appending ",sb_pla.name," to main_lv=",main_lv.name)
-#            main_lv.placements.append(sb_pla.name)
 
     def build_yoke(self,main_lv,geom):
 
