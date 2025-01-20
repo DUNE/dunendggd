@@ -25,12 +25,12 @@ class SandInnerVolumeBuilder(gegede.builder.Builder):
         self.build_grain(main_lv, geom)
 
     def build_tracker(self, main_lv, geom):
-        # if "STT" not in self.builders:
-        #     print("STT builder not found")
-        #     return  
         if "STT" in self.builders:
             print("STT builder found")
             tracker_builder=self.get_builder("STT")
+        elif "STT_Default" in self.builders or "STT_Backup" in self.builders:
+            print ("STT_Default or STT_Backup builder found")
+            tracker_builder=self.get_builder("STT_Default") if "STT_Default" in self.builders else self.get_builder("STT_Backup")
         elif "SAND_TRACKER" in self.builders:
             tracker_builder=self.get_builder("SAND_TRACKER")
         else:
