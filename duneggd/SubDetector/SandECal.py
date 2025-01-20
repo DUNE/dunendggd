@@ -32,10 +32,9 @@ class SandECalBuilder(gegede.builder.Builder):
         # part D is a TUBS, 1.96<|x|<2.15m, rmin=0.512m, rmax=1.73m
         self.EndcapDZStart=Q("1.96m")
         self.EndcapDZEnd=Q("2.15m")
+        
         # Here we reduce the size of the D element of the yoke endcap
         # to avoid overlap with the curved element of the ecal endcap module
-        # self.EndcapDRmax=Q("1.73m")
-        # self.EndcapDRmin=Q("0.51m")
         self.EndcapDRmax=Q("1.66m")
         self.EndcapDRmin=Q("0.62m")
 
