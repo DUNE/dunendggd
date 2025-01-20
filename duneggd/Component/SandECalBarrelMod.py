@@ -9,14 +9,14 @@ from gegede import Quantity as Q
 class SandECalBarrelModBuilder(gegede.builder.Builder):
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
     def configure(self,
-		  trapezoidDim=None,
-		  ScintMat=None,
-		  PasMat=None,
-		  PasSlabThickness=None,
-		  ActiveSlabThickness=None,
-		  nSlabs=None,
-          BackPlateThick=None,
-		  **kwds):
+                  trapezoidDim=None,
+                  ScintMat=None,
+                  PasMat=None,
+                  PasSlabThickness=None,
+                  ActiveSlabThickness=None,
+                  nSlabs=None,
+                  BackPlateThick=None,
+                  **kwds):
         self.trapezoidDim = trapezoidDim
         self.ScintMat = ScintMat
         self.PasMat = PasMat
@@ -38,8 +38,6 @@ class SandECalBarrelModBuilder(gegede.builder.Builder):
 
         ECAL_lv = geom.structure.Volume('ECAL_lv', material='Air', shape=ECAL_shape)
         self.add_volume(ECAL_lv)
-#       ECAL_position = geom.structure.Position('ECAL_position', Position[0], Position[1], Position[2])
-#       ECAL_place = geom.structure.Placement('ECAL_place', volume = ECAL_lv, pos=ECAL_position)
 
             ######## Aluminum back plate##################
 
