@@ -3,6 +3,7 @@ from duneggd.LocalTools import localtools as ltools
 import math
 from gegede import Quantity as Q
 import time
+from pint import UnitRegistry
 
 class STTBuilder(gegede.builder.Builder):
 
@@ -10,7 +11,7 @@ class STTBuilder(gegede.builder.Builder):
                         # SANDINNERVOLUME
                         halfDimension=None,     Material=None,            nBarrelModules=None,      configuration=None,     GRAINThickness=None,    clearenceGRAINTracker=None,        clearenceECALGRAIN=None,       clearenceTrackerECAL=None,
                         # STT   tracker
-                        nofUpstreamTrkMod=None, nofDownstreamTrkMod=None, nofC3H6ModAfterCMod=None, 
+                        nofUpstreamTrkMod=None, nofDownstreamTrkMod=None, nofC3H6ModAfterCMod=None,     nofC3H6ModNoRadAfterCMod=None,
                         # STRAW TUBE
                         StrawRadius=None,       DistStrawStraw=None,      DistStrawWall=None,       AngleStrawStraw=None,   StrawPlug=None,      StrawWireRadius=None, StrawWireCoatThickness=None, CoatThickness=None, MylarThickness=None, StrawGas=None,
                         # STT   MODULE
@@ -41,6 +42,7 @@ class STTBuilder(gegede.builder.Builder):
             self.nofUpstreamTrkMod            = nofUpstreamTrkMod
             self.nofDownstreamTrkMod          = nofDownstreamTrkMod
             self.nofC3H6ModAfterCMod          = nofC3H6ModAfterCMod
+            self.nofC3H6ModNoRadAfterCMod     = nofC3H6ModNoRadAfterCMod
             self.AvailableUpstreamSpace       = self.kloeTrkRegRadius - self.GRAINThickness - self.clearenceGRAINTracker - self.clearenceECALGRAIN
             self.AvalilableDowstreamSpace     = self.kloeTrkRegRadius - self.clearenceTrackerECAL
 
@@ -78,7 +80,7 @@ class STTBuilder(gegede.builder.Builder):
             self.nofStrawPlanes               = nofStrawPlanes
             #
             self.GetModThickness              = lambda mod_type : self.gap[mod_type]*2 + self.targetThickness[mod_type] + self.RadiatorThickness[mod_type] + self.nofStrawPlanes[mod_type]*self.planeXXThickness
-            self.ModThickness                 = {"CMod" : self.GetModThickness("CMod"),"C3H6Mod" : self.GetModThickness("C3H6Mod"),"TrkMod" : self.GetModThickness("TrkMod")}
+            self.ModThickness                 = {"CMod" : self.GetModThickness("CMod"),"C3H6Mod" : self.GetModThickness("C3H6Mod"), "C3H6ModNoRad" : self.GetModThickness("C3H6ModNoRad"), "TrkMod" : self.GetModThickness("TrkMod"), "TrkMod2lyr" : self.GetModThickness("TrkMod2lyr")}
             
             #************************************************************************| STT components placement |**************************************************************************
             
@@ -93,6 +95,9 @@ class STTBuilder(gegede.builder.Builder):
             self.PlaneYYPosInTrkMod           = {"X":-self.ModThickness["TrkMod"]/2 + self.gap["TrkMod"] + self.planeXXThickness*1.5, "Y":Q("0mm"), "Z":Q("0mm")}
             self.PlaneXX2PosInTrkMod          = {"X":-self.ModThickness["TrkMod"]/2 + self.gap["TrkMod"] + self.planeXXThickness*2.5, "Y":Q("0mm"), "Z":Q("0mm")}
 
+            self.PlaneXX1PosInTrkMod2lyr      = {"X":-self.ModThickness["TrkMod2lyr"]/2 + self.gap["TrkMod2lyr"] + self.planeXXThickness/2,   "Y":Q("0mm"), "Z":Q("0mm")}
+            self.PlaneYYPosInTrkMod2lyr      = {"X":-self.ModThickness["TrkMod2lyr"]/2 + self.gap["TrkMod2lyr"] + self.planeXXThickness*1.5, "Y":Q("0mm"), "Z":Q("0mm")}
+
             #*****************************************************************************************************************************************************************************
 
             print("")
@@ -102,9 +107,6 @@ class STTBuilder(gegede.builder.Builder):
             print("-"*20+" INNERVOLUME INFO "+"-"*20)
             print("")
             print("GRAINThickness              | "+str(self.GRAINThickness))
-            print("clearence GRAIN-ECAL        | "+str(self.clearenceECALGRAIN))
-            print("clearence GRAIN-STT         | "+str(self.clearenceGRAINTracker))
-            print("clearence STT-ECAL          | "+str(self.clearenceTrackerECAL))
             print("")
             print("-"*20+" STRAW INFO "+"-"*20)
             print("")
@@ -119,51 +121,103 @@ class STTBuilder(gegede.builder.Builder):
             print("")
             print("Ctarget      Thickness      | "+str(self.targetThickness["CMod"]))
             print("C3H6target   Thickness      | "+str(self.targetThickness["C3H6Mod"]))
+            print("C3H6NoRadtarget   Thickness      | "+str(self.targetThickness["C3H6ModNoRad"]))
             print("planeXX      Thickness      | "+str(self.planeXXThickness))
             print("C3H6radiator Thickness      | "+str(self.RadiatorThickness["C3H6Mod"]))
             print("trkMod       Thickness      | "+str(self.ModThickness["TrkMod"]))
+            print("trkMod2lyr   Thickness      | "+str(self.ModThickness["TrkMod2lyr"]))
             print("C3H6Mod      Thickness      | "+str(self.ModThickness["C3H6Mod"]))
+            print("C3H6ModNoRad         Thickness      | "+str(self.ModThickness["C3H6ModNoRad"]))
             print("CMod         Thickness      | "+str(self.ModThickness["CMod"]))
             print("")
 
+    def maximize_x_plus_y(self, a, b, c): # a-> nonRad , b->Rad, c->Remaining Space
+        max_value = 0
+        optimal_x = 0
+        optimal_y = 0
+
+        print("a : "+str(a) + " b : "+str(b) + " c : "+str(c))
+
+        for x in range(0,12):
+            for y in range(0,12):
+                if a*x + b*y <= c:
+                    current_value = x + y
+                    if current_value > max_value and x < y:
+                        max_value = current_value
+                        optimal_x = x
+                        optimal_y = y
+
+        return optimal_x, optimal_y, max_value
+
+    def place_C3H6ModNoRad(self, module_sequence, modules_X_center, running_X):
+        module_sequence.append("C3H6ModNoRad")
+        modules_X_center.append(running_X + self.ModThickness["C3H6ModNoRad"]/2)
+        running_X += self.ModThickness["C3H6ModNoRad"]
+        return module_sequence, modules_X_center, running_X
+
     def init(self):
+        ureg = UnitRegistry()
 
         #************************************** DEFINE STT SEQUENCE *************************************
-        self.SuperModThickness            = self.ModThickness["CMod"] + self.ModThickness["C3H6Mod"] * self.nofC3H6ModAfterCMod
+        self.SuperModThickness            = self.ModThickness["CMod"] + self.ModThickness["C3H6Mod"] * self.nofC3H6ModAfterCMod + self.ModThickness["C3H6ModNoRad"] * self.nofC3H6ModNoRadAfterCMod
         
         # *************************************    SAND upstream    *************************************
 
         # 1 CMod in the SAND center and nofUpstreamTrkMod at the beginning of the tracker
+        self.nof_Up_FullSuperMod     = int(((self.AvailableUpstreamSpace - self.ModThickness["CMod"]/2 - self.ModThickness["TrkMod2lyr"] * self.nofUpstreamTrkMod) / self.SuperModThickness).to_base_units().magnitude)
+        self.avSpace_Up_SmallSuperMod = self.AvailableUpstreamSpace - self.ModThickness["CMod"]/2 - self.nof_Up_FullSuperMod * self.SuperModThickness - self.ModThickness["TrkMod2lyr"] * self.nofUpstreamTrkMod
+        self.avSpace_Up_C3H6Mod_SmallSuperMod = self.avSpace_Up_SmallSuperMod - self.ModThickness["CMod"] 
 
-        self.UpstreamSpaceLeft            = self.AvailableUpstreamSpace - self.ModThickness["CMod"]/2 - self.ModThickness["TrkMod"] * self.nofUpstreamTrkMod
-        
-        self.nofUpstreamSuperMod          = int((self.UpstreamSpaceLeft / self.SuperModThickness).to_base_units().magnitude)
-        
-        # 1 CMod always in front of sequence of C3H6Mod
+        a = self.ModThickness["C3H6ModNoRad"].to(ureg.mm)
+        b = self.ModThickness["C3H6Mod"].to(ureg.mm)
+        c = self.avSpace_Up_C3H6Mod_SmallSuperMod.to(ureg.mm)
 
-        self.UpstreamSpaceLeft            -= (self.nofUpstreamSuperMod * self.SuperModThickness + self.ModThickness["CMod"])
+        #Calculation for optimal number of C3H6Mod in the first SuperMod
+        optimal_x, optimal_y, max_value = self.maximize_x_plus_y(a, b, c)
+        self.isUpSmallSuperMod = 1
+        if optimal_x + optimal_y < 4:
+            self.isUpSmallSuperMod = 0
+            optimal_x = 0
+            optimal_y = 0
         
-        self.nofFirstUpstreamC3H6Mod      = int((self.UpstreamSpaceLeft / self.ModThickness["C3H6Mod"]).to_base_units().magnitude)
-        
-        self.UpstreamSpaceLeft            -= self.nofFirstUpstreamC3H6Mod * self.ModThickness["C3H6Mod"]
-        
-        self.STT_startX                   = - self.AvailableUpstreamSpace + self.UpstreamSpaceLeft 
+        optimal_x = 2
+        optimal_y = 6
+
+        self.nof_Up_C3H6ModNoRad_SmallSuperMod = optimal_x
+        self.nof_Up_C3H6Mod_SmallSuperMod = optimal_y
+
+        self.width_Up_SmallSuperMod = self.ModThickness["CMod"] +self.nof_Up_C3H6ModNoRad_SmallSuperMod * self.ModThickness["C3H6ModNoRad"] + self.nof_Up_C3H6Mod_SmallSuperMod * self.ModThickness["C3H6Mod"]
+        self.totSpace_Up_Mod = self.ModThickness["CMod"]/2 + self.nof_Up_FullSuperMod * self.SuperModThickness + self.width_Up_SmallSuperMod + self.ModThickness["TrkMod2lyr"] * self.nofUpstreamTrkMod
+
+        self.STT_startX = -self.totSpace_Up_Mod    
+
+        print("Running X start : " + str(self.STT_startX))
+        print("width Small mod : " + str(self.width_Up_SmallSuperMod))
+            
 
         # *************************************    SAND downstream    *************************************
         
         # 1 CMod in the SAND center and nofDownstreamTrkMod at the end of the tracker
+        self.nof_Down_FullSuperMod     = int(((self.AvalilableDowstreamSpace + self.ModThickness["CMod"]/2 - self.ModThickness["TrkMod2lyr"] * self.nofDownstreamTrkMod) / self.SuperModThickness).to_base_units().magnitude)
+        self.avSpace_Down_SmallSuperMod = self.AvalilableDowstreamSpace + self.ModThickness["CMod"]/2 - self.nof_Down_FullSuperMod * self.SuperModThickness - self.ModThickness["TrkMod2lyr"] * self.nofDownstreamTrkMod
+        self.avSpace_Down_C3H6Mod_SmallSuperMod = self.avSpace_Down_SmallSuperMod - self.ModThickness["CMod"] 
 
-        self.DownstreamSpaceLeft          = self.AvalilableDowstreamSpace + self.ModThickness["CMod"]/2 - self.ModThickness["TrkMod"] * self.nofDownstreamTrkMod
-        
-        self.nofDownstreamSuperMod        = int((self.DownstreamSpaceLeft / self.SuperModThickness).to_base_units().magnitude)
+        #Calculation for optimal number of C3H6Mod in the first SuperMod
+        a = self.ModThickness["C3H6ModNoRad"].to(ureg.mm)
+        b = self.ModThickness["C3H6Mod"].to(ureg.mm)
+        c = self.avSpace_Down_C3H6Mod_SmallSuperMod.to(ureg.mm)
 
-        # 1 CMod always in front of sequence of C3H6Mod
+        #Calculation for optimal number of C3H6Mod in the first SuperMod
+        optimal_x, optimal_y, max_value = self.maximize_x_plus_y(a, b, c)
 
-        self.DownstreamSpaceLeft          -= (self.nofDownstreamSuperMod * self.SuperModThickness + self.ModThickness["CMod"])
-
-        self.nofLastDownstreamC3H6Mod     = int((self.DownstreamSpaceLeft/self.ModThickness["C3H6Mod"]).to_base_units().magnitude)
-
-        self.DownstreamSpaceLeft          -= self.nofLastDownstreamC3H6Mod * self.ModThickness["C3H6Mod"]
+        self.isDowmSmallSuperMod = 1
+        if optimal_x + optimal_y < 4:
+            self.isDowmSmallSuperMod = 0
+            optimal_x = 0
+            optimal_y = 0
+ 
+        self.nof_Down_C3H6ModNoRad_SmallSuperMod = optimal_x
+        self.nof_Down_C3H6Mod_SmallSuperMod = optimal_y
 
         self.nofStrawCurrentMod           = 0
         self.nofStrawTubeConstructed      = 0
@@ -173,69 +227,91 @@ class STTBuilder(gegede.builder.Builder):
         module_sequence,modules_X_center = [],[]
 
         running_X = self.STT_startX
+        global iCH2Mod, iCH2SuperMod, iCH2NoRadSuperMod
 
+        iCH2Mod = 0
+        iCH2SuperMod = 0
+        iCH2NoRadSuperMod = 0
+
+        running_X = Q("-1074.9317481542537mm")
+        modGap =Q("22.2863mm")
+
+        # Upsteram TrkMod
         for i in range(self.nofUpstreamTrkMod): 
-            module_sequence.append("TrkMod")
-            modules_X_center.append(running_X + self.ModThickness["TrkMod"]/2)
-            running_X += self.ModThickness["TrkMod"]
+            module_sequence.append("TrkMod2lyr")
+            modules_X_center.append(running_X + self.ModThickness["TrkMod2lyr"]/2)
+            running_X += (self.ModThickness["TrkMod2lyr"]+modGap)
 
-        for i in range(self.nofFirstUpstreamC3H6Mod):
-            if(i==0): 
-                module_sequence.append("CMod")
-                modules_X_center.append(running_X + self.ModThickness["CMod"]/2)
-                running_X += self.ModThickness["CMod"]
-            module_sequence.append("C3H6Mod")
-            modules_X_center.append(running_X + self.ModThickness["C3H6Mod"]/2)
-            running_X += self.ModThickness["C3H6Mod"]
-
-        for i in range(self.nofUpstreamSuperMod + self.nofDownstreamSuperMod):
+        # Upstream Super Modules
+        if self.isUpSmallSuperMod == 1:
             module_sequence.append("CMod")
             modules_X_center.append(running_X + self.ModThickness["CMod"]/2)
-            running_X += self.ModThickness["CMod"]
-            for i in range(self.nofC3H6ModAfterCMod): 
-                module_sequence.append("C3H6Mod")
-                modules_X_center.append(running_X + self.ModThickness["C3H6Mod"]/2)
-                running_X += self.ModThickness["C3H6Mod"]
+            running_X += (self.ModThickness["CMod"]+modGap)
         
-        for i in range(self.nofLastDownstreamC3H6Mod):
-            if(i==0): 
-                module_sequence.append("CMod")
-                modules_X_center.append(running_X + self.ModThickness["CMod"]/2)
-                running_X += self.ModThickness["CMod"]
+        for i in range(4):
             module_sequence.append("C3H6Mod")
             modules_X_center.append(running_X + self.ModThickness["C3H6Mod"]/2)
-            running_X += self.ModThickness["C3H6Mod"]
-                 
+            running_X += (self.ModThickness["C3H6Mod"]+modGap)
+
+        # Full Size Super Modules
+        for i in range(7): 
+            module_sequence.append("CMod")
+            modules_X_center.append(running_X + self.ModThickness["CMod"]/2)
+            running_X += (self.ModThickness["CMod"]+modGap)
+
+            for j in range(5):
+                module_sequence.append("C3H6Mod")
+                modules_X_center.append(running_X + self.ModThickness["C3H6Mod"]/2)
+                running_X += (self.ModThickness["C3H6Mod"]+modGap)
+
+
+        # Downstream TrkMod          
         for i in range(self.nofDownstreamTrkMod): 
-            module_sequence.append("TrkMod")
-            modules_X_center.append(running_X + self.ModThickness["TrkMod"]/2)
-            running_X += self.ModThickness["TrkMod"]
+            module_sequence.append("TrkMod2lyr")
+            modules_X_center.append(running_X + self.ModThickness["TrkMod2lyr"]/2)
+            running_X += self.ModThickness["TrkMod2lyr"]
         
         
         self.module_sequence    = module_sequence
         self.modules_X_center   = modules_X_center
-    
+  
+            
     def construct(self, geom):
 
         self.init()
         main_lv = self.build_STTSegment(geom)
 
         print("")
-        print("nof C3H6 Mod                | "+str((self.nofUpstreamSuperMod+self.nofDownstreamSuperMod)*self.nofC3H6ModAfterCMod+self.nofFirstUpstreamC3H6Mod+self.nofLastDownstreamC3H6Mod))
-        print("nof C Mod                   | "+str( self.nofUpstreamSuperMod+self.nofDownstreamSuperMod + 2))
-        print("nof Trk Mod                 | "+str(self.nofUpstreamTrkMod+self.nofDownstreamTrkMod))
+        print("Super Module Thickness : "+str(self.SuperModThickness))
+        print("Super Module Composition : 1 (C) " + str(self.nofC3H6ModNoRadAfterCMod) + " (C3H6NoRad) + " + str(self.nofC3H6ModAfterCMod) + " (C3H6Mod)")
+        print("Total Modules               | " + str(len(self.module_sequence)))
+        print("Total SuperModules          | " + str(self.nof_Up_FullSuperMod+self.nof_Down_FullSuperMod+self.isDowmSmallSuperMod+self.isUpSmallSuperMod))
+        print("Total UpStrem SuperModules  | " + str(self.nof_Up_FullSuperMod))
+        print("Total DownStrem SuperModules| " + str(self.nof_Down_FullSuperMod))
+        print("UpStream Small Super Module Composition : 1 (C) +" + str(self.nof_Up_C3H6ModNoRad_SmallSuperMod) + " (C3H6NoRad) + " + str(self.nof_Up_C3H6Mod_SmallSuperMod) + " (C3H6Mod)")
+        print("DownStream Small Super Module Composition : 1 (C) +" + str(self.nof_Down_C3H6ModNoRad_SmallSuperMod) + " (C3H6NoRad) + " + str(self.nof_Down_C3H6Mod_SmallSuperMod) + " (C3H6Mod)")
         print("")
+        print("")
+        print("Final Clearances :")
+        print("STT startX : "+str(self.STT_startX) + " | STT endX : "+str(self.modules_X_center[-1] + self.ModThickness["TrkMod2lyr"]/2))        
+        print("Radius : " + str(self.kloeTrkRegRadius))
+        print("GRAIN-ECAL                  | "+str(self.clearenceECALGRAIN))
+        print("GRAIN-STT                   | "+str(self.STT_startX - (-self.kloeTrkRegRadius + self.clearenceECALGRAIN + self.GRAINThickness)))
+        print("STT-ECAL                    | "+str(self.kloeTrkRegRadius - (self.modules_X_center[-1] + self.ModThickness["TrkMod2lyr"]/2)))
+        print("")
+        print("")
+
+
 
         for mod_id in range(len(self.module_sequence)):
 
             print("Building STT MODULE "+str(mod_id)+" "+self.module_sequence[mod_id])
             mod_lv       = self.construct_one_mod(geom, main_lv, mod_id) 
+
             mod_position = geom.structure.Position("mod_"+str(mod_id)+"_pos", self.modules_X_center[mod_id], Q("0m"), Q("0m"))
             mod_place    = geom.structure.Placement("mod_"+str(mod_id)+"_place", volume = mod_lv.name, pos = mod_position.name)
 
             main_lv.placements.append(mod_place.name)
-
-            # if mod_id==4: break
         
         self.stop_time = time.time()
         print("")
@@ -314,7 +390,8 @@ class STTBuilder(gegede.builder.Builder):
         planeYY                 = self.constructStrawPlane(geom, planeYY_name, dy = self.kloeTrkRegHalfDx - self.FrameThickness,  dz = module_half_heigth - self.FrameThickness,    gas = self.StrawGas[module_type])
         self.nofStrawTubeConstructed += self.nofStrawCurrentMod * self.nofStrawPlanes[module_type]
         
-        if(module_type!="TrkMod"):
+        if(module_type!="TrkMod" and module_type!="TrkMod2lyr"):
+            #print("Constructing "+module_type+" with "+str(self.nofStrawPlanes[module_type])+" straw planes")
             frame        = self.constructFrame(geom,    base_name,    module_type,    dy = module_half_heigth,                                            dz = self.kloeTrkRegHalfDx)
             target       = self.constructTarget(geom,   base_name,    module_type,    dy = module_half_heigth - self.FrameThickness - self.AddGapForSlab, dz = self.kloeTrkRegHalfDx - self.FrameThickness - self.AddGapForSlab)
             if (self.radiator=="yes" and module_type=='C3H6Mod'):Radiator = self.constructRadiator(geom, base_name,    module_type,    dy = module_half_heigth - self.FrameThickness, dz = self.kloeTrkRegHalfDx - self.FrameThickness)
@@ -337,7 +414,19 @@ class STTBuilder(gegede.builder.Builder):
             main_lv.placements.append(planeXX_pla.name)
             main_lv.placements.append(planeYY_pla.name)
 
+        elif (module_type=="TrkMod2lyr"):
+            #print("Constructing "+module_type+" with "+str(self.nofStrawPlanes[module_type])+" straw planes")
+            planeXX1_pos = geom.structure.Position(planeXX_name+"1_pos",self.PlaneXX1PosInTrkMod2lyr["X"],self.PlaneXX1PosInTrkMod2lyr["Y"],self.PlaneXX1PosInTrkMod2lyr["Z"])
+            planeYY_pos  = geom.structure.Position(planeYY_name+"_pos" ,self.PlaneYYPosInTrkMod2lyr["X"], self.PlaneYYPosInTrkMod2lyr["Y"], self.PlaneYYPosInTrkMod2lyr["Z"])
+
+            planeXX1_pla = geom.structure.Placement(planeXX_name+"1_pla", volume = planeXX, pos = planeXX1_pos)
+            planeYY_pla  = geom.structure.Placement(planeYY_name+"_pla",  volume = planeYY, pos = planeYY_pos, rot= "r90aboutX")
+
+            main_lv.placements.append(planeXX1_pla.name)
+            main_lv.placements.append(planeYY_pla.name)
+
         else:
+            #print("Constructing "+module_type+" with "+str(self.nofStrawPlanes[module_type])+" straw planes")
 
             planeXX1_pos = geom.structure.Position(planeXX_name+"1_pos",self.PlaneXX1PosInTrkMod["X"],self.PlaneXX1PosInTrkMod["Y"],self.PlaneXX1PosInTrkMod["Z"])
             planeYY_pos  = geom.structure.Position(planeYY_name+"_pos" ,self.PlaneYYPosInTrkMod["X"], self.PlaneYYPosInTrkMod["Y"], self.PlaneYYPosInTrkMod["Z"])
@@ -371,7 +460,7 @@ class STTBuilder(gegede.builder.Builder):
         # keep track of the total mass count
         if(module_type=="CMod"):
             self.TotalCMass    += Q("2.23 g/cm^2")  * (self.targetThickness[module_type]/2*dy*dz)*2 # grams
-        elif(module_type=="C3H6Mod"):
+        elif(module_type=="C3H6Mod" or module_type=="C3H6ModNoRad"):
             self.TotalC3H6Mass += Q("0.946 g/cm^2") * (self.targetThickness[module_type]/2*dy*dz)*2
         return target_lv
     

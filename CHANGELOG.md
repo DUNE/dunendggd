@@ -8,9 +8,20 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
+### Changed
+
+- Bump gegede to version 0.8.0
+- Define default geometries in Makefile instead of bash script
+- Implementation of the C-shaped volumes of the SAND ECAL Endcaps
+
 ### Removed
 
 - Removed old gdml files from repo.
+- Default geometry definitions that did not build (missing KLOE cfg file)
+
+### Added
+- Updated with standalone build of initial and complete STT configurations. `only_SAND_STT_Initial.gdml` `only_SAND_STT_Complete.gdml`
+- generate complete ND geo with SAND provided with a Drift Chamber using target `sand_opt3_DRIFT1.gdml`
 
 ## [TDR_Production_geometry_v_1.0.3]
 
