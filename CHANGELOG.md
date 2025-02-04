@@ -14,6 +14,7 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 - Define default geometries in Makefile instead of bash script
 - Implementation of the C-shaped volumes of the SAND ECAL Endcaps
 - Change the NDLAr SensDet name from `TPCActive_shape` and `volTPCActive` to avoid inconsistency between prototype gdml and downstream configuration confusion
+- Add ND-LAr only gdml configuration
 
 ### Removed
 

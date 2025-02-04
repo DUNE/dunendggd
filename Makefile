@@ -26,6 +26,8 @@ sandopt: SAND_opt1_STT1.gdml \
 	only_SAND_STT_Initial.gdml \
 	only_SAND_STT_Complete.gdml
 
+lar_only: nd_hall_with_lar_only.gdml
+
 clean:
 	rm *.gdml
 
@@ -65,6 +67,13 @@ anti_fiducial_nd_hall_with_lar_tms_sand.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/TMS.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeDetectorNoActive.cfg
+
+nd_hall_with_lar_only.gdml: duneggd/Config/WORLDggd.cfg \
+        duneggd/Config/ND_Hall_Air_Volume_Only_LArDet.cfg \
+        duneggd/Config/ND_Hall_Rock.cfg \
+        duneggd/Config/ND_CryoStruct.cfg \
+        duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
+        duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
 
 nd_hall_with_lar_tms_nosand.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_noSAND.cfg \
