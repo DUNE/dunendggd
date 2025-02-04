@@ -27,9 +27,8 @@ def merge_files(inFileArC, inFileMin, outFile):
     print("Looping over ArC volumes")
     for volname, volume in reg1.logicalVolumeDict.items():
         if "AssemblyVolume" in str(type(volume)): continue
-        if volname == 'volTPCActive':
-            aux_tag = pyg4ometry.gdml.Auxiliary("SensDet", volname)
-            volume .addAuxiliaryInfo(aux_tag)
+        aux_tag = pyg4ometry.gdml.Auxiliary("SensDet", volname)
+        volume .addAuxiliaryInfo(aux_tag)
 
     print("Looping over MINERvA volumes")
     for volname, volume in reg2.logicalVolumeDict.items():
