@@ -233,6 +233,11 @@ class tmsBuilder(gegede.builder.Builder):
                                     dx = 0.5*Q("0.036m"),   # width single bar
                                     dy = 0.5*Q("3.300m"),   # length bar for stereo bars
                                     dz = 0.5*Q("0.017m"))   # thickness single bar
+
+        scinBox_parallel = geom.shapes.Box( 'scinbox_parallel'+self.name,
+                                    dx = 0.5*Q("0.036m"),   # width single bar
+                                    dy = 0.5*Q("3.500m"),   # length bar for stereo bars
+                                    dz = 0.5*Q("0.017m"))   # thickness single bar
         
         scinBox_ortho = geom.shapes.Box( 'scinbox_ortho'+self.name,
                                     dx = 0.5*Q("3.500m"),   # length bar for orthogonal bars
@@ -242,21 +247,35 @@ class tmsBuilder(gegede.builder.Builder):
         scinBox_lv = geom.structure.Volume( 'scinBoxlv'+self.name, material='Scintillator', shape=scinBox)
         scinBox_lv.params.append(("SensDet", tms_lv.name))
 
+        scinBox_lv_parallel = geom.structure.Volume( 'scinBoxlv_parallel'+self.name, material='Scintillator', shape=scinBox_parallel)
+        scinBox_lv_parallel.params.append(("SensDet", tms_lv.name))
+
         scinBox_lv_ortho = geom.structure.Volume( 'scinBoxlv_ortho'+self.name, material='Scintillator', shape=scinBox_ortho)
         scinBox_lv_ortho.params.append(("SensDet", tms_lv.name))
 
         # Place Bars into Modules
         ModuleBox = geom.shapes.Box( 'ModuleBox',
                                      dx = 0.5*Q("0.036m")*32,# + Q("0.001m")    # Single module contains 32 bars
-                                     dy = 0.5*Q("3.300m"),# + Q("0.001m")       # Same length as single stereo bar
+                                     #dy = 0.5*Q("3.300m"),# + Q("0.001m")       # Same length as single stereo bar
+                                    #YBar
+                                     dy = 0.5*Q("3.500m"),# + Q("0.001m")       # Same length as single stereo bar
                                      dz = 0.5*Q("0.017m"))# + Q("0.001m"))      # Same thickness as single bar
+
 
         ModuleBox_ortho = geom.shapes.Box( 'ModuleBox_ortho',
                                     dx = 0.5*Q("3.500m"),# + Q("0.001m")        # Same length as single orthogonal bar
                                     dy = 0.5*Q("0.036m")*32,# + Q("0.001m")     # Single module contains 32 bars
                                     dz = 0.5*Q("0.017m"))# + Q("0.001m"))       # Same thickness as single bar
 
+        #Y bar
+        ModuleBox_parallel = geom.shapes.Box( 'ModuleBox_parallel',
+                                     dx = 0.5*Q("0.036m")*32,# + Q("0.001m")    # Single module contains 32 bars
+                                     dy = 0.5*Q("3.500m"),# + Q("0.001m")       # Same length as single stereo bar
+                                     dz = 0.5*Q("0.017m"))# + Q("0.001m"))      # Same thickness as single bar
+
         ModuleBox_lv = geom.structure.Volume( 'ModuleBoxvol', material='Air', shape=ModuleBox )
+
+        ModuleBox_lv_parallel = geom.structure.Volume( 'ModuleBoxvol_parallel', material='Air', shape=ModuleBox_parallel)
 
         ModuleBox_lv_ortho = geom.structure.Volume( 'ModuleBoxvol_ortho', material='Air', shape=ModuleBox_ortho)
         
@@ -290,12 +309,18 @@ class tmsBuilder(gegede.builder.Builder):
         sci_Bar_pos = [geom.structure.Position('g')]*sci_bars
         sci_Bar_pla = [geom.structure.Placement('h',volume=scinBox_lv, pos=sci_Bar_pos[1])]*sci_bars
 
+        sci_Bar_pos_parallel = [geom.structure.Position('q')]*sci_bars
+        sci_Bar_pla_parallel = [geom.structure.Placement('w',volume=scinBox_lv_parallel, pos=sci_Bar_pos_parallel[1])]*sci_bars
+
         sci_Bar_pos_ortho = [geom.structure.Position('i')]*sci_bars
         sci_Bar_pla_ortho = [geom.structure.Placement('j', volume=scinBox_lv_ortho, pos=sci_Bar_pos_ortho[1])]*sci_bars
 
         # y and z positions are the same for each bar
         zpos_bar = Q("0m") 
         ypos_bar = Q("0m")
+
+        zpos_bar_parallel = Q("0m")
+        ypos_bar_parallel = Q("0m")
 
         zpos_bar_ortho = Q("0m")
         xpos_bar_ortho = Q("0m")
@@ -309,6 +334,14 @@ class tmsBuilder(gegede.builder.Builder):
 
             sci_Bar_pla[bar] = geom.structure.Placement( 'scibarpla'+self.name+str(bar), volume=scinBox_lv, pos=sci_Bar_pos[bar] )
             ModuleBox_lv.placements.append(sci_Bar_pla[bar].name)
+
+            sci_Bar_pos_parallel[bar] = geom.structure.Position( 'sci_barposition_parallel'+str(bar),
+                                                           x = xpos,
+                                                           y = ypos_bar_parallel,
+                                                           z = zpos_bar_parallel)
+
+            sci_Bar_pla_parallel[bar] = geom.structure.Placement( 'scibarpla_parallel'+self.name+str(bar), volume=scinBox_lv_parallel, pos=sci_Bar_pos_parallel[bar] )
+            ModuleBox_lv_parallel.placements.append(sci_Bar_pla_parallel[bar].name)
 
             ypos_ortho = -Q("0.558m") + bar * Q("0.036m")  # middle of last bar in single module (-16*bar width + half bar width)
             sci_Bar_pos_ortho[bar] = geom.structure.Position( 'sci_barposition_ortho'+str(bar),
@@ -335,7 +368,7 @@ class tmsBuilder(gegede.builder.Builder):
         Mod_left_rot = geom.structure.Rotation( 'Modleftrot', '0deg','0deg','-3deg')
         #it depends on how we define the position below but in this code  we don't use it anyway.
 #        Mod_ortho_rot = geom.structure.Rotation( 'Modorthorot', '0deg', '0deg', '0deg') #X bar
-        Mod_paralel_rot = geom.structure.Rotation( 'Modparalrot', '0deg', '0deg', '0deg') # Y Bar
+        Mod_parallel_rot = geom.structure.Rotation( 'Modparalrot', '0deg', '0deg', '0deg') # Y Bar
 
         mod_pos1 = geom.structure.Position( 'modpos1'+self.name,
                                             -2.5*Q("0.036m")*32-Q("0.021m"),    # position center of module (very left) and add sum of gaps
@@ -401,62 +434,62 @@ class tmsBuilder(gegede.builder.Builder):
         mod_ri_pla1 = geom.structure.Placement( 'modripla1'+self.name, volume=  ModuleBox_lv, pos=mod_pos1, rot = Mod_ri_rot)
         mod_le_pla1 = geom.structure.Placement( 'modlepla1'+self.name, volume=  ModuleBox_lv, pos=mod_pos1, rot = Mod_left_rot)
         mod_ortho_pla1 = geom.structure.Placement( 'modorthopla1'+self.name, volume= ModuleBox_lv_ortho, pos=mod_pos1_ortho)
-        mod_paralel_pla1 = geom.structure.Placement( 'modparalelpla1'+self.name, volume= ModuleBox_lv, pos=mod_pos1, rot = Mod_paralel_rot)
+        mod_parallel_pla1 = geom.structure.Placement( 'modparallelpla1'+self.name, volume= ModuleBox_lv_parallel, pos=mod_pos1, rot = Mod_parallel_rot)
 
         mod_ri_pla2 = geom.structure.Placement( 'modripla2'+self.name, volume=  ModuleBox_lv, pos=mod_pos2, rot = Mod_ri_rot)
         mod_le_pla2 = geom.structure.Placement( 'modlepla2'+self.name, volume=  ModuleBox_lv, pos=mod_pos2, rot = Mod_left_rot)
         mod_ortho_pla2 = geom.structure.Placement( 'modorthopla2'+self.name, volume= ModuleBox_lv_ortho, pos=mod_pos2_ortho)
-        mod_paralel_pla2 = geom.structure.Placement( 'modparalelpla2'+self.name, volume= ModuleBox_lv, pos=mod_pos2, rot = Mod_paralel_rot)
+        mod_parallel_pla2 = geom.structure.Placement( 'modparallelpla2'+self.name, volume= ModuleBox_lv_parallel, pos=mod_pos2, rot = Mod_parallel_rot)
 
         mod_ri_pla3 = geom.structure.Placement( 'modripla3'+self.name, volume=  ModuleBox_lv, pos=mod_pos3, rot = Mod_ri_rot)
         mod_le_pla3 = geom.structure.Placement( 'modlepla3'+self.name, volume=  ModuleBox_lv, pos=mod_pos3, rot = Mod_left_rot)
         mod_ortho_pla3 = geom.structure.Placement( 'modorthopla3'+self.name, volume= ModuleBox_lv_ortho, pos=mod_pos3_ortho)
-        mod_paralel_pla3 = geom.structure.Placement( 'modparalelpla3'+self.name, volume= ModuleBox_lv, pos=mod_pos3, rot = Mod_paralel_rot)
+        mod_parallel_pla3 = geom.structure.Placement( 'modparallelpla3'+self.name, volume= ModuleBox_lv_parallel, pos=mod_pos3, rot = Mod_parallel_rot)
 
         mod_ri_pla4 = geom.structure.Placement( 'modripla4'+self.name, volume=  ModuleBox_lv, pos=mod_pos4, rot = Mod_ri_rot)
         mod_le_pla4 = geom.structure.Placement( 'modlepla4'+self.name, volume=  ModuleBox_lv, pos=mod_pos4, rot = Mod_left_rot)
         mod_ortho_pla4 = geom.structure.Placement( 'modorthopla4'+self.name, volume= ModuleBox_lv_ortho, pos=mod_pos4_ortho)
-        mod_paralel_pla4 = geom.structure.Placement( 'modparalelpla4'+self.name, volume= ModuleBox_lv, pos=mod_pos4, rot = Mod_paralel_rot)
+        mod_parallel_pla4 = geom.structure.Placement( 'modparallelpla4'+self.name, volume= ModuleBox_lv_parallel, pos=mod_pos4, rot = Mod_parallel_rot)
 
         mod_ri_pla5 = geom.structure.Placement( 'modripla5'+self.name, volume=  ModuleBox_lv, pos=mod_pos5, rot = Mod_ri_rot)
         mod_le_pla5 = geom.structure.Placement( 'modlepla5'+self.name, volume=  ModuleBox_lv, pos=mod_pos5, rot = Mod_left_rot)
         mod_ortho_pla5 = geom.structure.Placement( 'modorthopla5'+self.name, volume= ModuleBox_lv_ortho, pos=mod_pos5_ortho)
-        mod_paralel_pla5 = geom.structure.Placement( 'modparalelpla5'+self.name, volume= ModuleBox_lv, pos=mod_pos5, rot = Mod_paralel_rot)
+        mod_parallel_pla5 = geom.structure.Placement( 'modparallelpla5'+self.name, volume= ModuleBox_lv_parallel, pos=mod_pos5, rot = Mod_parallel_rot)
 
         mod_ri_pla6 = geom.structure.Placement( 'modripla6'+self.name, volume=  ModuleBox_lv, pos=mod_pos6, rot = Mod_ri_rot)
         mod_le_pla6 = geom.structure.Placement( 'modlepla6'+self.name, volume=  ModuleBox_lv, pos=mod_pos6, rot = Mod_left_rot)
         mod_ortho_pla6 = geom.structure.Placement( 'modorthopla6'+self.name, volume= ModuleBox_lv_ortho, pos=mod_pos6_ortho)
-        mod_paralel_pla6 = geom.structure.Placement( 'modparalelpla6'+self.name, volume= ModuleBox_lv, pos=mod_pos6, rot = Mod_paralel_rot)
+        mod_parallel_pla6 = geom.structure.Placement( 'modparallelpla6'+self.name, volume= ModuleBox_lv_parallel, pos=mod_pos6, rot = Mod_parallel_rot)
 
         Module_layer_lv1.placements.append(mod_ri_pla1.name)
         Module_layer_lv2.placements.append(mod_le_pla1.name)
         Module_layer_lv3.placements.append(mod_ortho_pla1.name)
-        Module_layer_lv4.placements.append(mod_paralel_pla1.name)
+        Module_layer_lv4.placements.append(mod_parallel_pla1.name)
 
         Module_layer_lv1.placements.append(mod_ri_pla2.name)
         Module_layer_lv2.placements.append(mod_le_pla2.name)
         Module_layer_lv3.placements.append(mod_ortho_pla2.name)
-        Module_layer_lv4.placements.append(mod_paralel_pla2.name)
+        Module_layer_lv4.placements.append(mod_parallel_pla2.name)
 
         Module_layer_lv1.placements.append(mod_ri_pla3.name)
         Module_layer_lv2.placements.append(mod_le_pla3.name)
         Module_layer_lv3.placements.append(mod_ortho_pla3.name)
-        Module_layer_lv4.placements.append(mod_paralel_pla3.name)
+        Module_layer_lv4.placements.append(mod_parallel_pla3.name)
 
         Module_layer_lv1.placements.append(mod_ri_pla4.name)
         Module_layer_lv2.placements.append(mod_le_pla4.name)
         Module_layer_lv3.placements.append(mod_ortho_pla4.name)
-        Module_layer_lv4.placements.append(mod_paralel_pla4.name)
+        Module_layer_lv4.placements.append(mod_parallel_pla4.name)
 
         Module_layer_lv1.placements.append(mod_ri_pla5.name)
         Module_layer_lv2.placements.append(mod_le_pla5.name)
         Module_layer_lv3.placements.append(mod_ortho_pla5.name)
-        Module_layer_lv4.placements.append(mod_paralel_pla5.name)
+        Module_layer_lv4.placements.append(mod_parallel_pla5.name)
 
         Module_layer_lv1.placements.append(mod_ri_pla6.name)
         Module_layer_lv2.placements.append(mod_le_pla6.name)
         Module_layer_lv3.placements.append(mod_ortho_pla6.name)
-        Module_layer_lv4.placements.append(mod_paralel_pla6.name)
+        Module_layer_lv4.placements.append(mod_parallel_pla6.name)
 
         #Place Layers into RMS vol
         Module_layers_thin = 50
@@ -464,7 +497,7 @@ class tmsBuilder(gegede.builder.Builder):
         thin_Modlayer_pla = [geom.structure.Placement('l',volume=Module_layer_lv1,pos=thinModlayer_pos[1])]*Module_layers_thin
 
         hybrid = False
-        XY = False
+        XY = True
     
         for module in range(Module_layers_thin):
             zpos = -Q("3.650m") -Q("0.0325m") + module * Q("0.065m") + Q("0.0075m")     # first layer of thin steel - half thin steel thickness - half gap
@@ -484,7 +517,7 @@ class tmsBuilder(gegede.builder.Builder):
                 elif module % 3 == 2:
                     thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thinModlayer_pos[module] )
             elif XY:
-                #stereo version (UV)
+                #XY version (XY)
                 if module % 2 == 0 :
                    thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thinModlayer_pos[module] )
     
@@ -524,7 +557,7 @@ class tmsBuilder(gegede.builder.Builder):
                 elif module % 3 == 2:
                     thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thickModlayer_pos[module] )   #u
             elif XY:
-                #stereo version (UV)
+                #XY version (XY)
                 if module % 2 == 0 :
                      thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thickModlayer_pos[module] )
                     
@@ -564,7 +597,7 @@ class tmsBuilder(gegede.builder.Builder):
                 elif module % 3 == 2:
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=doubleModlayer_pos[module] )
             elif XY:
-                #stereo version (UV)
+                #XY version (XY)
                 if module % 2 == 0:
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=doubleModlayer_pos[module] )
     
