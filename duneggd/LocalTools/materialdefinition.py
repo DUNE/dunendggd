@@ -56,19 +56,17 @@ def define_materials( g ):
     TiO2  = g.matter.Molecule("TiO2",  density="4.23*g/cc",  elements=(("titanium",1),("oxygen",2)))
     Fe2O3 = g.matter.Molecule("Fe2O3", density="5.24*g/cc",  elements=(("iron",2),("oxygen",3)))
 
-    rock  = g.matter.Mixture( "Rock", density = "2.82*g/cc",
+    rock  = g.matter.Mixture( "Rock", density = "2.33*g/cc",
                             components = (
-                               ("SiO2",   0.5267),
-                               ("FeO",    0.1174),
-                               ("Al2O3",  0.1025),
-                               ("oxygen", 0.0771),
-                               ("MgO",    0.0473),
-                               ("CO2",    0.0422),
-                               ("CaO",    0.0382),
-                               ("carbon", 0.0240),
-                               ("sulfur", 0.0186),
-                               ("Na2O",   0.0053),
-                               ("P2O5",   0.0007),
+                                ("hydrogen",    0.0147547),
+                                ("carbon",      0.0114328),
+                                ("oxygen",      0.0431255),
+                                ("calcium",     0.0431250),
+                                ("sodium",      0.0028548),
+                                ("aluminum",    0.0946920),
+                                ("iron",        0.0179492),
+                                ("silicon",     0.2420140),
+                                ("potassium",   0.0093778),
                             ))
 
     dirt  = g.matter.Mixture( "Dirt", density = "1.7*g/cc",
