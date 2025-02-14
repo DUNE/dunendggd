@@ -8,6 +8,10 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
+- Nothing
+
+## [TDR_Production_geometry_v_1.1.0]
+
 ### Changed
 
 - Bump gegede to version 0.8.0
