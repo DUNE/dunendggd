@@ -68,6 +68,9 @@ root -q -b "checkOverlaps.C(\"geometry.gdml\", 1)"
 The last argument determines the algorithm used for the check. You should run
 both to be sure that there really are no overlaps.
 
+If you leave out the batch mode flag `-b` it will also show you any overlaps
+in a graphical interace.
+
 # Checking geometry positions
 
 The macro `locateVolume.C` can be used to check positions of volumes in the
