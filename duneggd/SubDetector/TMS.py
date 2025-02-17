@@ -65,7 +65,7 @@ class tmsBuilder(gegede.builder.Builder):
         tmsbox = geom.shapes.Box( 'tmsbox',
                                    dx = 0.5*Q("8.00m"),             # simply make big enough to fit everything
                                    dy = 0.5*Q("7.00m"), # 8.825     # same, but might need to increase once readout is added to orthogonal scintillator
-                                   dz = 0.5*Q("7.45m"))#7.05m"))    # same
+                                   dz = 0.5*Q("7.55m"))#7.05m"))    # same
         
         
         thinBox1_lv = geom.structure.Volume( 'thinvol'+self.name, material=self.mat, shape=thinBox1 )
@@ -449,33 +449,55 @@ class tmsBuilder(gegede.builder.Builder):
         thin_Modlayer_pla = [geom.structure.Placement('l',volume=Module_layer_lv1,pos=thinModlayer_pos[1])]*Module_layers_thin
 
         hybrid = True
-    
-        for module in range(Module_layers_thin):
-            zpos = -Q("3.650m") -Q("0.0325m") + module * Q("0.065m") + Q("0.0075m")     # first layer of thin steel - half thin steel thickness - half gap
-            thinModlayer_pos[module] = geom.structure.Position( 'thinModlayerposition'+str(module),
+        
+        if hybrid:
+            # set U layer for double layer of scintillator in first layer
+            thinModlayer_pos_first = [geom.structure.Position('q')]*51
+            thin_Modlayer_pla_first = [geom.structure.Placement('r',volume=Module_layer_lv1,pos=thinModlayer_pos[1])]*51
+            zpos = -Q("3.650m") -Q("0.0325m") + Q("0.0075m") - Q("0.051m") - Q("0.001m")     # first layer of thin steel - half thin steel thickness - half gap - full scintillator width - 1mm for space between modules
+            thinModlayer_pos_first[0] = geom.structure.Position( 'thinModlayerposition'+str(0),
+                                                            x = xpos_planes,
+                                                            y = ypos_planes,
+                                                            z = zpos)
+
+            thin_Modlayer_pla_first[0] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(0), volume=Module_layer_lv1, pos=thinModlayer_pos_first[0] )     #u
+            tms_lv.placements.append(thin_Modlayer_pla_first[0].name)
+
+        if hybrid:
+            #hybrid version (XUV)
+            for module in range(1, Module_layers_thin + 1):
+                zpos = -Q("3.650m") -Q("0.0325m") + (module-1) * Q("0.065m") + Q("0.0075m")     # first layer of thin steel - half thin steel thickness - half gap
+                thinModlayer_pos_first[module] = geom.structure.Position( 'thinModlayerposition'+str(module),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
                                                            z = zpos)
             
-            if hybrid:
-                #hybrid version (XUV)
-                if module % 3 == 0 :
-                    thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thinModlayer_pos[module] )
+                if (module-1) % 3 == 0 :
+                    thin_Modlayer_pla_first[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thinModlayer_pos_first[module] )
     
-                elif module % 3 == 1:
-                    thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thinModlayer_pos[module] )
+                elif (module-1) % 3 == 1:
+                    thin_Modlayer_pla_first[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thinModlayer_pos_first[module] )
     
-                elif module % 3 == 2:
-                    thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thinModlayer_pos[module] )
-            else:
-                #stereo version (UV)
+                elif (module-1) % 3 == 2:
+                    thin_Modlayer_pla_first[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thinModlayer_pos_first[module] )
+                
+                tms_lv.placements.append(thin_Modlayer_pla_first[module].name)
+        else:
+            #stereo version (UV)
+            for module in range(Module_layers_thin):
+                zpos = -Q("3.650m") -Q("0.0325m") + module * Q("0.065m") + Q("0.0075m")     # first layer of thin steel - half thin steel thickness - half gap
+                thinModlayer_pos[module] = geom.structure.Position( 'thinModlayerposition'+str(module),
+                                                           x = xpos_planes,
+                                                           y = ypos_planes,
+                                                           z = zpos)
+
                 if module % 2 == 0 :
                    thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thinModlayer_pos[module] )
     
                 else:
                     thin_Modlayer_pla[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thinModlayer_pos[module] )
 
-            tms_lv.placements.append(thin_Modlayer_pla[module].name)
+                tms_lv.placements.append(thin_Modlayer_pla[module].name)
 
 
         #Place Layers into RMS vol between thick layers                                                                                 
