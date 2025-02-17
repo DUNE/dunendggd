@@ -460,7 +460,7 @@ class tmsBuilder(gegede.builder.Builder):
                                                             y = ypos_planes,
                                                             z = zpos)
 
-            thin_Modlayer_pla_first[0] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(0), volume=Module_layer_lv1, pos=thinModlayer_pos_first[0] )     #u
+            thin_Modlayer_pla_first[0] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(0), volume=Module_layer_lv2, pos=thinModlayer_pos_first[0] )     #v (To uphold the pattern and not uXuv)
             tms_lv.placements.append(thin_Modlayer_pla_first[0].name)
 
         if hybrid:
