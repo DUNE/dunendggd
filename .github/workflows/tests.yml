@@ -13,6 +13,14 @@ permissions:
   id-token: write
 
 jobs:
+  check_changelog:
+    name: Check that CHANGELOG was updated
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'pull_request' }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Check CHANGELOG diff
+      run: git diff --exit-code ${{github.base_ref}} && echo "::error file=CHANGELOG.md::CHANGELOG was not updated" && exit 1
   build:
     name: Build default geometry
     runs-on: ubuntu-latest
