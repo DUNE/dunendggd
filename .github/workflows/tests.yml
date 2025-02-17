@@ -25,10 +25,10 @@ jobs:
       run: |
         if git diff --exit-code origin/${{github.base_ref}} -- CHANGELOG.md
         then
-            echo "CHANGELOG was updated"
-        else
             echo "::error file=CHANGELOG.md::CHANGELOG was not updated"
             exit 1
+        else
+            echo "::notice file=CHANGELOG.md::CHANGELOG was updated"
         fi
   build:
     name: Build default geometry
