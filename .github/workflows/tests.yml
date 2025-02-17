@@ -23,7 +23,13 @@ jobs:
         fetch-depth: 0
     - name: Check CHANGELOG diff
       run: |
-        git diff --exit-code origin/${{github.base_ref}} -- CHANGELOG.md && (echo "::error file=CHANGELOG.md::CHANGELOG was not updated"; exit 1)
+        if git diff --exit-code origin/${{github.base_ref}} -- CHANGELOG.md
+        then
+            echo "CHANGELOG was updated"
+        else
+            echo "::error file=CHANGELOG.md::CHANGELOG was not updated"
+            exit 1
+        fi
   build:
     name: Build default geometry
     runs-on: ubuntu-latest
