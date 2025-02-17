@@ -8,6 +8,10 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
+### Changed
+
+- Change most rock to vaccuum. Only need rock in front, and a little around detectors
+
 ### Added
 
 - Check for CHANGELOG update in PRs
