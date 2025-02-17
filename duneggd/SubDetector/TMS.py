@@ -11,7 +11,7 @@ class tmsBuilder(gegede.builder.Builder):
         self.BFieldDownHigh = BFieldDownHigh
         self.mat=mat
         self.thinbox1Dimension=thinbox1Dimension
-        #self.thinbox2Dimension=thinbox2Dimension
+        #self.thinbox2Dimension=thinbox2Dimension   #remnant from old geometry version with two different steel plate widths (outer and inner)
         self.gapPosition=gapPosition
         
         
@@ -87,6 +87,7 @@ class tmsBuilder(gegede.builder.Builder):
         tms_lv = geom.structure.Volume( 'vol'+self.name, material='Air', shape=tmsbox )
             
         # Position steel in layer volumes (Thin)
+        """The commented out part here is a remnant from the old geometry with different steel widths (inner and outer)"""
         #lf_pos = geom.structure.Position( 'lfpos'+self.name,
         #                                  0.5*(self.thinbox1Dimension[0]+self.thinbox2Dimension[0])+self.gapPosition[0],
         #                                  Q("0m"),
@@ -119,7 +120,8 @@ class tmsBuilder(gegede.builder.Builder):
                                             Q("0m"))
 
 
-        # Thin steel        
+        # Thin steel
+        """Same here"""
         #rt_pla = geom.structure.Placement( 'rtpla'+self.name, volume=thinBox1_lv, pos=rt_pos )
         #lf_pla = geom.structure.Placement( 'lfpla'+self.name, volume=thinBox1_lv, pos=lf_pos )
         #ctr_pla = geom.structure.Placement( 'ctrpla'+self.name, volume=thinBox2_lv, pos=ctr_pos )
@@ -139,6 +141,7 @@ class tmsBuilder(gegede.builder.Builder):
         thin_layer_lv.placements.append(pla_4.name)
 
         # Thick steel
+        """Same here"""
         #thick_rt_pla = geom.structure.Placement( 'thickrtpla'+self.name, volume=thickBox1_lv, pos=rt_pos )
         #thick_lf_pla = geom.structure.Placement( 'thicklfpla'+self.name, volume=thickBox1_lv, pos=lf_pos )
         #thick_ctr_pla = geom.structure.Placement( 'thickctrpla'+self.name, volume=thickBox2_lv, pos=ctr_pos )
@@ -158,6 +161,7 @@ class tmsBuilder(gegede.builder.Builder):
         thick_layer_lv.placements.append(thick_pla_4.name)
 
         # Double steel
+        """Same here"""
         #double_rt_pla = geom.structure.Placement( 'doublertpla'+self.name, volume=doubleBox1_lv, pos=rt_pos )
         #double_lf_pla = geom.structure.Placement( 'doublelfpla'+self.name, volume=doubleBox1_lv, pos=lf_pos )
         #double_ctr_pla = geom.structure.Placement( 'doublectrpla'+self.name, volume=doubleBox2_lv, pos=ctr_pos )
@@ -260,7 +264,8 @@ class tmsBuilder(gegede.builder.Builder):
 
         ModuleBox_lv_ortho = geom.structure.Volume( 'ModuleBoxvol_ortho', material='Air', shape=ModuleBox_ortho)
         
-        # add aluminium box as an enclosure
+
+        # Attempting to add aluminium box as an enclosure. NOT WORKING YET!!! TODO: This
         #Aluminium_case = geom.shapes.Box( 'AluCase',
         #                            dx = 0.5*(Q("0.03542m")*32 + Q("0.001m")),
         #                            dy = 0.5*(Q("3.096m") + Q("0.001m")),
