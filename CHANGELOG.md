@@ -10,6 +10,7 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ### Changed
 
+- Change most rock to vaccuum. Only need rock in front, and a little around detectors
 - TMS geometry update from CDR to PDR
   - Switch to 50 thin, 34 thick and 8 double thick steel planes with less material overburden in the y dimension
   - Change the dimension of scintillator bars, the amount of bars per module and the number of modules per layer
