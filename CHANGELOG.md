@@ -8,13 +8,16 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
-### Changed: TMS geometry update from CDR to PDR
+### Changed
 
-- Switch to 50 thin, 34 thick and 8 double thick steel planes with less material overburden in the y dimension
-- Change the dimension of scintillator bars, the amount of bars per module and the number of modules per layer
-- Introducing horizontal layer(X), currently in a vXuvXuv pattern with the first two layers being in front of the steel, while between the rest there is one layer of steel each in between
-- Increasing the air gap size
-- Double first layer of scintillator before the first layer of thin steel. There is also a layer of scintillator after the last layer of steel now
+- TMS geometry update from CDR to PDR
+  - Switch to 50 thin, 34 thick and 8 double thick steel planes with less material overburden in the y dimension
+  - Change the dimension of scintillator bars, the amount of bars per module and the number of modules per layer
+  - Introducing horizontal layer(X), currently in a vXuvXuv pattern with the first two layers being in front of the steel, while between the rest there is one layer of steel each in between
+  - Increasing the air gap size
+  - Double first layer of scintillator before the first layer of thin steel. There is also a layer of scintillator after the last layer of steel now
+
+### Added
 
 - Check for CHANGELOG update in PRs
 
