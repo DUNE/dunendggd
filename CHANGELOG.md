@@ -10,6 +10,16 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ### Changed
 
+- Change most rock to vaccuum. Only need rock in front, and a little around detectors
+
+### Added
+
+- Check for CHANGELOG update in PRs
+
+## [TDR_Production_geometry_v_1.1.0]
+
+### Changed
+
 - Bump gegede to version 0.8.0
 - Define default geometries in Makefile instead of bash script
 - Implementation of the C-shaped volumes of the SAND ECAL Endcaps
