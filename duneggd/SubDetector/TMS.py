@@ -87,7 +87,7 @@ class tmsBuilder(gegede.builder.Builder):
         tms_lv = geom.structure.Volume( 'vol'+self.name, material='Air', shape=tmsbox )
             
         # Position steel in layer volumes (Thin)
-        """The commented out part here is a remnant from the old geometry with different steel widths (inner and outer)"""
+        ### The commented out part here is a remnant from the old geometry with different steel widths (inner and outer) ###
         #lf_pos = geom.structure.Position( 'lfpos'+self.name,
         #                                  0.5*(self.thinbox1Dimension[0]+self.thinbox2Dimension[0])+self.gapPosition[0],
         #                                  Q("0m"),
@@ -102,6 +102,7 @@ class tmsBuilder(gegede.builder.Builder):
         #                                   Q("0m"),
         #                                   Q("0m"),
         #                                   Q("0m"))
+        ### This is the geometry with the same steel widths in inner and outer parts ###
         steel_pos1 = geom.structure.Position( 'steel_pos1'+self.name,
                                             -1.5*self.thinbox1Dimension[0]-1.5*self.gapPosition[0],
                                             Q("0m"),
@@ -121,7 +122,7 @@ class tmsBuilder(gegede.builder.Builder):
 
 
         # Thin steel
-        """Same here"""
+        ### The commented out part here is a remnant from the old geometry with different steel widths (inner and outer) ###
         #rt_pla = geom.structure.Placement( 'rtpla'+self.name, volume=thinBox1_lv, pos=rt_pos )
         #lf_pla = geom.structure.Placement( 'lfpla'+self.name, volume=thinBox1_lv, pos=lf_pos )
         #ctr_pla = geom.structure.Placement( 'ctrpla'+self.name, volume=thinBox2_lv, pos=ctr_pos )
@@ -129,7 +130,8 @@ class tmsBuilder(gegede.builder.Builder):
         #thin_layer_lv.placements.append(rt_pla.name)
         #thin_layer_lv.placements.append(lf_pla.name)
         #thin_layer_lv.placements.append(ctr_pla.name)
-        
+
+        ### This is the geometry with the same steel widths in inner and outer parts ###
         pla_1 = geom.structure.Placement( 'plane1'+self.name, volume=thinBox1_lv, pos=steel_pos1 )
         pla_2 = geom.structure.Placement( 'plane2'+self.name, volume=thinBox2_lv, pos=steel_pos2 )
         pla_3 = geom.structure.Placement( 'plane3'+self.name, volume=thinBox2_lv, pos=steel_pos3 )
@@ -141,7 +143,7 @@ class tmsBuilder(gegede.builder.Builder):
         thin_layer_lv.placements.append(pla_4.name)
 
         # Thick steel
-        """Same here"""
+        ### The commented out part here is a remnant from the old geometry with different steel widths (inner and outer) ###
         #thick_rt_pla = geom.structure.Placement( 'thickrtpla'+self.name, volume=thickBox1_lv, pos=rt_pos )
         #thick_lf_pla = geom.structure.Placement( 'thicklfpla'+self.name, volume=thickBox1_lv, pos=lf_pos )
         #thick_ctr_pla = geom.structure.Placement( 'thickctrpla'+self.name, volume=thickBox2_lv, pos=ctr_pos )
@@ -149,7 +151,8 @@ class tmsBuilder(gegede.builder.Builder):
         #thick_layer_lv.placements.append(thick_rt_pla.name)
         #thick_layer_lv.placements.append(thick_lf_pla.name)
         #thick_layer_lv.placements.append(thick_ctr_pla.name)
-        
+
+        ### This is the geometry with the same steel widths in inner and outer parts ###
         thick_pla_1 = geom.structure.Placement( 'thickplane1'+self.name, volume=thickBox1_lv, pos=steel_pos1 )
         thick_pla_2 = geom.structure.Placement( 'thickplane2'+self.name, volume=thickBox2_lv, pos=steel_pos2 )
         thick_pla_3 = geom.structure.Placement( 'thickplane3'+self.name, volume=thickBox2_lv, pos=steel_pos3 )
@@ -161,7 +164,7 @@ class tmsBuilder(gegede.builder.Builder):
         thick_layer_lv.placements.append(thick_pla_4.name)
 
         # Double steel
-        """Same here"""
+        ### The commented out part here is a remnant from the old geometry with different steel widths (inner and outer) ###
         #double_rt_pla = geom.structure.Placement( 'doublertpla'+self.name, volume=doubleBox1_lv, pos=rt_pos )
         #double_lf_pla = geom.structure.Placement( 'doublelfpla'+self.name, volume=doubleBox1_lv, pos=lf_pos )
         #double_ctr_pla = geom.structure.Placement( 'doublectrpla'+self.name, volume=doubleBox2_lv, pos=ctr_pos )
@@ -170,6 +173,7 @@ class tmsBuilder(gegede.builder.Builder):
         #double_layer_lv.placements.append(double_lf_pla.name)
         #double_layer_lv.placements.append(double_ctr_pla.name)
 
+        ### This is the geometry with the same steel widths in inner and outer parts ###
         double_pla_1 = geom.structure.Placement( 'doubleplane1'+self.name, volume=doubleBox1_lv, pos=steel_pos1 )
         double_pla_2 = geom.structure.Placement( 'doubleplane2'+self.name, volume=doubleBox2_lv, pos=steel_pos2 )
         double_pla_3 = geom.structure.Placement( 'doubleplane3'+self.name, volume=doubleBox2_lv, pos=steel_pos3 )
