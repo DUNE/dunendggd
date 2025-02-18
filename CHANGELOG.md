@@ -16,7 +16,9 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
-- Nothing
+### Added
+
+- Check for CHANGELOG update in PRs
 
 ## [TDR_Production_geometry_v_1.1.0]
 
