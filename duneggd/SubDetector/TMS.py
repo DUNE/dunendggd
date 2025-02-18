@@ -251,14 +251,14 @@ class tmsBuilder(gegede.builder.Builder):
 
         # Place Bars into Modules
         ModuleBox = geom.shapes.Box( 'ModuleBox',
-                                     dx = 0.5*Q("0.036m")*32,# + Q("0.001m")    # Single module contains 32 bars
-                                     dy = 0.5*Q("3.300m"),# + Q("0.001m")       # Same length as single stereo bar
-                                     dz = 0.5*Q("0.017m"))# + Q("0.001m"))      # Same thickness as single bar
+                                     dx = 0.5*Q("0.036m")*32,    # Single module contains 32 bars
+                                     dy = 0.5*Q("3.300m"),       # Same length as single stereo bar
+                                     dz = 0.5*Q("0.017m"))       # Same thickness as single bar
 
         ModuleBox_ortho = geom.shapes.Box( 'ModuleBox_ortho',
-                                    dx = 0.5*Q("3.500m"),# + Q("0.001m")        # Same length as single orthogonal bar
-                                    dy = 0.5*Q("0.036m")*32,# + Q("0.001m")     # Single module contains 32 bars
-                                    dz = 0.5*Q("0.017m"))# + Q("0.001m"))       # Same thickness as single bar
+                                    dx = 0.5*Q("3.500m"),        # Same length as single orthogonal bar
+                                    dy = 0.5*Q("0.036m")*32,     # Single module contains 32 bars
+                                    dz = 0.5*Q("0.017m"))        # Same thickness as single bar
 
         ModuleBox_lv = geom.structure.Volume( 'ModuleBoxvol', material='Air', shape=ModuleBox )
 
