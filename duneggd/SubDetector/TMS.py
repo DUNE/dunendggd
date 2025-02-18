@@ -49,7 +49,7 @@ class tmsBuilder(gegede.builder.Builder):
 
 
         thin_layer = geom.shapes.Box( 'thinlayerbox',
-                                      dx = 0.5*Q("7.460m"), #7.036m # 4*self.thinbox1Dimension[0]+3*self.gapPosition[0]
+                                      dx = 0.5*Q("7.460m"), #7.036m # 4*self.thinbox1Dimension[0]+3*self.gapPosition[0] # the commented out values like this are from the old geometry. Exchange the values, if switching back to 60-40 steel geometry
                                       dy = 0.5*Q("4.700m"), #5.022m # steel height
                                       dz = 0.5*Q("0.015m"))         # thin steel thickness
         thick_layer = geom.shapes.Box( 'thicklayerbox',
@@ -330,9 +330,9 @@ class tmsBuilder(gegede.builder.Builder):
         # Place Modules into scint layers
         modules_in_layer = 6
         Module_layer = geom.shapes.Box( 'Modulelayerbox',
-                                      dx = 0.5*Q("7.500m"), #7.04   # simply make it fit
+                                      dx = 0.5*Q("7.500m"), #7.04   # make it fit
                                       dy = 0.5*Q("3.500m"), #4.700m # about 3*module width
-                                      dz = 0.5*Q("0.050m"))         # simply fill entire gap between steel
+                                      dz = 0.5*Q("0.050m"))         # fill entire gap between steel
 
         Module_layer_lv1 = geom.structure.Volume( 'modulelayervol1', material='Air', shape=Module_layer )
         Module_layer_lv2 = geom.structure.Volume( 'modulelayervol2', material='Air', shape=Module_layer )
