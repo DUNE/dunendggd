@@ -458,7 +458,94 @@ class tmsBuilder(gegede.builder.Builder):
         thin_Modlayer_pla = [geom.structure.Placement('l',volume=Module_layer_lv1,pos=thinModlayer_pos[1])]*Module_layers_thin
 
         hybrid = True
+        # Every 5th layer horizontal
+        thin_horizontal = [1, 6, 11, 16, 21, 26, 31, 36, 41, 46]
+        thick_horizontal = [0, 5, 10, 15, 20, 25, 30]
+        double_horizontal = [1, 6]
+        thin_U = [2, 4, 7, 9, 12, 14, 17, 19, 22, 24, 27, 29, 32, 34, 37, 39, 42, 44, 47, 49]
+        thick_U = [1, 3, 6, 8, 11, 13, 16, 18, 21, 23, 26, 28, 31, 33]
+        double_U = [2, 4, 7]
+        thin_V = [3, 5, 8, 10, 13, 15, 18, 20, 23, 25, 28, 30, 33, 35, 38, 40, 43, 45, 48, 50]
+        thick_V = [2, 4, 7, 9, 12, 14, 17, 19, 22, 24, 27, 29, 32, 34]
+        double_V = [0, 3, 5, 8]
         
+        # Every 7th layer horizontal
+        #thin_horizontal = [1, 8, 15, 22, 29, 36, 43, 50]
+        #thick_horizontal = [6, 13, 20, 27]
+        #double_horizontal = [0, 7]
+        #thin_U = [2, 4, 6, 9, 11, 13, 16, 18, 20, 23, 25, 27, 30, 32, 34, 37, 39, 41, 44, 46, 48]
+        #thick_U = [0, 2, 4, 7, 9, 11, 14, 16, 18, 21, 23, 25, 28, 30, 32]
+        #double_U = [1, 3, 5, 8]
+        #thin_V = [3, 5, 7, 10, 12, 14, 17, 19, 21, 24, 26, 28, 31, 33, 35, 38, 40, 42, 45, 47, 49]
+        #thick_V = [1, 3, 5, 8, 10, 12, 15, 17, 19, 22, 24, 26, 29, 31, 33]
+        #double_V = [2, 4, 6]
+
+        # Every 9th layer horizontal 
+        #thin_horizontal = [1, 10, 19, 28, 37, 46]
+        #thick_horizontal = [4, 13, 22, 31]
+        #double_horizontal = [6]
+        #thin_U = [2, 4, 6, 8, 11, 13, 15, 17, 20, 22, 24, 26, 29, 31, 33, 35, 38, 40, 42, 44, 47, 49]
+        #thick_U = [0, 2, 5, 7, 9, 11, 14, 16, 18, 20, 23, 25, 27, 29, 32]
+        #double_U = [0, 2, 4, 7]
+        #thin_V = [3, 5, 7, 9, 12, 14, 16, 18, 21, 23, 25, 27, 30, 32, 34, 36, 39, 41, 43, 45, 48, 50]
+        #thick_V = [1, 3, 6, 8, 10, 12, 15, 17, 19, 21, 24, 26, 28, 30, 33]
+        #double_V = [1, 3, 5, 8]
+
+        # Every 11th layer horizontal 
+        #thin_horizontal = [1, 12, 23, 34, 45]
+        #thick_horizontal = [5, 16, 27]
+        #double_horizontal = [4]
+        #thin_U = [2, 4, 6, 8, 10, 13, 15, 17, 19, 21, 24, 26, 28, 30, 32, 35, 37, 39, 41, 43, 46, 48, 50]
+        #thick_U = [1, 3, 6, 8, 10, 12, 14, 17, 19, 21, 23, 25, 28, 30, 32]
+        #double_U = [0, 2, 5, 7]
+        #thin_V = [3, 5, 7, 9, 11, 14, 16, 18, 20, 22, 25, 27, 29, 31, 33, 36, 38, 40, 42, 44, 47, 49]
+        #thick_V = [0, 2, 4, 7, 9, 11, 13, 15, 18, 20, 22, 24, 26, 29, 31, 33]
+        #double_V = [1, 3, 6, 8]
+
+        # Every 13th layer horizontal
+        #thin_horizontal = [1, 14, 27, 40]
+        #thick_horizontal = [2, 15, 28]
+        #double_horizontal = [7]
+        #thin_U = [2, 4, 6, 8, 10, 12, 15, 17, 19, 21, 23, 25, 28, 30, 32, 34, 36, 38, 41, 43, 45, 47, 49]
+        #thick_U = [0, 3, 5, 7, 9, 11, 13, 16, 18, 20, 22, 24, 26, 29, 31, 33]
+        #double_U = [1, 3, 5, 8]
+        #thin_V = [3, 5, 7, 9, 11, 13, 16, 18, 20, 22, 24, 26, 29, 31, 33, 35, 37, 39, 42, 44, 46, 48, 50]
+        #thick_V = [1, 4, 6, 8, 10, 12, 14, 17, 19, 21, 23, 25, 27, 30, 32]
+        #double_V = [0, 2, 4, 6]
+
+        # Every 15th layer horizontal 
+        #thin_horizontal = [1, 16, 31, 46]
+        #thick_horizontal = [10, 25]
+        #double_horizontal = [6]
+        #thin_U = [2, 4, 6, 8, 10, 12, 14, 17, 19, 21, 23, 25, 27, 29, 32, 34, 36, 38, 40, 42, 44, 47, 49]
+        #thick_U = [0, 2, 4, 6, 8, 11, 13, 15, 17, 19, 21, 23, 26, 28, 30, 32]
+        #double_U = [0, 2, 4, 7]
+        #thin_V = [3, 5, 7, 9, 11, 13, 15, 18, 20, 22, 24, 26, 28, 30, 33, 35, 37, 39, 41, 43, 45, 48, 50]
+        #thick_V = [1, 3, 5, 7, 9, 12, 14, 16, 18, 20, 22, 24, 27, 29, 31, 33]
+        #double_V = [1, 3, 5, 8]
+
+        # Every 17th layer horizontal
+        #thin_horizontal = [1, 18, 35]
+        #thick_horizontal = [1, 18]
+        #double_horizontal = [1]
+        #thin_U = [2, 4, 6, 8, 10, 12, 14, 16, 19, 21, 23, 25, 27, 29, 31, 33, 36, 38, 40, 42, 44, 46, 48, 50]
+        #thick_U = [2, 4, 6, 8, 10, 12, 14, 16, 19, 21, 23, 25, 27, 29, 31, 33]
+        #double_U = [2, 4, 6, 8]
+        #thin_V = [3, 5, 7, 9, 11, 13, 15, 17, 20, 22, 24, 26, 28, 30, 32, 34, 37, 39, 41, 43, 45, 47, 49]
+        #thick_V = [0, 3, 5, 7, 9, 11, 13, 15, 17, 20, 22, 24, 26, 28, 30, 32]
+        #double_V = [0, 3, 5, 7]
+
+        # Every 19th layer horizontal
+        #thin_horizontal = [1, 20, 39]
+        #thick_horizontal = [7, 26]
+        #double_horizontal = []
+        #thin_U = [2, 4, 6, 8, 10, 12, 14, 16, 18, 21, 23, 25, 27, 29, 31, 33, 35, 37, 40, 42, 44, 46, 48, 50]
+        #thick_U = [1, 3, 5, 8, 10, 12, 14, 16, 18, 20, 22, 24, 27, 29, 31, 33]
+        #double_U = [1, 3, 5, 7]
+        #thin_V = [3, 5, 7, 9, 11, 13, 15, 17, 19, 22, 24, 26, 28, 30, 32, 34, 36, 38, 41, 43, 45, 47, 49]
+        #thick_V = [0, 2, 4, 6, 9, 11, 13, 15, 17, 19, 21, 23, 25, 28, 30, 32]
+        #double_V = [0, 2, 4, 6, 8]
+
         if hybrid:
             # set U layer for double layer of scintillator in first layer
             thinModlayer_pos_first = [geom.structure.Position('q')]*51
@@ -480,13 +567,13 @@ class tmsBuilder(gegede.builder.Builder):
                                                            y = ypos_planes,
                                                            z = zpos)
             
-                if (module-1) % 3 == 0 :
+                if module in thin_horizontal:   #(module-1) % 3 == 0 :
                     thin_Modlayer_pla_first[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thinModlayer_pos_first[module] )  #x
     
-                elif (module-1) % 3 == 1:
+                elif module in thin_U:          #(module-1) % 3 == 1:
                     thin_Modlayer_pla_first[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thinModlayer_pos_first[module] )  #u
     
-                elif (module-1) % 3 == 2:
+                elif module in thin_V:          #(module-1) % 3 == 2:
                     thin_Modlayer_pla_first[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thinModlayer_pos_first[module] )  #v
                 
                 tms_lv.placements.append(thin_Modlayer_pla_first[module].name)
@@ -522,14 +609,14 @@ class tmsBuilder(gegede.builder.Builder):
             
             if hybrid:
                 #hybrid version (XUV)
-                if module % 3 == 0 :    #this handling is done to ensure a even distribution of ortho layers also across the different thicknesses (XuvXu->vXuvXuv)
-                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thickModlayer_pos[module] )   #v
+                if module in thick_horizontal:  #module % 3 == 0 :    #this handling is done to ensure a even distribution of ortho layers also across the different thicknesses (XuvXu->vXuvXuv)
+                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thickModlayer_pos[module] )   #x  #2, pos=thickModlayer_pos[module] )   #v
 
-                elif module % 3 == 1:
-                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thickModlayer_pos[module] )   #x
+                elif module in thick_U:         #module % 3 == 1:
+                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thickModlayer_pos[module] )   #u  #3, pos=thickModlayer_pos[module] )   #x
 
-                elif module % 3 == 2:
-                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thickModlayer_pos[module] )   #u
+                elif module in thick_V:         #module % 3 == 2:
+                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thickModlayer_pos[module] )   #v  #1, pos=thickModlayer_pos[module] )   #u
             else:
                 #stereo version (UV)
                 if module % 2 == 0 :
@@ -555,13 +642,13 @@ class tmsBuilder(gegede.builder.Builder):
 
             if hybrid:
                 #hybrid version (XUV)
-                if module % 3 == 0 :    #here the handling is not necessary as it just works
+                if module in double_horizontal: #module % 3 == 0 :    #here the handling is not necessary as it just works
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=doubleModlayer_pos[module] )    #x
 
-                elif module % 3 == 1:
+                elif module in double_U:        #module % 3 == 1:
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=doubleModlayer_pos[module] )    #u
 
-                elif module % 3 == 2:
+                elif module in double_V:        #module % 3 == 2:
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=doubleModlayer_pos[module] )    #v
             else:
                 #stereo version (UV)
