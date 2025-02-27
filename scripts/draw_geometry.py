@@ -440,6 +440,16 @@ def get_default_view(args, view_name, w, h, translate):
         box_max = (0,  110*m*ratio,  110*m)
         matrix = create_projection_matrix(w, h, box_min, box_max, "YZ")
         projection = "YZ"
+    if view_name == "xz_zoom":
+        box_min = (-24*m*ratio, 0, -1*m)
+        box_max = ( 6*m*ratio, 0,  29*m)
+        matrix = create_projection_matrix(w, h, box_min, box_max, "XZ")
+        projection = "XZ"
+    if view_name == "yz_zoom":
+        box_min = (0, -10*m*ratio, -1*m)
+        box_max = (0,  18*m*ratio,  29*m)
+        matrix = create_projection_matrix(w, h, box_min, box_max, "YZ")
+        projection = "YZ"
     if matrix == None:
         raise ValueError(f"Did not understand view named {view_name}")
     args.matrix = matrix
@@ -465,7 +475,7 @@ def parse_args():
     parser.add_argument("--outdir", default="output", help="Output directory (defaults to 'output').")
     parser.add_argument("--outfilename", help="Custom output filename (defaults to view_name.png or custom_matrix.png).")
     parser.add_argument("--view", default="xz", 
-           help="Draw built-in view (xz, xz_wide, yz, yz_wide, lar_top, lar_side, tms_top, tms_side, sand_top, sand_side, rock_top, rock_side)")
+           help="Draw built-in view (xz, xz_wide, xz_zoom, yz, yz_wide, yz_zoom, lar_top, lar_side, tms_top, tms_side, sand_top, sand_side, rock_top, rock_side)")
     parser.add_argument("--color", default="density", help="Color function to use. (density, density_bw, random, material, scintillator)")
     parser.add_argument("--draw_air", action='store_true', help="Whether to draw air/vac. Normally white")
     parser.add_argument("--preview", action='store_true', help="Draw 1/4th size preview image (16x faster)")

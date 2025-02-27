@@ -6,6 +6,8 @@ if [[ $# -eq 0 ]] || [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
   python $scriptname --help
   exit 0
 fi
+python $scriptname --view xz_zoom $@
+python $scriptname --view yz_zoom $@
 python $scriptname --view sand_top $@
 python $scriptname --view sand_side $@
 python $scriptname --view lar_side $@
