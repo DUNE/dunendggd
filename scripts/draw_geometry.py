@@ -29,18 +29,10 @@ def material_to_rgb(atomic_number, density,
     brightness_normalized = 1 - ((density - density_min) / (density_max - density_min))
     brightness = max(0, min(brightness_normalized, 1))  # Clamp between 0 and 1
     
-    #if bw: saturation = 0
-    #else:
-    #    saturation = 1.0
-    #    small_density = 0.002
-    #    #if density < small_density:
-    #    #    saturation = density / small_density
     saturation = 0.0 if bw else 1.0
     small_density = 0.02
     if not bw and density < small_density:
         saturation = density / small_density
-        #saturation = min(1, max(0, 0.25*math.log10(density / small_density)))
-        #print(f"sat: {saturation}, density: {density}, {density / small_density}, {0.1*math.log10(density / small_density)}")
 
     # Convert HSV to RGB
     r, g, b = colorsys.hsv_to_rgb(hue, saturation, brightness)
@@ -116,14 +108,15 @@ names_seen = set()
 
 def color_function(node, highlight, exclude_clear = True):
     '''
-        node - the TGeoNode to gather properties from.
-        highlight - the highlighting function. Options are:
+    Parameters:
+        - node - the TGeoNode to gather properties from.
+        - highlight - the highlighting function. Options are:
             random - choose random color based on name
             scintillator - scintillator is black, everything else is white
             material - plastic yellow, steel blue, rock black
             density - density determines brightness, atomic number determines hue 
             density_bw - black and white, only scale based on density
-        exclude_clear - draws air and vac as white
+        - exclude_clear - draws air and vac as white
     '''
     name = node.GetName()
     names_seen.add(name)
