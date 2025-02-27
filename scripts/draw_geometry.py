@@ -441,8 +441,8 @@ def get_default_view(args, view_name, w, h, translate):
         matrix = create_projection_matrix(w, h, box_min, box_max, "YZ")
         projection = "YZ"
     if view_name == "xz_zoom":
-        box_min = (-24*m*ratio, 0, -1*m)
-        box_max = ( 6*m*ratio, 0,  29*m)
+        box_min = (-21*m*ratio, 0, -1*m)
+        box_max = ( 9*m*ratio, 0,  29*m)
         matrix = create_projection_matrix(w, h, box_min, box_max, "XZ")
         projection = "XZ"
     if view_name == "yz_zoom":
