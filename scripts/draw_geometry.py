@@ -1,12 +1,9 @@
 import ROOT
 ROOT.gROOT.SetBatch(True)
 import sys
-import random
-random.seed(1234)
 import collections
 import os
 import time
-import cppyy
 import hashlib
 import math
 
