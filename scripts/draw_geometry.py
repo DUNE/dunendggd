@@ -475,7 +475,7 @@ def parse_args():
     parser.add_argument("--outfilename", help="Custom output filename (defaults to view_name.png or custom_matrix.png).")
     parser.add_argument("--view", default="xz", 
            help="Draw built-in view (xz, xz_wide, yz, yz_wide, lar_top, lar_side, tms_top, tms_side, sand_top, sand_side, rock_top, rock_side)")
-    parser.add_argument("--color", default="density", help="Color function to use. (density)")
+    parser.add_argument("--color", default="density", help="Color function to use. (density, density_bw, random, material, scintillator)")
     parser.add_argument("--draw_air", action='store_true', help="Whether to draw air/vac. Normally white")
     parser.add_argument("--preview", action='store_true', help="Draw 1/4th size preview image (16x faster)")
     parser.add_argument("--height", type=int, default=800, help="Image height")
