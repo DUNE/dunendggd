@@ -1,6 +1,6 @@
 scriptname=draw_geometry.py
 if [[ $# -eq 0 ]] || [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
-  echo "Usage ./draw_all --filename <gdml file> + any additional args"
+  echo "Usage ./draw_all.sh --filename <gdml file> + any additional args"
   echo "Automatically draws all default views"
   echo "Here's the output of python $scriptname --help:"
   python $scriptname --help
