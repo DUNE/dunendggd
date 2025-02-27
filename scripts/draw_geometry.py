@@ -390,8 +390,9 @@ def get_default_view(args, view_name, w, h, translate):
     ratio=h/float(w)
     m = 100
     if view_name == "sand_top":
-        box_min = (-450*ratio, translate, 1950)
-        box_max = ( 450*ratio, translate, 2850)
+        y_mid = -250
+        box_min = (-450*ratio, y_mid + translate, 1950)
+        box_max = ( 450*ratio, y_mid + translate, 2850)
         matrix = create_projection_matrix(w, h, box_min, box_max, "XZ")
         projection = "XZ"
     if view_name == "sand_side":
