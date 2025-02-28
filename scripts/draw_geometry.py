@@ -89,6 +89,71 @@ def get_node(geom, i, j, matrix):
     return geom.FindNode(*pos)
 
 
+def get_b_field_from_volume(volume):
+    out = None
+    import cppyy
+
+    if volume != None:
+        ue = volume.GetUserExtension()
+        if ue != None:
+            user_obj = ue.GetUserObject()
+            if isinstance(user_obj, cppyy.gbl.TMap):
+                # Iterate over the keys in the TMap
+                it = user_obj.MakeIterator()
+                while it.Next():
+                    key = it.Key()
+                    value = it.Value()
+                    # Check if the key is 'BField'
+                    if key == "BField":
+                        if VERBOSE:
+                            print(f"Found magnetic field: {value}")
+                        # You can now parse the value if it's in a format like "(Bx, By, Bz)"
+                        # Example: value = "(0 T, 1 T, 0 T)"
+                        try:
+                            bx, by, bz = map(
+                                float,
+                                str(value).strip("()").replace("T", "").split(","),
+                            )
+                            out = bx, by, bz
+                            if VERBOSE:
+                                print(
+                                    f"Parsed magnetic field for {volume.GetName()}:\tBx={bx}, By={by}, Bz={bz}"
+                                )
+                        except ValueError:
+                            if VERBOSE:
+                                print("Failed to parse magnetic field value.")
+    return out
+
+
+def clamp(value, min_value, max_value):
+    return max(min(value, max_value), min_value)
+
+
+def get_b_field(node):
+    scale = 127
+    out = None
+    b_max = 1.2  # T
+    volume = node.GetVolume()
+    b_field = get_b_field_from_volume(volume)
+    if b_field == None:
+        b_field = get_b_field_from_volume(node.GetMotherVolume())
+    if b_field != None:
+        bx, by, bz = b_field
+        b = math.sqrt(bx**2 + by**2 + bz**2)
+        saturation = clamp(b / b_max, 0, 1)
+        brightness = 0.5
+        b_to_use = by
+        x_component_is_larger = abs(bx) > abs(by)
+        if x_component_is_larger:
+            b_to_use = bx
+        hue = clamp(b_to_use / b_max, -1, 1) * 0.25 + 0.5
+        r, g, b = colorsys.hsv_to_rgb(hue, saturation, brightness)
+        if VERBOSE:
+            print("b field colors:", r, g, b, hue, saturation, brightness)
+        out = from_rgb(int(r * 255), int(g * 255), int(b * 255))
+    return out
+
+
 def get_material(node):
     out = None
     med = node.GetMedium()
@@ -197,7 +262,10 @@ def color_function(node, highlight, exclude_clear=True):
                         raise NotImplementedError(
                             f"Do not have a color for {material.GetName()}"
                         )
-        if color == None:
+            if highlight == "bfield":
+                color = get_b_field(node)
+        # bfield is allowed to have color == None
+        if color == None and highlight != "bfield":
             raise NotImplementedError(f"Do not understand highlight option {highlight}")
         color_map[key] = color
         return color
@@ -344,7 +412,28 @@ def draw_image(geom, matrix, w, h, color_function):
             if node == None:
                 # print(f"None node at ({i}, {j}) ->\t({x:0.1f},{y:0.1f},{z:0.1f})")
                 continue
-            image.PutPixel(i, j, color_function(node))
+            color = color_function(node)
+            niter = 0
+            while color == None:
+                the_node_name = node.GetName()
+                geom.CdUp()
+                node = geom.GetCurrentNode()
+                # if VERBOSE: print(f"Didn't get color with node {the_node_name}. Went up one level to {node.GetName()}")
+                # print(f"On node {node.GetName()}, {geom.GetTopVolume().GetName()}")
+                color = color_function(node)
+                if color == None and (
+                    "volWorld" in node.GetVolume().GetName()
+                    or "rockBox" in node.GetVolume().GetName()
+                ):
+                    # end when we reached the top
+                    color = white
+                if niter > 30:
+                    print(
+                        f"Not making progress leaving while loop with node name {node.GetName()}. Ending now"
+                    )
+                    color = white
+                niter += 1
+            image.PutPixel(i, j, color)
     end_time = time.perf_counter()
     t = end_time - start_time
     time_per_pixel = t / float(w * h)
@@ -531,6 +620,8 @@ def get_color_function(color_function_name, exclude_clear):
         out = lambda x: color_function(x, "density", exclude_clear)
     if color_function_name == "random":
         out = lambda x: color_function(x, "random", exclude_clear)
+    if color_function_name == "bfield":
+        out = lambda x: color_function(x, "bfield", exclude_clear)
 
     if out == None:
         raise ValueError(
@@ -558,7 +649,7 @@ def parse_args():
     parser.add_argument(
         "--view",
         default="xz",
-        help="Draw built-in view (xz, xz_wide, xz_zoom, yz, yz_wide, yz_zoom, lar_top, lar_side, tms_top, tms_side, sand_top, sand_side, rock_top, rock_side)",
+        help="Draw built-in view (xz, xz_wide, xz_zoom, yz, yz_wide, yz_zoom, lar_top, lar_side, tms_top, tms_side, sand_top, sand_side, rock_top, rock_side, bfield)",
     )
     parser.add_argument(
         "--color",
