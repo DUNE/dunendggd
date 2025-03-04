@@ -21,6 +21,7 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 ### Added
 
 - Check for CHANGELOG update in PRs
+- Versioning metadata to `volWorld`: `git_commit`, `git_branch`, and `git_tag`
 
 ## [TDR_Production_geometry_v_1.1.0]
 
