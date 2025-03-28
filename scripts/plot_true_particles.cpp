@@ -740,8 +740,8 @@ int main(int argc, char *argv[]) {
                                         ZOOMED_REGION_END.Z()));
 
   REGISTER_AXIS(search_front_z,
-                std::make_tuple("Z Location (m)", 100, -10.0, 0.0));
-  REGISTER_AXIS(search_end_z, std::make_tuple("Z Location (m)", 40, 0, 40));
+                std::make_tuple("Z Location (m)", 150, -15.0, 0.0));
+  REGISTER_AXIS(search_end_z, std::make_tuple("Z Location (m)", 150, 25, 40));
   REGISTER_AXIS(search_other_x,
                 std::make_tuple("X Location (m)", 150, 0, 15.0));
   REGISTER_AXIS(search_prism_x,
@@ -761,7 +761,7 @@ int main(int argc, char *argv[]) {
 
   const long original_n_entries = events->GetEntries();
   long n_entries = original_n_entries;
-  if (numEvents > 0)
+  if (numEvents > 0 && numEvents < n_entries)
     n_entries = numEvents;
   if (n_entries == 0) {
     std::cerr << "Fatal: Found no events. Did you get the right file names?"
@@ -773,8 +773,9 @@ int main(int argc, char *argv[]) {
   int n_files = events->GetNtrees();
   pot_for_full_sample = n_files * pot_per_file;
   std::cout << "Found " << n_files << " files. Calculate "
-            << pot_for_full_sample << " pot for full sample" << std::endl;
-  if (numEvents > 0) {
+            << pot_for_full_sample << " pot for full sample with "
+            << original_n_entries << " entries." << std::endl;
+  if (numEvents > 0 && numEvents < n_entries) {
     pot_for_full_sample *= ((double)numEvents) / ((double)original_n_entries);
     std::cout << "numEvents " << numEvents << ". Recalculated to "
               << pot_for_full_sample << " pot for subsample" << std::endl;
@@ -784,7 +785,7 @@ int main(int argc, char *argv[]) {
   for (long i = 0; i < n_entries; i++) {
     if (i % 5393 == 0) {
       double remaining = 100 * i / (double)n_entries;
-      std::cout << "\r" << i << "\t" << remaining << "%\t\t\t" << std::flush;
+      std::cout << "\r\t" << i << "\t" << remaining << "%            " << std::flush;
     }
     events->GetEntry(i);
 
