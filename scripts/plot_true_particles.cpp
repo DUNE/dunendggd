@@ -53,7 +53,7 @@ const TVector3 SAND_END(3.0, 0.1600, 30.0);
 
 // This is the genie box for non-muon sample
 const TVector3 GENIE_FIDUCIAL_START(-25, -10, -8);
-const TVector3 GENIE_FIDUCIAL_END(6, 18, 32);
+const TVector3 GENIE_FIDUCIAL_END(10, 18, 32);
 
 const double MASS_MUON = 0.105658;    // GeV
 const double MASS_NEUTRON = 0.939565; // GeV
@@ -436,7 +436,9 @@ void fill_range(std::string hist_name, std::string title, double value,
   auto hist = GetHist(hist_name, title, xaxis, yaxis);
   int nbins = hist->GetXaxis()->GetNbins();
   const double max = hist->GetXaxis()->GetXmax();
-  const double min = hist->GetXaxis()->GetXmin();
+  double min = hist->GetXaxis()->GetXmin();
+  double dx = (max - min) / nbins;
+  min -= dx * 5;
   if (std::isnan(value))
     value = (negative) ? max : min;
   int bin = hist->GetXaxis()->FindBin(value);
@@ -449,7 +451,6 @@ void fill_range(std::string hist_name, std::string title, double value,
   // When value = max or min, then can end up with events on bin edges.
   // Depending on rounding, it ends up in in right bin or bin above/below
   // So pick the bin center to start to avoid issue
-  double dx = (max - min) / nbins;
   if (negative)
     dx *= -1;
   value = hist->GetXaxis()->GetBinCenter(bin);
@@ -682,7 +683,7 @@ int main(int argc, char *argv[]) {
 
   std::string save_location = getOutputDirname(outputFilename);
 
-  createDirectory(save_location);
+  //createDirectory(save_location);
 
   // Get the geometry
   // TFile input(inputFilename.c_str());
