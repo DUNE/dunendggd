@@ -181,12 +181,15 @@ def draw_histograms(input_file):
     recoeff_plots_numerators = dict()
     recoeff_plots_denominators = dict()
     stack_plots = collections.defaultdict(dict)
+    all_hists = dict()
 
     # Loop over all keys in the ROOT file
     for key in root_file.GetListOfKeys():
         obj = key.ReadObj()
         output_subdir = output_dir
         name = obj.GetName()
+        
+        all_hists[name] = obj
 
         subdir, image_name = get_subdir_and_name(name)
         output_subdir = os.path.join(output_dir, subdir)
@@ -361,6 +364,8 @@ def draw_histograms(input_file):
 
         # Get the numerator and denominator, and then divide
         numerator = recoeff_plots_numerators[name]
+        # Make a copy so we don't hurt the original
+        numerator = type(numerator)(numerator)
         denominator = recoeff_plots_denominators[name]
         newtitle = numerator.GetTitle()
         newtitle = newtitle.replace(": Numerator", "").strip()
@@ -374,6 +379,7 @@ def draw_histograms(input_file):
         numerator.GetYaxis().SetTitle("Probability")
         xmin = numerator.GetXaxis().GetXmin()
         xmax = numerator.GetXaxis().GetXmax()
+        all_hists[name + "_probability"] = numerator
         numerator.Draw("hist")
         dunestyle.Simulation()
         # Make dotted line
@@ -387,6 +393,101 @@ def draw_histograms(input_file):
         subdir, image_name = get_subdir_and_name(name)
         output_subdir = os.path.join(output_dir, subdir)
         canvas.Print(os.path.join(output_subdir, image_name + ".png"))
+        
+    # Now draw special plots
+    #for name, hist in all_hists.items():
+    #    if "x_other" in name and "probability" in name: print(name, hist, sep="\t")
+    target_names = "x_other x_prism y_top y_bottom z_front z_back".split()
+    # const TVector3 GENIE_FIDUCIAL_START(-25, -10, -8);
+    # const TVector3 GENIE_FIDUCIAL_END(10, 18, 32);
+    cut_locations = {"x_prism":-25, "x_other":10, "y_bottom":-10, "y_top":18, "z_front":-8, "z_back":32}
+    for target_name in target_names:
+        all_vertices_path = "all_vertices__probability__fiducial_only__"
+        only_target_vertices_path = "nonmuon_sample__probability__fiducial_only__"
+        only_target_vertices_hist_name = only_target_vertices_path + target_name + "_normalize_per_spill"
+        all_vertices_path_hist_name = all_vertices_path + target_name + "_normalize_per_spill"
+        output_dir = os.path.splitext(input_file)[0] + "_images"
+        output_subdir = os.path.join(output_dir, "special")
+        os.makedirs(output_subdir, exist_ok=True)
+        target_vertices_hist = all_hists[only_target_vertices_hist_name]
+        target_vertices_hist.SetLineColor(ROOT.kBlue)
+        all_vertices_hist = all_hists[all_vertices_path_hist_name]
+        all_vertices_hist.SetLineColor(ROOT.kRed)
+        all_vertices_hist.GetYaxis().SetTitle("N Vertices / Spill given Cut Location")
+        # Calculate computational efficiency as useful vertices / all vertices
+        computational_efficiency = type(target_vertices_hist)(target_vertices_hist)
+        computational_efficiency.SetLineColor(ROOT.kBlack)
+        computational_efficiency.Divide(all_vertices_hist)
+        marginal_target_vertices_hist = all_hists[only_target_vertices_hist_name.replace("normalize_per_spill", "actual_value_normalize_per_spill")]
+        marginal_computational_efficiency = type(marginal_target_vertices_hist)(marginal_target_vertices_hist)
+        marginal_computational_efficiency.SetLineColor(ROOT.kBlack)
+        marginal_computational_efficiency.Divide(all_vertices_hist)
+        marginal_computational_efficiency.SetLineColor(ROOT.kRed)
+        # TODO use cut_locations
+        ratio_all_vertices_hist = type(all_vertices_hist)(all_vertices_hist)
+        nominal_value = cut_locations[target_name]
+        b = ratio_all_vertices_hist.GetXaxis().FindBin(nominal_value)
+        value_at_bin = ratio_all_vertices_hist.GetBinContent(b)
+        scale = 1 / value_at_bin
+        ratio_all_vertices_hist.Scale(scale)
+        ratio_all_vertices_hist.SetLineColor(ROOT.kGreen)
+        copy_of_computational_efficiency = type(computational_efficiency)(computational_efficiency)
+        color = ROOT.kGreen + 2
+        copy_of_computational_efficiency.SetLineColor(color)
+        scale = all_vertices_hist.GetMaximum()
+        copy_of_computational_efficiency.Scale(scale)
+        all_vertices_hist.Draw("hist")
+        target_vertices_hist.Draw("hist same")
+        copy_of_computational_efficiency.Draw("hist same")
+        gPad = canvas
+        #  gPad.GetUxmin(),gPad.GetUymax(),gPad.GetUxmax(),gPad.GetUymax()
+        xmax = all_vertices_hist.GetXaxis().GetXmax()
+        headroom = 1.2
+        ymax = all_vertices_hist.GetMaximum() * headroom
+        all_vertices_hist.GetYaxis().SetRangeUser(0, ymax)
+        tga = ROOT.TGaxis(xmax, 0, xmax, ymax, 0, 1.2, 510, "+L")
+        tga.SetTitle("Computational Efficiency")
+        tga.SetLineColor(color)
+        tga.SetLabelColor(color)
+        tga.SetTitleColor(color)
+        tga.Draw()
+        leg = ROOT.TLegend(0.2, 0.8, 0.8, 0.9)
+        leg.SetFillStyle(0)
+        leg.SetBorderSize(0)
+        leg.SetNColumns(2)
+        leg.AddEntry(all_vertices_hist, "All Vertices", "l")
+        leg.AddEntry(target_vertices_hist, "Target Vertices", "l")
+        leg.Draw()
+        canvas.Print(os.path.join(output_subdir, f"n_vertex_comparison_{target_name}_.png"))
+        #computational_efficiency.GetYaxis().SetRangeUser(0, 1)
+        #computational_efficiency.GetYaxis().SetTitle("Efficiency (useful/all vertices)")
+        #computational_efficiency.Draw("hist")
+        #marginal_computational_efficiency.Draw("same hist")
+        #canvas.Print(os.path.join(output_subdir, target_name + "_computational_efficiency.png"))
+        probability_hist_name = only_target_vertices_hist_name.replace("__fiducial_only", "").replace("_normalize_per_spill", "") + "_probability"
+        probability_hist = all_hists[probability_hist_name]
+        computational_efficiency.SetLineColor(ROOT.kBlue)
+        marginal_computational_efficiency.SetLineColor(ROOT.kGreen)
+        probability_hist.GetYaxis().SetRangeUser(0, 1.3)
+        probability_hist.GetYaxis().SetTitle("Value")
+        probability_hist.Draw("hist")
+        computational_efficiency.SetLineColor(ROOT.kRed)
+        computational_efficiency.Draw("hist same")
+        #marginal_computational_efficiency.Draw("hist same")
+        ratio_all_vertices_hist.Draw("hist same")
+        probability_hist.Draw("axis same")
+        leg = ROOT.TLegend(0.2, 0.3, 0.8, 0.55)
+        leg.SetFillStyle(0)
+        leg.SetBorderSize(0)
+        #leg.SetNColumns(2)
+        leg.AddEntry(probability_hist, "Probability of Cutting Important Vertices", "l")
+        leg.AddEntry(computational_efficiency, "Computational Efficiency (N Important / All)", "l")
+        leg.AddEntry(ratio_all_vertices_hist, f"Rel. N Vtxs vs Nominal ({value_at_bin:0.0f} / spill @ {nominal_value:0.0f}m)", "l")
+        
+        #leg.AddEntry(marginal_computational_efficiency, "Marginal Computational Efficiency", "l")
+        leg.Draw()
+        canvas.Print(os.path.join(output_subdir, target_name + ".png"))
+    
 
     # Close the input ROOT file
     root_file.Close()
