@@ -4,6 +4,7 @@ import gegede.builder
 from duneggd.LocalTools import localtools as ltools
 from duneggd.LocalTools import materialdefinition as materials
 from gegede import Quantity as Q
+import sys
 
 
 #Changed DetEnc to Rock
@@ -30,9 +31,16 @@ class WorldBuilder(gegede.builder.Builder):
             self.git_commit = ""
             self.git_tag = ""
             self.git_branch = ""
+
+        # Get output file name
+        self.output_file_name = ""
+        if "-o" in sys.argv:
+            self.output_file_name = sys.argv[sys.argv.index('-o') + 1]
+
         print(f"Current git commit: {self.git_commit}")
         print(f"Current git branch: {self.git_branch}")
         print(f"Current git tag:    {self.git_tag}")
+        print(f"Output file name:   {self.output_file_name}")
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
     def construct(self, geom):
 
@@ -78,3 +86,4 @@ class WorldBuilder(gegede.builder.Builder):
         main_lv.params.append(("git_commit", self.git_commit))
         main_lv.params.append(("git_branch", self.git_branch))
         main_lv.params.append(("git_tag", self.git_tag))
+        main_lv.params.append(("output_file_name", self.output_file_name))
