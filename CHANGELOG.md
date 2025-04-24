@@ -8,6 +8,8 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
+## [TDR_Production_geometry_v_1.2.0]
+
 ### Changed
 
 - Change most rock to vaccuum. Only need rock in front, and a little around detectors
