@@ -26,6 +26,8 @@ sandopt: SAND_opt1_STT1.gdml \
 	only_SAND_STT_Initial.gdml \
 	only_SAND_STT_Complete.gdml
 
+SAND_opt3_STT1_simple_only: only_SAND_opt3_STT1_simple.gdml
+
 lar_only: nd_hall_with_lar_only.gdml
 
 clean:
@@ -231,6 +233,16 @@ only_SAND_STT_Complete.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/SAND_ECAL.cfg \
 	duneggd/Config/SAND_STT/STT_Default.cfg \
 	duneggd/Config/SAND_GRAIN.cfg 
+
+only_SAND_opt3_STT1_simple.gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_Only_SAND.cfg \
+	duneggd/Config/ND_Hall_Rock.cfg \
+	duneggd/Config/ND_ElevatorStruct.cfg \
+	duneggd/Config/SAND_MAGNET.cfg \
+	duneggd/Config/SAND_INNERVOLOPT3.cfg \
+	duneggd/Config/SAND_ECAL.cfg \
+	duneggd/Config/SAND_STT/STT1_simple.cfg \
+	duneggd/Config/SAND_GRAIN.cfg
 
 
 nd_hall_no_dets.gdml: duneggd/Config/WORLDggd.cfg \

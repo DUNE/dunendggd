@@ -1,5 +1,6 @@
 import gegede.builder
 from duneggd.LocalTools import localtools as ltools
+from duneggd.LocalTools import materialdefinition as lmaterial
 import math
 from gegede import Quantity as Q
 import time
@@ -12,7 +13,7 @@ class STTBuilder(gegede.builder.Builder):
                         # STT   tracker
                         nofUpstreamTrkMod=None, nofDownstreamTrkMod=None, nofC3H6ModAfterCMod=None, 
                         # STRAW TUBE
-                        StrawRadius=None,       DistStrawStraw=None,      DistStrawWall=None,       AngleStrawStraw=None,   StrawPlug=None,      StrawWireRadius=None, StrawWireCoatThickness=None, CoatThickness=None, MylarThickness=None, StrawGas=None,
+                        StrawRadius=None,       DistStrawStraw=None,      DistStrawWall=None,       AngleStrawStraw=None,   StrawPlug=None,      StrawWireRadius=None, StrawWireCoatThickness=None, CoatThickness=None, MylarThickness=None, StrawGas=None, SimpleStraw=None,
                         # STT   MODULE
                         FrameThickness=None,    AddGapForSlab=None,       targetThickness=None,     gap=None,               nofStrawPlanes=None,    radiator=None,            nofFoils=None,         FoilThickness=None,  AirGapThickness=None, RadiatorThickness=None,
                         **kwds):
@@ -56,6 +57,7 @@ class STTBuilder(gegede.builder.Builder):
             self.CoatThickness                = CoatThickness
             self.MylarThickness               = MylarThickness
             self.StrawGas                     = StrawGas
+            self.SimpleStraw                  = SimpleStraw
 
             self.planeXXThickness             = 2*(self.StrawRadius + self.StrawPlug)*(math.cos(self.AngleStrawStraw/2)+1) + self.DistStrawStraw*math.cos(self.AngleStrawStraw/2) + 2*self.DistStrawWall
             self.StrawYDist                   = 2*((self.StrawRadius+self.StrawPlug)*(2*math.sin(self.AngleStrawStraw/2)-1) + self.DistStrawStraw*math.sin(self.AngleStrawStraw/2))
@@ -434,42 +436,54 @@ class STTBuilder(gegede.builder.Builder):
             ring_pla            = geom.structure.Placement(ring_name+"_place", volume = ring_lv)
 
         # coat
-        Alcoat_name         = straw_name+"_Alcoat"
-        Alcoat_shape        = geom.shapes.Tubs(Alcoat_name+"_shape", rmin = self.StrawRadius - self.CoatThickness, rmax=self.StrawRadius, dz=straw_half_length)
-        Alcoat_lv           = geom.structure.Volume(Alcoat_name, material="Aluminum", shape = Alcoat_shape)
-        Alcoat_pla          = geom.structure.Placement(Alcoat_name+"_place", volume = Alcoat_lv)
+        if(self.SimpleStraw!="yes"):
+            Alcoat_name         = straw_name+"_Alcoat"
+            Alcoat_shape        = geom.shapes.Tubs(Alcoat_name+"_shape", rmin = self.StrawRadius - self.CoatThickness, rmax=self.StrawRadius, dz=straw_half_length)
+            Alcoat_lv           = geom.structure.Volume(Alcoat_name, material="Aluminum", shape = Alcoat_shape)
+            Alcoat_pla          = geom.structure.Placement(Alcoat_name+"_place", volume = Alcoat_lv)
 
-        # mylar
-        mylar_name          = straw_name+"_mylar"
-        mylar_shape         = geom.shapes.Tubs(mylar_name+"_shape", rmin = self.StrawRadius - self.CoatThickness - self.MylarThickness, rmax = self.StrawRadius - self.CoatThickness, dz=straw_half_length)
-        mylar_lv            = geom.structure.Volume(mylar_name, material="Mylar", shape = mylar_shape)
-        mylar_pla           = geom.structure.Placement(mylar_name+"_place", volume = mylar_lv)
+            # mylar
+            mylar_name          = straw_name+"_mylar"
+            mylar_shape         = geom.shapes.Tubs(mylar_name+"_shape", rmin = self.StrawRadius - self.CoatThickness - self.MylarThickness, rmax = self.StrawRadius - self.CoatThickness, dz=straw_half_length)
+            mylar_lv            = geom.structure.Volume(mylar_name, material="Mylar", shape = mylar_shape)
+            mylar_pla           = geom.structure.Placement(mylar_name+"_place", volume = mylar_lv)
 
-        # gas
-        gas_name            = straw_name+"_"+gas
-        gas_shape           = geom.shapes.Tubs(gas_name+"_shape", rmin = self.StrawWireRadius + self.StrawWireCoatThickness, rmax = self.StrawRadius - self.CoatThickness - self.MylarThickness, dz=straw_half_length)
-        gas_lv              = geom.structure.Volume(gas_name, material=gas, shape = gas_shape)
-        gas_pla             = geom.structure.Placement(gas_name+"_place", volume = gas_lv)
-        gas_lv.params.append(("SensDet","Straw"))
+            # gas
+            gas_name            = straw_name+"_"+gas
+            gas_shape           = geom.shapes.Tubs(gas_name+"_shape", rmin = self.StrawWireRadius + self.StrawWireCoatThickness, rmax = self.StrawRadius - self.CoatThickness - self.MylarThickness, dz=straw_half_length)
+            gas_lv              = geom.structure.Volume(gas_name, material=gas, shape = gas_shape)
+            gas_pla             = geom.structure.Placement(gas_name+"_place", volume = gas_lv)
+            gas_lv.params.append(("SensDet","Straw"))
 
-        # wire coating
-        wireCoat_name       = straw_name+"_wireCoating"
-        wireCoat_shape      = geom.shapes.Tubs(wireCoat_name+"_shape", rmin = self.StrawWireRadius, rmax = self.StrawWireRadius + self.StrawWireCoatThickness, dz=straw_half_length)
-        wireCoat_lv         = geom.structure.Volume(wireCoat_name, material="Tungsten", shape=wireCoat_shape)
-        wireCoat_pla        = geom.structure.Placement(wireCoat_name+"_place", volume = wireCoat_lv)
+            # wire coating
+            wireCoat_name       = straw_name+"_wireCoating"
+            wireCoat_shape      = geom.shapes.Tubs(wireCoat_name+"_shape", rmin = self.StrawWireRadius, rmax = self.StrawWireRadius + self.StrawWireCoatThickness, dz=straw_half_length)
+            wireCoat_lv         = geom.structure.Volume(wireCoat_name, material="Tungsten", shape=wireCoat_shape)
+            wireCoat_pla        = geom.structure.Placement(wireCoat_name+"_place", volume = wireCoat_lv)
 
-        # wire
-        wire_name           = straw_name+"_wire"
-        wire_shape          = geom.shapes.Tubs(wire_name+"_shape", rmin = Q("0mm"), rmax = self.StrawWireRadius, dz=straw_half_length)
-        wire_lv             = geom.structure.Volume(wire_name, material="Gold",shape=wire_shape)
-        wire_pla            = geom.structure.Placement(wire_name+"_place", volume = wire_lv)
-
+            # wire
+            wire_name           = straw_name+"_wire"
+            wire_shape          = geom.shapes.Tubs(wire_name+"_shape", rmin = Q("0mm"), rmax = self.StrawWireRadius, dz=straw_half_length)
+            wire_lv             = geom.structure.Volume(wire_name, material="Gold",shape=wire_shape)
+            wire_pla            = geom.structure.Placement(wire_name+"_place", volume = wire_lv)
+            
+        else:
+            # gas
+            gas_name            = straw_name+"_"+gas
+            gas_shape           = geom.shapes.Tubs(gas_name+"_shape", rmin = Q("0mm"), rmax = self.StrawRadius, dz=straw_half_length)
+            gas_lv              = geom.structure.Volume(gas_name, material=gas, shape = gas_shape)
+            gas_pla             = geom.structure.Placement(gas_name+"_place", volume = gas_lv)
+            gas_lv.params.append(("SensDet","Straw"))
+            
         if(self.StrawPlug!=Q("0mm")): straw_lv.placements.append(ring_pla.name)
-        straw_lv.placements.append(Alcoat_pla.name)
-        straw_lv.placements.append(mylar_pla.name)
-        straw_lv.placements.append(gas_pla.name)
-        straw_lv.placements.append(wireCoat_pla.name)
-        straw_lv.placements.append(wire_pla.name)
+        if(self.SimpleStraw!="yes"):
+            straw_lv.placements.append(Alcoat_pla.name)
+            straw_lv.placements.append(mylar_pla.name)
+            straw_lv.placements.append(gas_pla.name)
+            straw_lv.placements.append(wireCoat_pla.name)
+            straw_lv.placements.append(wire_pla.name)
+        else:
+            straw_lv.placements.append(gas_pla.name)
 
         return straw_lv
 

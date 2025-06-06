@@ -1,5 +1,7 @@
 # based on Tyler https://github.com/tyleralion/duneggd
 #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
+import math 
+
 def define_materials( g ):
     h  = g.matter.Element("hydrogen",   "H",  1,  "1.00791*g/mole" )
 #    b10=g.matter.Isotope("boron10", 5, 10, "10.01*g/mole")
@@ -167,6 +169,65 @@ def define_materials( g ):
                                            ("CO2",    0.3),
                                            ("argon",  0.7)                                    
                                        ))
+    
+    ## Straw average material definition for simplified geometry
+    
+    aluminum_density = 2.70
+    mylar_density    = 1.39
+    tungsten_density = 19.25
+    gold_density     = 19.32
+    
+    StrawRadius             = 0.25
+    StrawWireRadius         = 0.002
+    StrawWireCoatThickness  = 20e-9
+    CoatThickness           = 70e-9
+    MylarThickness          = 12e-6
+
+    aluminum_mass = aluminum_density * (math.pi * (StrawRadius**2 - (StrawRadius - CoatThickness)**2) )
+    mylar_mass    = mylar_density * (math.pi * (StrawRadius - CoatThickness)**2 )
+    tungsten_mass = tungsten_density * (math.pi * ((StrawRadius - CoatThickness - MylarThickness)**2 - (StrawWireRadius + StrawWireCoatThickness)**2) )
+    gold_mass     = gold_density * (math.pi * (StrawWireRadius**2) )
+
+    ArCO2_19 = densArCO2 * (math.pi * ((StrawRadius - CoatThickness - MylarThickness)**2 - (StrawWireRadius + StrawWireCoatThickness)**2) )
+
+    straw_density = (aluminum_mass + mylar_mass + tungsten_mass + gold_mass + ArCO2_19) / (math.pi * (StrawRadius**2 - (StrawRadius - CoatThickness)**2) )
+    straw_density_units = str(straw_density)+"*g/cc"
+
+    aluminum_mass_portion = aluminum_mass / (aluminum_mass + mylar_mass + tungsten_mass + gold_mass + ArCO2_19)
+    mylar_mass_portion    = mylar_mass / (aluminum_mass + mylar_mass + tungsten_mass + gold_mass + ArCO2_19)
+    tungsten_mass_portion = tungsten_mass / (aluminum_mass + mylar_mass + tungsten_mass + gold_mass + ArCO2_19)
+    gold_mass_portion     = gold_mass / (aluminum_mass + mylar_mass + tungsten_mass + gold_mass + ArCO2_19)
+    ArCO2_19_portion      = ArCO2_19 / (aluminum_mass + mylar_mass + tungsten_mass + gold_mass + ArCO2_19)
+
+    straw_avg_Material_Ar19 = g.matter.Mixture("straw_avg_Material_Ar19", density = straw_density_units,
+                                            components = (
+                                                ("Aluminum",    aluminum_mass_portion),
+                                                ("Mylar",  mylar_mass_portion),
+                                                ("stGas_Ar19", ArCO2_19_portion),
+                                                ("Tungsten", tungsten_mass_portion),
+                                                ("Gold", gold_mass_portion)
+                                            ))
+    
+    
+    XeCO2_19 = densXeCO2 * (math.pi * ((StrawRadius - CoatThickness - MylarThickness)**2 - (StrawWireRadius + StrawWireCoatThickness)**2) )
+
+    straw_density = (aluminum_mass + mylar_mass + tungsten_mass + gold_mass + XeCO2_19) / (math.pi * (StrawRadius**2 - (StrawRadius - CoatThickness)**2) )
+    straw_density_units = str(straw_density)+"*g/cc"
+
+    aluminum_mass_portion = aluminum_mass / (aluminum_mass + mylar_mass + tungsten_mass + gold_mass + XeCO2_19)
+    mylar_mass_portion    = mylar_mass / (aluminum_mass + mylar_mass + tungsten_mass + gold_mass + XeCO2_19)
+    tungsten_mass_portion = tungsten_mass / (aluminum_mass + mylar_mass + tungsten_mass + gold_mass + XeCO2_19)
+    gold_mass_portion     = gold_mass / (aluminum_mass + mylar_mass + tungsten_mass + gold_mass + XeCO2_19)
+    XeCO2_19_portion      = XeCO2_19 / (aluminum_mass + mylar_mass + tungsten_mass + gold_mass + XeCO2_19)
+
+    straw_avg_Material_Xe19 = g.matter.Mixture("straw_avg_Material_Xe19", density = straw_density_units,
+                                            components = (
+                                                ("Aluminum",    aluminum_mass_portion),
+                                                ("Mylar",  mylar_mass_portion),
+                                                ("stGas_Xe19", XeCO2_19_portion),
+                                                ("Tungsten", tungsten_mass_portion),
+                                                ("Gold", gold_mass_portion)
+                                            ))
     # DriftChamber Gas : Ar/CO2 85/15 at 1 atm + 10mbar = 1.01 atm
 
     fracCO2_drift = 0.15
