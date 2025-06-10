@@ -474,6 +474,7 @@ class STTBuilder(gegede.builder.Builder):
             gas_lv              = geom.structure.Volume(gas_name, material=gas, shape = gas_shape)
             gas_pla             = geom.structure.Placement(gas_name+"_place", volume = gas_lv)
             gas_lv.params.append(("SensDet","Straw"))
+            gas_lv.params.append(("DetID","0"))
             
         if(self.StrawPlug!=Q("0mm")): straw_lv.placements.append(ring_pla.name)
         if(self.SimpleStraw!="yes"):
