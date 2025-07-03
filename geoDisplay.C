@@ -15,6 +15,6 @@ void geoDisplay(TString filename, Int_t VisLevel=5)
 	v->SetStyle(TGLRnrCtx::kOutline);
 	v->SetSmoothPoints(kTRUE);
 	v->SetLineScale(0.5);
-  //	v->UseDarkColorSet();
+	//	v->UseDarkColorSet();
 	v->UpdateScene();
 }
