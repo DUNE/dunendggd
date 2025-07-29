@@ -28,9 +28,9 @@ class tmsBuilder(gegede.builder.Builder):
     def construct(self, geom):        
 
         six_width = False #6m
-        hybrid = False #6m, 4.2c
-        XY = False #6m, 4.2d
-        3_2b = True #7m, 3.2b
+        hybrid = False #6m, 4.2c, UVX set by rules in TMS.cfg
+        XY = False #6m, 4.2d, XY UVX set by rules in TMS.cfg 
+        PDR_3_2b = True #7m, 3.2b, UVXUVXUVX...
 
             
         #Make Boxes for steel and logical volumes
@@ -201,9 +201,6 @@ class tmsBuilder(gegede.builder.Builder):
         double_layer_lv.placements.append(double_pla_4.name)
 
         # Position the thin and thick steel
-        # 91 scint layers but first and last layer is scintillator
-        # so only 92 steel layers, 50 thin and 34 thick and 8 double
-
         #80 steel layers, 34 thin, 22 thinck and 24 double.
 
         n_thin_steel = 34#50
@@ -214,11 +211,9 @@ class tmsBuilder(gegede.builder.Builder):
         xpos_planes = Q("0m")
         ypos_planes = Q("0.85m") # this is the vertical position w.r.t. the main tms box
 
-        moduleplusgapthickness=Q("0.50m")
-
         for plane in range(n_thin_steel):
             # zpos changes with each layer
-            zpos = -Q("3.650m") + plane * Q("0.065m") # Q("0.0075m")    # half of total steel thickness with gaps (7300mm) and shift for differing air gaps for thin and double plates
+            zpos = -Q("3.650m") + plane * Q("0.065m")  # half of total steel thickness with gaps (7300mm) and + plane thickness (gap(22mm)+Module(28mm)+steel thickness(15mm))
             thinlayer_pos[plane] = geom.structure.Position( 'thinlayerposition'+str(plane),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
@@ -233,7 +228,7 @@ class tmsBuilder(gegede.builder.Builder):
         
         for plane in range(n_thick_steel):
             #last position=-Q("3.650m") + (n_thin_steel) * Q("(0.065)m") + Q("(0.065/2)m")- Q("0.015m")
-            zpos = -Q("1.4225m")+ plane * Q("0.09m")     # last positono + plane thickness
+            zpos = -Q("1.4225m")+ plane * Q("0.09m")     # last position + plane thickness (gap(22mm)+Module(28mm)+steel thickness(40mm))
             thicklayer_pos[plane] = geom.structure.Position( 'thicklayerposition'+str(plane),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
@@ -248,7 +243,7 @@ class tmsBuilder(gegede.builder.Builder):
 
         for plane in range(n_double_steel):
             #last position=-Q("1.4225m") + (n_thick_steel) * Q("(0.09)m") + Q("(0.09/2)m")- Q("0.015m")
-            zpos = +Q("0.5875m")+ plane * Q("0.13m")     # last positon++ plane thickness
+            zpos = +Q("0.5875m")+ plane * Q("0.13m")     # last positon+plane thickness (gap(22mm)+Module(28mm)+steel thickness(80mm))
             doublelayer_pos[plane] = geom.structure.Position( 'doublelayerposition'+str(plane),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
@@ -258,7 +253,7 @@ class tmsBuilder(gegede.builder.Builder):
 
 
         # Scintillator
-        # Individual scintillator bar
+        # Individual scintillator bar width * number of bars
         #0.01010526316*114
         #0.02618181818*44
         #0.03031578947*38
@@ -270,10 +265,9 @@ class tmsBuilder(gegede.builder.Builder):
         barwidth=0.036
         barnumber=32
         middlepos=barwidth*barnumber/2-barwidth/2
-        
         length_orth=3.5
         if six_width: length_orth=2.880 
-        #scintillator= bar thickness=16mm
+
         scinBox = geom.shapes.Box( 'scinbox'+self.name,
                                     dx = 0.5*Q(f"{barwidth}m"),   # width single bar
                                     dy = 0.5*Q("3.300m"),   # length bar for stereo bars
@@ -347,7 +341,6 @@ class tmsBuilder(gegede.builder.Builder):
         #                                                                                    zpos = Q("0m")))) 
 
         # now create and place the bars
-        #sci_bars = 32
         sci_bars = barnumber
         sci_Bar_pos = [geom.structure.Position('g')]*sci_bars
         sci_Bar_pla = [geom.structure.Placement('h',volume=scinBox_lv, pos=sci_Bar_pos[1])]*sci_bars
@@ -396,9 +389,9 @@ class tmsBuilder(gegede.builder.Builder):
         # Place Modules into scint layers
         modules_in_layer = 6
         Module_layer = geom.shapes.Box( 'Modulelayerbox',
-                                      dx = 0.5*Q("7.500m"), #7.04   # make it fit
-                                      dy = 0.5*Q("3.500m"), #4.700m # about 3*module width
-                                      dz = 0.5*Q("0.050m"))         # fill entire gap between steel
+                                      dx = 0.5*Q("7.500m"),  # make it fit
+                                      dy = 0.5*Q("3.500m"),  # about 3*module width
+                                      dz = 0.5*Q("0.050m"))  # fill entire gap between steel
 
         Module_layer_lv1 = geom.structure.Volume( 'modulelayervol1', material='Air', shape=Module_layer )
         Module_layer_lv2 = geom.structure.Volume( 'modulelayervol2', material='Air', shape=Module_layer )
@@ -416,37 +409,31 @@ class tmsBuilder(gegede.builder.Builder):
         if not six_width:
             mod_pos1 = geom.structure.Position( 'modpos1'+self.name,
                                                 -2.5*Q(f"{barwidth}m")*barnumber-Q("0.021m"),    # position center of module (very left) and add sum of gaps
-                                                #-2.5*Q("0.036m")*32-Q("0.021m"),    # position center of module (very left) and add sum of gaps
                                                 Q("0m"),
                                                 Q("0m"))
 
             mod_pos2 = geom.structure.Position( 'modpos2'+self.name,
                                                 -1.5*Q(f"{barwidth}m")*barnumber-Q("0.014m"),    # position center of module (middle left) and add sum of gaps
-                                                #-1.5*Q("0.036m")*32-Q("0.014m"),    # position center of module (middle left) and add sum of gaps
                                                 Q("0m"),
                                                 Q("0m"))
 
             mod_pos3 = geom.structure.Position( 'modpos3'+self.name,
                                                 -0.5*Q(f"{barwidth}m")*barnumber-Q("0.007m"),    # position center of module (slightly left) and add gap
-                                                #-0.5*Q("0.036m")*32-Q("0.007m"),    # position center of module (slightly left) and add gap
                                                 Q("0m"),
                                                 Q("0m"))
 
             mod_pos4 = geom.structure.Position( 'modpos4'+self.name,
                                                 +0.5*Q(f"{barwidth}m")*barnumber+Q("0.007m"),    # position center of module (slightly right) and add gap
-                                                #+0.5*Q("0.036m")*32+Q("0.007m"),    # position center of module (slightly right) and add gap
                                                 Q("0m"),
                                                 Q("0m"))
             
             mod_pos5 = geom.structure.Position( 'modpos5'+self.name,
                                                 +1.5*Q(f"{barwidth}m")*barnumber+Q("0.014m"),    # position center of module (middle right) and add sum of gaps
-                                                #+1.5*Q("0.036m")*32+Q("0.014m"),    # position center of module (middle right) and add sum of gaps
                                                 Q("0m"),
                                                 Q("0m"))
             
             mod_pos6 = geom.structure.Position( 'modpos6'+self.name,
                                                 +2.5*Q(f"{barwidth}m")*barnumber+Q("0.021m"),    # position center of module (very right) and add sum of gaps
-                                                #+2.5*Q("0.036m")*32+Q("0.021m"),    # position center of module (very right) and add sum of gaps
                                                 Q("0m"),
                                                 Q("0m"))
 
@@ -454,33 +441,29 @@ class tmsBuilder(gegede.builder.Builder):
         if six_width:
             mod_pos1 = geom.structure.Position( 'modpos1'+self.name,
                                                -2.0*Q(f"{barwidth}m")*barnumber-Q("0.021m"),    # position center of module (very left) and add sum of gaps
-                                               #-2.5*Q("0.036m")*32-Q("0.021m"),    # position center of module (very left) and add sum of gaps
                                                Q("0m"),
                                                Q("0m"))
 
             mod_pos2 = geom.structure.Position( 'modpos2'+self.name,
                                            -1.0*Q(f"{barwidth}m")*barnumber-Q("0.014m"),    # position center of module (middle left) and add sum of gaps
-                                           #-1.5*Q("0.036m")*32-Q("0.014m"),    # position center of module (middle left) and add sum of gaps
                                            Q("0m"),
                                            Q("0m"))
 
             mod_pos3 = geom.structure.Position( 'modpos3'+self.name,
                                            -0.0*Q(f"{barwidth}m")*barnumber-Q("0.007m"),    # position center of module (slightly left) and add gap
-                                           #-0.5*Q("0.036m")*32-Q("0.007m"),    # position center of module (slightly left) and add gap
                                            Q("0m"),
                                            Q("0m"))
 
             mod_pos4 = geom.structure.Position( 'modpos4'+self.name,
                                            +1.0*Q(f"{barwidth}m")*barnumber+Q("0.007m"),    # position center of module (slightly right) and add gap
-                                           #+0.5*Q("0.036m")*32+Q("0.007m"),    # position center of module (slightly right) and add gap
                                            Q("0m"),
                                            Q("0m"))
 
             mod_pos5 = geom.structure.Position( 'modpos5'+self.name,
                                            +2.0*Q(f"{barwidth}m")*barnumber+Q("0.014m"),    # position center of module (middle right) and add sum of gaps
-                                           #+1.5*Q("0.036m")*32+Q("0.014m"),    # position center of module (middle right) and add sum of gaps
                                            Q("0m"),
                                            Q("0m"))
+
         ####################################################################################################################################################33
 
         halflen_ortho=length_orth/2
@@ -488,13 +471,11 @@ class tmsBuilder(gegede.builder.Builder):
         mod_pos1_ortho = geom.structure.Position( 'modpos1_ortho'+self.name,
                                             -Q(f"{halflen_ortho}m")-Q("0.001m"),           # half of module length and assuming a gap between the sides of 2mm (left)
                                             +1.0*Q(f"{barwidth}m")*barnumber+Q("0.014m"),    # full module to center of module (up) and add sum of gaps
-                                            #+1.0*Q("0.036m")*32+Q("0.014m"),    # full module to center of module (up) and add sum of gaps
                                             Q("0m"))
 
         mod_pos2_ortho = geom.structure.Position( 'modpos2_ortho'+self.name,
                                             +Q(f"{halflen_ortho}m")+Q("0.001m"),           # half of module length and assuming a gap between the sides of 2mm (right)
                                             +1.0*Q(f"{barwidth}m")*barnumber+Q("0.014m"),    # same as for mod_pos1_ortho
-                                            #+1.0*Q("0.036m")*32+Q("0.014m"),    # same as for mod_pos1_ortho
                                             Q("0m"))
 
         mod_pos3_ortho = geom.structure.Position( 'modpos3_ortho'+self.name,
@@ -510,13 +491,11 @@ class tmsBuilder(gegede.builder.Builder):
         mod_pos5_ortho = geom.structure.Position( 'modpos5_ortho'+self.name,
                                             -Q(f"{halflen_ortho}m")-Q("0.001m"),           # same as for mod_pos1_ortho
                                             -1.0*Q(f"{barwidth}m")*barnumber-Q("0.014m"),    # full module to center of module (down) and add sum of gaps
-                                            #-1.0*Q("0.036m")*32-Q("0.014m"),    # full module to center of module (down) and add sum of gaps
                                             Q("0m"))
 
         mod_pos6_ortho = geom.structure.Position( 'modpos6_ortho'+self.name,
                                             +Q(f"{halflen_ortho}m")+Q("0.001m"),           # same as for mod_pos2_ortho
                                             -1.0*Q(f"{barwidth}m")*barnumber-Q("0.014m"),    # same as for mod_pos5_ortho
-                                            #-1.0*Q("0.036m")*32-Q("0.014m"),    # same as for mod_pos5_ortho
                                             Q("0m"))
 
 
@@ -585,13 +564,6 @@ class tmsBuilder(gegede.builder.Builder):
             Module_layer_lv4.placements.append(mod_parallel_pla6.name)
 
 
-
-
-        #For_5_verticals
-        #Module_layer_lv1.placements.append(mod_ri_pla6.name)
-        #Module_layer_lv2.placements.append(mod_le_pla6.name)
-        #For_5_verticals
-
         #Place Layers into RMS vol
         Module_layers_thin = 34#50
         thinModlayer_pos = [geom.structure.Position('k')]*Module_layers_thin
@@ -602,8 +574,7 @@ class tmsBuilder(gegede.builder.Builder):
             # set U layer for double layer of scintillator in first layer
             thinModlayer_pos_first = [geom.structure.Position('q')]*(Module_layers_thin+1)
             thin_Modlayer_pla_first = [geom.structure.Placement('r',volume=Module_layer_lv1,pos=thinModlayer_pos[1])]*(Module_layers_thin+1)
-            #zpos = -Q("3.650m") -Q("0.0325m") + Q("0.0065m") - Q("0.022m")# first layer of thin steel - half thin steel thickness - half gap - full scintillator width - 1mm for space between modules
-            zpos = -Q("3.650m") -Q("0.0325m") + Q("0.0065m") - Q("0.057m")# first layer of thin steel - half thin steel thickness - half gap - full scintillator width - 1mm for space between modules
+            zpos = -Q("3.650m") -Q("0.0325m") -Q("0.065m") # first layer of thin steel - half plane thickness + plane thickness
             thinModlayer_pos_first[0] = geom.structure.Position( 'thinModlayerposition'+str(0),
                                                             x = xpos_planes,
                                                             y = ypos_planes,
@@ -612,11 +583,9 @@ class tmsBuilder(gegede.builder.Builder):
             thin_Modlayer_pla_first[0] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(0), volume=Module_layer_lv2, pos=thinModlayer_pos_first[0] )     #v (To uphold the pattern and not uXuv)
             tms_lv.placements.append(thin_Modlayer_pla_first[0].name)
 
-            #hybrid version (XUV)
+            #4_2c
             for module in range(1, Module_layers_thin + 1):
-                zpos = -Q("3.650m") -Q("0.0325m") + (module-1) * Q("0.065m")#     # first layer of thin steel - half steel+gap thickness - half gap
-                if module==1:
-                    print("Start thin:",zpos)
+                zpos = -Q("3.650m") -Q("0.0325m") + (module-1) * Q("0.065m")#     # first layer of thin steel - half plane thickness + plane thickness
                 thinModlayer_pos_first[module] = geom.structure.Position( 'thinModlayerposition'+str(module),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
@@ -635,7 +604,7 @@ class tmsBuilder(gegede.builder.Builder):
         elif XY:
             thinModlayer_pos_first = [geom.structure.Position('q')]*(Module_layers_thin+1)
             thin_Modlayer_pla_first = [geom.structure.Placement('r',volume=Module_layer_lv4,pos=thinModlayer_pos[1])]*(Module_layers_thin+1)
-            zpos = -Q("3.650m") -Q("0.0325m") + Q("0.0065m") - Q("0.057m") #- Q("0.001m")     # first layer of thin steel - half thin steel thickness - half gap - full scintillator width - 1mm for space between modules
+            zpos = -Q("3.650m") -Q("0.0325m") -Q("0.065m") # first layer of thin steel - half plane thickness + plane thickness
             thinModlayer_pos_first[0] = geom.structure.Position( 'thinModlayerposition'+str(0),
                                                             x = xpos_planes,
                                                             y = ypos_planes,
@@ -645,12 +614,12 @@ class tmsBuilder(gegede.builder.Builder):
             tms_lv.placements.append(thin_Modlayer_pla_first[0].name)
 
             for module in range(1,Module_layers_thin+1):
-                zpos = -Q("3.650m") -Q("0.0325m") + (module-1) * Q("0.065m")      # first layer of thin steel - half thin steel thickness - half gap
+                zpos = -Q("3.650m") -Q("0.0325m") + (module-1) * Q("0.065m")      # first layer of thin steel - half plane thickness + plane thickness
                 thinModlayer_pos_first[module] = geom.structure.Position( 'thinModlayerposition'+str(module),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
                                                            z = zpos)
-                #XY version (XY)
+                #4_2d
                 if module in self.thin_horizontal:
                     thin_Modlayer_pla_first[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thinModlayer_pos_first[module] )#x
                 if module in self.thin_U:
@@ -659,10 +628,10 @@ class tmsBuilder(gegede.builder.Builder):
                     thin_Modlayer_pla_first[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv4, pos=thinModlayer_pos_first[module] )#y
 
                 tms_lv.placements.append(thin_Modlayer_pla_first[module].name)
-        elif 3_2b:
-            #stereo version (UV)
+        elif PDR_3_2b:
+            #3_2b
             for module in range(Module_layers_thin):
-                zpos = -Q("3.650m") -Q("0.0325m") + module * Q("0.065m")#     # first layer of thin steel - half steel+gap thickness - half gap
+                zpos = -Q("3.650m") -Q("0.0325m") + module * Q("0.065m")#     # first layer of thin steel - half plane thickness + plane thickness
                 thinModlayer_pos[module] = geom.structure.Position( 'thinModlayerposition'+str(module),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
@@ -685,16 +654,14 @@ class tmsBuilder(gegede.builder.Builder):
         thick_Modlayer_pla = [geom.structure.Placement('n',volume=Module_layer_lv1,pos=thickModlayer_pos[1])]*Module_layers_thick    
 
         for module in range(0, Module_layers_thick):
-            zpos = -Q("1.4225m") - Q("0.045m")  + module * Q("0.09m")    # first layer of thick steel(1.4725) - half of plane gap + 40mm+ gap
-            if module==1:
-                print("Start thick:",zpos)
+            zpos = -Q("1.4225m") - Q("0.045m")  + module * Q("0.09m")    # first layer of thick steel(1.4225) -half plane thickness + plane thickness
             thickModlayer_pos[module] = geom.structure.Position( 'thickModlayerposition'+str(module),
                                                            x = xpos_planes,
                                                            y = ypos_planes,
                                                            z = zpos)
             
             if hybrid:
-                #hybrid version (XUV)
+                #4_2c
                 if module in self.thick_horizontal:
                     thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thickModlayer_pos[module] )   #x
                 if module in self.thick_U:
@@ -702,15 +669,15 @@ class tmsBuilder(gegede.builder.Builder):
                 if module in self.thick_V:
                     thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv2, pos=thickModlayer_pos[module] )   #v
             elif XY:
-                #XY version (XY)
+                #4_2d
                 if module in self.thick_horizontal:
                     thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thickModlayer_pos[module] )#x
                 if module in self.thick_U:
                     thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv4, pos=thickModlayer_pos[module] )
                 if module in self.thick_V:
                     thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv4, pos=thickModlayer_pos[module] )
-            elif 3_2b:
-                #stereo version (UV)
+            elif PDR_3_2b:
+                #3_2b
                 if (module+Module_layers_thin) % 3 == 0 :
                     thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=thickModlayer_pos[module] )   #u
                 if (module+Module_layers_thin) % 3 == 1 :
@@ -727,14 +694,11 @@ class tmsBuilder(gegede.builder.Builder):
         double_Modlayer_pla = [geom.structure.Placement('p',volume=Module_layer_lv1,pos=doubleModlayer_pos[1])]*Module_layers_double
 
         for module in range(0,Module_layers_double):
-            zpos = +Q("0.5875m") -Q("0.065m")  + module * Q("0.13m")    # first layer of thick steel(0.51) -half of plane gap +40mm+ gap
+            zpos = +Q("0.5875m") -Q("0.065m")  + module * Q("0.13m")    # first layer of thick steel(0.5875) -half plane thickness + plane thickness
             doubleModlayer_pos[module] = geom.structure.Position( 'doubleModlayerposition'+str(module),
                                                             x = xpos_planes,
                                                             y = ypos_planes,
                                                             z = zpos)
-
-            if module==1:
-                print("Start double:",zpos)
 
             if hybrid:
                 #hybrid version (XUV)
@@ -752,7 +716,7 @@ class tmsBuilder(gegede.builder.Builder):
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv4, pos=doubleModlayer_pos[module] )
                 if module in self.double_V:
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv4, pos=doubleModlayer_pos[module] )
-            elif 3_2b:
+            elif PDR_3_2b:
                 #UVX
                 if (module+Module_layers_thick+Module_layers_thin) % 3 == 0 :
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv1, pos=doubleModlayer_pos[module] )   #u
