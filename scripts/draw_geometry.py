@@ -547,6 +547,11 @@ def get_default_view(args, view_name, w, h, translate):
         box_max = (800 * ratio, translate, 1400)
         matrix = create_projection_matrix(w, h, box_min, box_max, "XZ")
         projection = "XZ"
+    if view_name == "tagger":
+        box_min = (-800 * ratio, translate, 150)
+        box_max = (800 * ratio, translate, 450)
+        matrix = create_projection_matrix(w, h, box_min, box_max, "XZ")
+        projection = "XZ"
     if view_name == "lar_side":
         box_min = (translate, -800 * ratio, 0)
         box_max = (translate, 400 * ratio, 1200)
