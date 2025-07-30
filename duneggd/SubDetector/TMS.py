@@ -4,14 +4,13 @@ from duneggd.LocalTools import materialdefinition as materials
 from gegede import Quantity as Q
 global Pos
 class tmsBuilder(gegede.builder.Builder):
-    def configure(self, mat=None, thinbox1Dimension=None, gapPosition=None, BFieldUpLow = None, BFieldUpHigh = None, BFieldDownLow = None , BFieldDownHigh = None, thin_horizontal=None, thick_horizontal=None, double_horizontal=None, thin_U=None, thick_U=None, double_U=None, thin_V=None, thick_V=None, double_V=None,  **kwds):    #thinbox2Dimension=None
+    def configure(self, mat=None, thinbox1Dimension=None, gapPosition=None, BFieldUpLow = None, BFieldUpHigh = None, BFieldDownLow = None , BFieldDownHigh = None, thin_horizontal=None, thick_horizontal=None, double_horizontal=None, thin_U=None, thick_U=None, double_U=None, thin_V=None, thick_V=None, double_V=None,  **kwds): 
         self.BFieldUpLow = BFieldUpLow
         self.BFieldUpHigh = BFieldUpHigh
         self.BFieldDownLow = BFieldDownLow 
         self.BFieldDownHigh = BFieldDownHigh
         self.mat=mat
         self.thinbox1Dimension=thinbox1Dimension
-        #self.thinbox2Dimension=thinbox2Dimension   #remnant from old geometry version with two different steel plate widths (outer and inner)
         self.gapPosition=gapPosition
         self.thin_horizontal = thin_horizontal
         self.thick_horizontal = thick_horizontal
@@ -65,8 +64,8 @@ class tmsBuilder(gegede.builder.Builder):
 
 
         thin_layer = geom.shapes.Box( 'thinlayerbox',
-                                      dx = 0.5*Q("7.460m"), #7.036m # 4*self.thinbox1Dimension[0]+3*self.gapPosition[0] # the commented out values like this are from the old geometry. Exchange the values, if switching back to 60-40 steel geometry
-                                      dy = 0.5*Q("4.700m"), #5.022m # steel height
+                                      dx = 0.5*Q("7.460m"), # 4*self.thinbox1Dimension[0]+3*self.gapPosition[0] # the commented out values like this are from the old geometry. Exchange the values, if switching back to 60-40 steel geometry
+                                      dy = 0.5*Q("4.700m"), # steel height
                                       dz = 0.5*Q("0.015m"))         # thin steel thickness
         thick_layer = geom.shapes.Box( 'thicklayerbox',
                                       dx = 0.5*Q("7.460m"),
@@ -103,21 +102,6 @@ class tmsBuilder(gegede.builder.Builder):
         tms_lv = geom.structure.Volume( 'vol'+self.name, material='Air', shape=tmsbox )
             
         # Position steel in layer volumes (Thin)
-        ### The commented out part here is a remnant from the old geometry with different steel widths (inner and outer) ###
-        #lf_pos = geom.structure.Position( 'lfpos'+self.name,
-        #                                  0.5*(self.thinbox1Dimension[0]+self.thinbox2Dimension[0])+self.gapPosition[0],
-        #                                  Q("0m"),
-        #                                  Q("0m"))
-        
-        #rt_pos = geom.structure.Position( 'rtpos'+self.name,
-        #                                  -(0.5*(self.thinbox1Dimension[0]+self.thinbox2Dimension[0])+self.gapPosition[0]),
-        #                                  Q("0m"),
-        #                                  Q("0m"))
-            
-        #ctr_pos = geom.structure.Position( 'ctrpos'+self.name,
-        #                                   Q("0m"),
-        #                                   Q("0m"),
-        #                                   Q("0m"))
         ### This is the geometry with the same steel widths in inner and outer parts ###
         steel_pos1 = geom.structure.Position( 'steel_pos1'+self.name,
                                             -1.5*self.thinbox1Dimension[0]-1.5*self.gapPosition[0],
@@ -138,15 +122,6 @@ class tmsBuilder(gegede.builder.Builder):
 
 
         # Thin steel
-        ### The commented out part here is a remnant from the old geometry with different steel widths (inner and outer) ###
-        #rt_pla = geom.structure.Placement( 'rtpla'+self.name, volume=thinBox1_lv, pos=rt_pos )
-        #lf_pla = geom.structure.Placement( 'lfpla'+self.name, volume=thinBox1_lv, pos=lf_pos )
-        #ctr_pla = geom.structure.Placement( 'ctrpla'+self.name, volume=thinBox2_lv, pos=ctr_pos )
-
-        #thin_layer_lv.placements.append(rt_pla.name)
-        #thin_layer_lv.placements.append(lf_pla.name)
-        #thin_layer_lv.placements.append(ctr_pla.name)
-
         ### This is the geometry with the same steel widths in inner and outer parts ###
         pla_1 = geom.structure.Placement( 'plane1'+self.name, volume=thinBox1_lv, pos=steel_pos1 )
         pla_2 = geom.structure.Placement( 'plane2'+self.name, volume=thinBox2_lv, pos=steel_pos2 )
@@ -159,15 +134,6 @@ class tmsBuilder(gegede.builder.Builder):
         thin_layer_lv.placements.append(pla_4.name)
 
         # Thick steel
-        ### The commented out part here is a remnant from the old geometry with different steel widths (inner and outer) ###
-        #thick_rt_pla = geom.structure.Placement( 'thickrtpla'+self.name, volume=thickBox1_lv, pos=rt_pos )
-        #thick_lf_pla = geom.structure.Placement( 'thicklfpla'+self.name, volume=thickBox1_lv, pos=lf_pos )
-        #thick_ctr_pla = geom.structure.Placement( 'thickctrpla'+self.name, volume=thickBox2_lv, pos=ctr_pos )
-
-        #thick_layer_lv.placements.append(thick_rt_pla.name)
-        #thick_layer_lv.placements.append(thick_lf_pla.name)
-        #thick_layer_lv.placements.append(thick_ctr_pla.name)
-
         ### This is the geometry with the same steel widths in inner and outer parts ###
         thick_pla_1 = geom.structure.Placement( 'thickplane1'+self.name, volume=thickBox1_lv, pos=steel_pos1 )
         thick_pla_2 = geom.structure.Placement( 'thickplane2'+self.name, volume=thickBox2_lv, pos=steel_pos2 )
@@ -180,15 +146,6 @@ class tmsBuilder(gegede.builder.Builder):
         thick_layer_lv.placements.append(thick_pla_4.name)
 
         # Double steel
-        ### The commented out part here is a remnant from the old geometry with different steel widths (inner and outer) ###
-        #double_rt_pla = geom.structure.Placement( 'doublertpla'+self.name, volume=doubleBox1_lv, pos=rt_pos )
-        #double_lf_pla = geom.structure.Placement( 'doublelfpla'+self.name, volume=doubleBox1_lv, pos=lf_pos )
-        #double_ctr_pla = geom.structure.Placement( 'doublectrpla'+self.name, volume=doubleBox2_lv, pos=ctr_pos )
-
-        #double_layer_lv.placements.append(double_rt_pla.name)
-        #double_layer_lv.placements.append(double_lf_pla.name)
-        #double_layer_lv.placements.append(double_ctr_pla.name)
-
         ### This is the geometry with the same steel widths in inner and outer parts ###
         double_pla_1 = geom.structure.Placement( 'doubleplane1'+self.name, volume=doubleBox1_lv, pos=steel_pos1 )
         double_pla_2 = geom.structure.Placement( 'doubleplane2'+self.name, volume=doubleBox2_lv, pos=steel_pos2 )
@@ -203,7 +160,7 @@ class tmsBuilder(gegede.builder.Builder):
         # Position the thin and thick steel
         #80 steel layers, 34 thin, 22 thinck and 24 double.
 
-        n_thin_steel = 34#50
+        n_thin_steel = 34
         thinlayer_pos = [geom.structure.Position('a')]*n_thin_steel
         thin_layer_pla = [geom.structure.Placement('b',volume=thin_layer_lv,pos=thinlayer_pos[1])]*n_thin_steel
 
@@ -222,7 +179,7 @@ class tmsBuilder(gegede.builder.Builder):
             tms_lv.placements.append(thin_layer_pla[plane].name)
 
         #Thick Layer Placement
-        n_thick_steel = 22#34
+        n_thick_steel = 22
         thicklayer_pos = [geom.structure.Position('c')]*n_thick_steel
         thick_layer_pla = [geom.structure.Placement('d',volume=thick_layer_lv, pos=thicklayer_pos[1])]*n_thick_steel
         
@@ -237,7 +194,7 @@ class tmsBuilder(gegede.builder.Builder):
             tms_lv.placements.append(thick_layer_pla[plane].name)
         
         #Double Layer Placement
-        n_double_steel = 24#8
+        n_double_steel = 24
         doublelayer_pos = [geom.structure.Position('e')]*n_double_steel #e was scintillator so far!!!
         double_layer_pla = [geom.structure.Placement('f',volume=double_layer_lv, pos=doublelayer_pos[1])]*n_double_steel    #f was scintillator so far!!!
 
@@ -266,22 +223,23 @@ class tmsBuilder(gegede.builder.Builder):
         barnumber=32
         middlepos=barwidth*barnumber/2-barwidth/2
         length_orth=3.5
+        barthickness=0.016
         if six_width: length_orth=2.880 
 
         scinBox = geom.shapes.Box( 'scinbox'+self.name,
                                     dx = 0.5*Q(f"{barwidth}m"),   # width single bar
                                     dy = 0.5*Q("3.300m"),   # length bar for stereo bars
-                                    dz = 0.5*Q("0.016m"))   # thickness single bar
+                                    dz = 0.5*Q(f"{barthickness}m"))   # thickness single bar
         
         scinBox_ortho = geom.shapes.Box( 'scinbox_ortho'+self.name,
                                     dx = 0.5*Q(f"{length_orth}m"),   # length bar for orthogonal bars
                                     dy = 0.5*Q(f"{barwidth}m"),   # width single bar
-                                    dz = 0.5*Q("0.016m"))   # thickness single bar
+                                    dz = 0.5*Q(f"{barthickness}m"))   # thickness single bar
 
         scinBox_parallel = geom.shapes.Box( 'scinbox_parallel'+self.name,
                                     dx = 0.5*Q(f"{barwidth}m"),   # width single bar
                                     dy = 0.5*Q("3.500m"),   # length bar for stereo bars
-                                    dz = 0.5*Q("0.016m"))   # thickness single bar
+                                    dz = 0.5*Q(f"{barthickness}m"))   # thickness single bar
 
 
         scinBox_lv = geom.structure.Volume( 'scinBoxlv'+self.name, material='Scintillator', shape=scinBox)
@@ -297,17 +255,17 @@ class tmsBuilder(gegede.builder.Builder):
         ModuleBox = geom.shapes.Box( 'ModuleBox',
                                      dx = 0.5*Q(f"{barwidth}m")*barnumber,   # width single bar
                                      dy = 0.5*Q("3.300m"),       # Same length as single stereo bar
-                                     dz = 0.5*Q("0.016m"))       # Same thickness as single bar
+                                    dz = 0.5*Q(f"{barthickness}m"))   # thickness single bar
 
         ModuleBox_ortho = geom.shapes.Box( 'ModuleBox_ortho',
                                     dx = 0.5*Q(f"{length_orth}m"),        # Same length as single orthogonal bar
                                      dy = 0.5*Q(f"{barwidth}m")*barnumber,   # width single bar
-                                    dz = 0.5*Q("0.016m"))        # Same thickness as single bar
+                                    dz = 0.5*Q(f"{barthickness}m"))   # thickness single bar
 
         ModuleBox_parallel = geom.shapes.Box( 'ModuleBox_parallel',
                                      dx = 0.5*Q(f"{barwidth}m")*barnumber,   # width single bar
-                                     dy = 0.5*Q("3.500m"),# + Q("0.001m")       # Same length as single stereo bar
-                                     dz = 0.5*Q("0.016m"))# + Q("0.001m"))      # Same thickness as single bar
+                                     dy = 0.5*Q("3.500m"),       # Same length as single stereo bar
+                                    dz = 0.5*Q(f"{barthickness}m"))   # thickness single bar
 
         ModuleBox_lv = geom.structure.Volume( 'ModuleBoxvol', material='Air', shape=ModuleBox )
 
