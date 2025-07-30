@@ -10,6 +10,14 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ### Changed
 
+- TMS new stacking plan for PDR, 34 thin, 22 thick and 24 double thick steel planes
+  - Introduce 3 geometries, 3.2b, 4.2c and 4.2d
+
+## [TDR_Production_geometry_v_1.2.0]
+
+### Changed
+
+- Change most rock to vaccuum. Only need rock in front, and a little around detectors
 - TMS geometry update from CDR to PDR
   - Switch to 50 thin, 34 thick and 8 double thick steel planes with less material overburden in the y dimension
   - Change the dimension of scintillator bars, the amount of bars per module and the number of modules per layer
@@ -20,6 +28,8 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 ### Added
 
 - Check for CHANGELOG update in PRs
+- Versioning metadata to `volWorld`: `git_commit`, `git_branch`, `git_tag`, and `output_file_name`
+- Add `draw_geometry.py` and `draw_all.sh`
 
 ## [TDR_Production_geometry_v_1.1.0]
 
