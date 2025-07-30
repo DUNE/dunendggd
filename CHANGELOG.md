@@ -8,6 +8,10 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
+### Removed
+
+- Muon tagger as it's not in current engineering design
+
 ## [TDR_Production_geometry_v_1.2.0]
 
 ### Changed
