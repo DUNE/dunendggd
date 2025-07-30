@@ -141,7 +141,7 @@ def make_beam(geom, n_support_beams, full_rectangle_length, support_beam_gap, su
                         
                         
                     
-        print(i)
+        #print(i)
         #below uses shape beam_minus_down_triangle as it is the last shape made in the j loop not left triangle
         
 

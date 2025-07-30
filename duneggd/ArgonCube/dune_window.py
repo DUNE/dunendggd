@@ -25,7 +25,7 @@ class WorldBuilder(gegede.builder.Builder):
         pass
 
     def construct(self, geom):
-        print ("Construct WorldBuilder volume for " + self.name)
+        
         ## Define the materials.  All materials should be defined in
         ## the world builder construct method.
         ## some elements from https://pubchem.ncbi.nlm.nih.gov/periodic-table
@@ -79,9 +79,9 @@ class WorldBuilder(gegede.builder.Builder):
         
         
     
-        #print("making daughters")
+        
 
-        #print("about to subbuild")
+        
 
         #make the full rectangle builder
         full_rectangle_subBuilder = self.get_builders()[0]
@@ -114,10 +114,10 @@ class WorldBuilder(gegede.builder.Builder):
         
         
 
-        #print("triangle_subBuilder is")
-        #print(triangle_subBuilder)
         
-        #print("about to make vol")
+        
+    
+        
         #make the subVolumes
         full_rectangle_subVolume = full_rectangle_subBuilder.get_volume()
         smaller_rectangle_subVolume = smaller_rectangle_subBuilder.get_volume()
@@ -291,7 +291,7 @@ class Block(gegede.builder.Builder):
         pass
 
     def construct(self, geom):
-        print ("Construct RubikBuilder volume for " + self.name)
+        
 
         # get volumes from sub-builders.  Note, implicitly assume
         # order, which must be born out by configuration.  Once could
@@ -310,10 +310,10 @@ class Block(gegede.builder.Builder):
         #Try and make my own volume
         dim = (self.length, self.height, self.thickness)
         #dim = (half_size,) * 3
-        print(dim)
+        
         # make overall shape and LV
         shape = geom.shapes.Box(self.name + '_box_shape', *dim)
-        print("The name for this shape is " + self.name + '_box_shape')
+        
         volume = geom.structure.Volume(self.name+'_volume',
                                        material=self.material, shape=shape)
         self.add_volume(volume)
@@ -328,7 +328,7 @@ class TriangleGap(gegede.builder.Builder):
     #cubes of equal size.
 
     def configure(self,  material = 'Steel', side_length = Q("5cm"), angle = 45 * 3.14 / 180, thickness = Q("0.1cm"), triangle_gap = Q("7.5cm"), side_triangle_gap = Q("0cm"), **kwds):
-        print ("Configure TriangleGap for " + self.name)
+        
         self.material = material
         self.thickness, self.side_length = (thickness, side_length)
         #self height is to make sure the triangle is equilateral
@@ -338,7 +338,7 @@ class TriangleGap(gegede.builder.Builder):
         pass
 
     def construct(self, geom):
-        print ("Construct RubikBuilder volume for " + self.name)
+        
 
         # get volumes from sub-builders.  Note, implicitly assume
         # order, which must be born out by configuration.  Once could
@@ -357,8 +357,8 @@ class TriangleGap(gegede.builder.Builder):
         
         #Try and make my own volume
         dim = (self.thickness, self.thickness, self.side_length, Q("0cm"), self.height)
-        #dim = (half_size,) * 3
-        #print(dim)
+        
+        
         # make overall shape and LV
         shape = geom.shapes.Trapezoid(self.name + '_box_shape', *dim)
         volume = geom.structure.Volume(self.name+'_volume', 
