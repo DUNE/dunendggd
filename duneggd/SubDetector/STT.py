@@ -8,7 +8,7 @@ class STTBuilder(gegede.builder.Builder):
 
     def configure(self, STTconfiguration=None,
                         # SANDINNERVOLUME
-                        halfDimension=None,     Material=None,            nBarrelModules=None,      configuration=None,     liqArThickness=None,    DistGRAINSTT=None,        DistGRAINECAL=None,       DistSTTECAL=None,
+                        halfDimension=None,     Material=None,            nBarrelModules=None,      configuration=None,     GRAINThickness=None,    clearenceGRAINTracker=None,        clearenceECALGRAIN=None,       clearenceTrackerECAL=None,
                         # STT   tracker
                         nofUpstreamTrkMod=None, nofDownstreamTrkMod=None, nofC3H6ModAfterCMod=None, 
                         # STRAW TUBE
@@ -30,19 +30,19 @@ class STTBuilder(gegede.builder.Builder):
             self.kloeTrkRegHalfDx             = self.kloeVesselHalfDx - self.extLateralgap
             self.nBarrelModules               = nBarrelModules
             self.rotAngle                     = 0.5 * Q('360deg') / self.nBarrelModules
-            self.liqArThickness               = liqArThickness
+            self.GRAINThickness               = GRAINThickness
             self.configuration                = configuration
             self.STTcofiguration              = STTconfiguration
-            self.DistGRAINSTT                 = DistGRAINSTT
-            self.DistGRAINECAL                = DistGRAINECAL
-            self.DistSTTECAL                  = DistSTTECAL
+            self.clearenceGRAINTracker        = clearenceGRAINTracker
+            self.clearenceECALGRAIN           = clearenceECALGRAIN
+            self.clearenceTrackerECAL         = clearenceTrackerECAL
 
             #************************************************************************|  STT tracker  |**********************************************************************************
             self.nofUpstreamTrkMod            = nofUpstreamTrkMod
             self.nofDownstreamTrkMod          = nofDownstreamTrkMod
             self.nofC3H6ModAfterCMod          = nofC3H6ModAfterCMod
-            self.AvailableUpstreamSpace       = self.kloeTrkRegRadius - self.liqArThickness - self.DistGRAINSTT - self.DistGRAINECAL
-            self.AvalilableDowstreamSpace     = self.kloeTrkRegRadius - self.DistSTTECAL
+            self.AvailableUpstreamSpace       = self.kloeTrkRegRadius - self.GRAINThickness - self.clearenceGRAINTracker - self.clearenceECALGRAIN
+            self.AvalilableDowstreamSpace     = self.kloeTrkRegRadius - self.clearenceTrackerECAL
 
             #************************************************************************|   STRAWTUBE   |**********************************************************************************
 
@@ -101,10 +101,10 @@ class STTBuilder(gegede.builder.Builder):
             print("")
             print("-"*20+" INNERVOLUME INFO "+"-"*20)
             print("")
-            print("liqArThickness              | "+str(self.liqArThickness))
-            print("distance GRAIN-ECAL         | "+str(self.DistGRAINECAL))
-            print("distance GRAIN-STT          | "+str(self.DistGRAINSTT))
-            print("distance STT-ECAL           | "+str(self.DistSTTECAL))
+            print("GRAINThickness              | "+str(self.GRAINThickness))
+            print("clearence GRAIN-ECAL        | "+str(self.clearenceECALGRAIN))
+            print("clearence GRAIN-STT         | "+str(self.clearenceGRAINTracker))
+            print("clearence STT-ECAL          | "+str(self.clearenceTrackerECAL))
             print("")
             print("-"*20+" STRAW INFO "+"-"*20)
             print("")
@@ -137,13 +137,13 @@ class STTBuilder(gegede.builder.Builder):
 
         self.UpstreamSpaceLeft            = self.AvailableUpstreamSpace - self.ModThickness["CMod"]/2 - self.ModThickness["TrkMod"] * self.nofUpstreamTrkMod
         
-        self.nofUpstreamSuperMod          = int(self.UpstreamSpaceLeft / self.SuperModThickness)
+        self.nofUpstreamSuperMod          = int((self.UpstreamSpaceLeft / self.SuperModThickness).to_base_units().magnitude)
         
         # 1 CMod always in front of sequence of C3H6Mod
 
         self.UpstreamSpaceLeft            -= (self.nofUpstreamSuperMod * self.SuperModThickness + self.ModThickness["CMod"])
         
-        self.nofFirstUpstreamC3H6Mod      = int(self.UpstreamSpaceLeft / self.ModThickness["C3H6Mod"])
+        self.nofFirstUpstreamC3H6Mod      = int((self.UpstreamSpaceLeft / self.ModThickness["C3H6Mod"]).to_base_units().magnitude)
         
         self.UpstreamSpaceLeft            -= self.nofFirstUpstreamC3H6Mod * self.ModThickness["C3H6Mod"]
         
@@ -155,13 +155,13 @@ class STTBuilder(gegede.builder.Builder):
 
         self.DownstreamSpaceLeft          = self.AvalilableDowstreamSpace + self.ModThickness["CMod"]/2 - self.ModThickness["TrkMod"] * self.nofDownstreamTrkMod
         
-        self.nofDownstreamSuperMod        = int(self.DownstreamSpaceLeft / self.SuperModThickness)
+        self.nofDownstreamSuperMod        = int((self.DownstreamSpaceLeft / self.SuperModThickness).to_base_units().magnitude)
 
         # 1 CMod always in front of sequence of C3H6Mod
 
         self.DownstreamSpaceLeft          -= (self.nofDownstreamSuperMod * self.SuperModThickness + self.ModThickness["CMod"])
 
-        self.nofLastDownstreamC3H6Mod     = int(self.DownstreamSpaceLeft/self.ModThickness["C3H6Mod"])
+        self.nofLastDownstreamC3H6Mod     = int((self.DownstreamSpaceLeft/self.ModThickness["C3H6Mod"]).to_base_units().magnitude)
 
         self.DownstreamSpaceLeft          -= self.nofLastDownstreamC3H6Mod * self.ModThickness["C3H6Mod"]
 
@@ -205,8 +205,7 @@ class STTBuilder(gegede.builder.Builder):
             module_sequence.append("C3H6Mod")
             modules_X_center.append(running_X + self.ModThickness["C3H6Mod"]/2)
             running_X += self.ModThickness["C3H6Mod"]
-                
-        
+                 
         for i in range(self.nofDownstreamTrkMod): 
             module_sequence.append("TrkMod")
             modules_X_center.append(running_X + self.ModThickness["TrkMod"]/2)
@@ -216,7 +215,6 @@ class STTBuilder(gegede.builder.Builder):
         self.module_sequence    = module_sequence
         self.modules_X_center   = modules_X_center
     
-
     def construct(self, geom):
 
         self.init()
@@ -247,12 +245,11 @@ class STTBuilder(gegede.builder.Builder):
         print("time to construct STT       | "+str(self.stop_time-self.start_time)+" seconds")
         print("")
         
-
     def build_STTSegment(self, geom):
 
         whole_shape         = geom.shapes.PolyhedraRegular("whole_shape_for_stt",numsides=self.nBarrelModules, rmin=Q('0cm'), rmax=self.kloeVesselRadius , dz=self.kloeVesselHalfDx, sphi=self.rotAngle)
-        upstream_shape      = geom.shapes.Box("upstream_shape_for_stt", dx=0.5*self.liqArThickness, dy=self.kloeVesselRadius, dz=self.kloeVesselHalfDx )
-        upstream_shape_pos  = geom.structure.Position("upstream_shape_pos_for_stt", -self.kloeVesselRadius+0.5*self.liqArThickness, Q('0m'), Q('0m'))
+        upstream_shape      = geom.shapes.Box("upstream_shape_for_stt", dx=0.5*self.GRAINThickness, dy=self.kloeVesselRadius, dz=self.kloeVesselHalfDx )
+        upstream_shape_pos  = geom.structure.Position("upstream_shape_pos_for_stt", - self.kloeVesselRadius + 0.5*self.GRAINThickness + self.clearenceECALGRAIN, Q('0m'), Q('0m'))
         stt_shape           = geom.shapes.Boolean("stt_shape", type='subtraction', first=whole_shape, second=upstream_shape, rot='noRotate', pos=upstream_shape_pos)
         main_lv             = geom.structure.Volume('STTtracker',   material=self.Material, shape=stt_shape)
         print(( "  main_lv = "+ main_lv.name))
@@ -276,7 +273,7 @@ class STTBuilder(gegede.builder.Builder):
                 return HalfHeight-(dis2c-projectedDisPre)*math.tan(i*theta)
             else:
                 HalfHeight-=2*d*math.sin(i*theta)
-    
+
     # def getHalfHeight(self,dis2c):
     #     PolyAngle   = 2*math.pi/self.nBarrelModules
     #     alpha0      = PolyAngle/2
@@ -317,7 +314,6 @@ class STTBuilder(gegede.builder.Builder):
         planeYY                 = self.constructStrawPlane(geom, planeYY_name, dy = self.kloeTrkRegHalfDx - self.FrameThickness,  dz = module_half_heigth - self.FrameThickness,    gas = self.StrawGas[module_type])
         self.nofStrawTubeConstructed += self.nofStrawCurrentMod * self.nofStrawPlanes[module_type]
         
-        
         if(module_type!="TrkMod"):
             frame        = self.constructFrame(geom,    base_name,    module_type,    dy = module_half_heigth,                                            dz = self.kloeTrkRegHalfDx)
             target       = self.constructTarget(geom,   base_name,    module_type,    dy = module_half_heigth - self.FrameThickness - self.AddGapForSlab, dz = self.kloeTrkRegHalfDx - self.FrameThickness - self.AddGapForSlab)
@@ -340,7 +336,6 @@ class STTBuilder(gegede.builder.Builder):
             if (self.radiator=="yes" and module_type=='C3H6Mod'): main_lv.placements.append(Radiator_pla.name)
             main_lv.placements.append(planeXX_pla.name)
             main_lv.placements.append(planeYY_pla.name)
-
 
         else:
 
@@ -367,7 +362,6 @@ class STTBuilder(gegede.builder.Builder):
         frame_lv         = geom.structure.Volume(frame_name, material="carbonComposite", shape=frame_shape)
         return frame_lv
 
-        
     def constructTarget(self, geom, base_name, module_type, dy, dz):
         target_name     = base_name + "_target"
         target_material = "Graphite" if module_type == 'CMod' else "C3H6"
@@ -401,16 +395,15 @@ class STTBuilder(gegede.builder.Builder):
         
         return radiator_lv
 
-
     def constructStrawPlane(self, geom, base_name, dy, dz, gas):
 
         plane_shape = geom.shapes.Box(base_name, dx=self.planeXXThickness/2, dy=dy, dz=dz)
         plane_lv    = geom.structure.Volume(base_name,material="Air35C", shape=plane_shape)
         straw_lv    = self.constructStraw(geom, base_name, dz, gas)
 
-        Nstraw      = int(dy/(self.StrawRadius + self.StrawPlug + self.StrawYDist/2))*2 - 1
+        Nstraw      = int((dy/(self.StrawRadius + self.StrawPlug + self.StrawYDist/2)).to_base_units().magnitude)*2 - 1
 
-        left_spaceY = dy.magnitude*1E3%(self.StrawRadius + self.StrawPlug + self.StrawYDist/2).magnitude
+        left_spaceY = dy.to_base_units().magnitude*1E3%(self.StrawRadius + self.StrawPlug + self.StrawYDist/2).to_base_units().magnitude
 
         running_y   = dy - Q(str(left_spaceY)+"mm")
         
@@ -470,7 +463,6 @@ class STTBuilder(gegede.builder.Builder):
         wire_shape          = geom.shapes.Tubs(wire_name+"_shape", rmin = Q("0mm"), rmax = self.StrawWireRadius, dz=straw_half_length)
         wire_lv             = geom.structure.Volume(wire_name, material="Gold",shape=wire_shape)
         wire_pla            = geom.structure.Placement(wire_name+"_place", volume = wire_lv)
-
 
         if(self.StrawPlug!=Q("0mm")): straw_lv.placements.append(ring_pla.name)
         straw_lv.placements.append(Alcoat_pla.name)
