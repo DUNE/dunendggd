@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+from subprocess import run
 import gegede.builder
 from duneggd.LocalTools import localtools as ltools
 from duneggd.LocalTools import materialdefinition as materials
 from gegede import Quantity as Q
+import sys
 
 
 #Changed DetEnc to Rock
@@ -13,6 +15,32 @@ class WorldBuilder(gegede.builder.Builder):
         self.Material = Material
         self.RockPosition = RockPosition
         self.RockRotation = RockRotation
+
+        # Get current git commit hash
+        ret = run(["git", "rev-parse", "HEAD"], capture_output=True, text=True)
+        if ret.returncode == 0:
+            self.git_commit = ret.stdout.strip()
+            # Get current tag
+            ret = run(["git", "describe", "--tags", "HEAD"], capture_output=True, text=True)
+            self.git_tag = ret.stdout.strip()
+            # Get current branch
+            ret = run(["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True)
+            self.git_branch = ret.stdout.strip()
+        else:
+            # Error in calling `git`
+            self.git_commit = ""
+            self.git_tag = ""
+            self.git_branch = ""
+
+        # Get output file name
+        self.output_file_name = ""
+        if "-o" in sys.argv:
+            self.output_file_name = sys.argv[sys.argv.index('-o') + 1]
+
+        print(f"Current git commit: {self.git_commit}")
+        print(f"Current git branch: {self.git_branch}")
+        print(f"Current git tag:    {self.git_tag}")
+        print(f"Output file name:   {self.output_file_name}")
     #^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^~^
     def construct(self, geom):
 
@@ -53,3 +81,9 @@ class WorldBuilder(gegede.builder.Builder):
         Rock_rot = geom.structure.Rotation(de_lv.name+'_rot', rot[0], rot[1], rot[2])
         Rock_pla = geom.structure.Placement(de_lv.name+'_pla', volume=de_lv, pos=Rock_pos,rot=Rock_rot)
         main_lv.placements.append(Rock_pla.name)
+
+        # Add metadata
+        main_lv.params.append(("git_commit", self.git_commit))
+        main_lv.params.append(("git_branch", self.git_branch))
+        main_lv.params.append(("git_tag", self.git_tag))
+        main_lv.params.append(("output_file_name", self.output_file_name))

@@ -35,6 +35,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # We need the full history for the git metadata
     - name: Setup
       run: pip install .
     - name: Build defaul gdml
