@@ -6,7 +6,7 @@ prod: tms
 # Other options
 all:  tms tms_nosand gar_nosand garlite_nosand empty sandopt
 
-tms: nd_hall_with_lar_tms_sand.gdml \
+tms: nd_hall_with_lar_tms_sand_new_window.gdml \
 	anti_fiducial_nd_hall_with_lar_tms_sand.gdml
 
 tms_nosand: nd_hall_with_lar_tms_nosand.gdml
