@@ -13,6 +13,10 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 - TMS new stacking plan for  PDR, 34 thin, 22 thick and 24 double thick steel planes
   - Introduce 3 diffrent TMS geometries, 3.2b, 4.2c and 4.2d
 
+### Removed
+
+- Muon tagger as it's not in current engineering design
+
 ## [TDR_Production_geometry_v_1.2.0]
 
 ### Changed
