@@ -10,13 +10,9 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ##[new_cryostat_window]
 
-### Fixed
-
-- Changed lightCarbonSteel to a density that isn't less than the density of water
-
 ### Added
 
-- Added the option to build "new_window" in build_hall.sh to build the new design of the cryostat window
+- Added the option to build "new_window" in MakeFile to build the new design of the cryostat window
 
 ## [TDR_Production_geometry_v_1.2.0]
 

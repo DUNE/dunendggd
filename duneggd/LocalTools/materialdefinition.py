@@ -342,7 +342,7 @@ def define_materials( g ):
                                 ("sulfur",0.00050)
                             ))
 
-    lightCarbonSteel = g.matter.Mixture("LowDensityCarbonSteel", density="7.54*g/cc",
+    lightCarbonSteel = g.matter.Mixture("LowDensityCarbonSteel", density="0.754*g/cc",
                             components = (
                                 ("carbon",0.0030),
                                 ("copper",0.0025),
