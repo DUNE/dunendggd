@@ -1,8 +1,9 @@
 import gegede.builder
 from gegede import Quantity as Q
-import numpy as np
+#import numpy as np
 from . import make_beam
 from duneggd.LocalTools import localtools as ltools
+import math
 
 #make_beam.did_it_work()
 
@@ -332,7 +333,7 @@ class TriangleGap(gegede.builder.Builder):
         self.material = material
         self.thickness, self.side_length = (thickness, side_length)
         #self height is to make sure the triangle is equilateral
-        self.height = side_length / 2 * np.tan(angle)
+        self.height = side_length / 2 * math.tan(angle)
         self.triangle_gap = triangle_gap
         self.side_triangle_gap  = side_triangle_gap
         pass
