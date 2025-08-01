@@ -8,8 +8,6 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
-##[new_cryostat_window]
-
 ### Added
 
 - Added the option to build "new_window" in MakeFile to build the new design of the cryostat window

@@ -6,7 +6,7 @@ prod: tms
 # Other options
 all:  tms tms_nosand gar_nosand garlite_nosand empty sandopt
 
-tms: nd_hall_with_lar_tms_sand_new_window.gdml \
+tms: nd_hall_with_lar_tms_sand.gdml \
 	anti_fiducial_nd_hall_with_lar_tms_sand.gdml
 
 tms_nosand: nd_hall_with_lar_tms_nosand.gdml
@@ -242,7 +242,7 @@ nd_hall_no_dets.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_HallwayStruct.cfg \
 	duneggd/Config/ND_CryoStruct.cfg
 
-nd_hall_with_lar_tms_sand_new_window.gdml: duneggd/Config/WORLDggd.cfg \
+nd_hall_with_lar_tms_sand_old_window.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND.cfg \
 	duneggd/Config/ND_Hall_Rock.cfg \
 	duneggd/Config/ND_ElevatorStruct.cfg \
@@ -256,5 +256,5 @@ nd_hall_with_lar_tms_sand_new_window.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/SAND_STT/STT1.cfg \
 	duneggd/Config/SAND_GRAIN.cfg \
 	duneggd/Config/TMS.cfg \
-	duneggd/Config/ArgonCube/ArgonCubeCryostatNewWindow.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeCryostatOldWindow.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
