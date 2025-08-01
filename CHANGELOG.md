@@ -11,7 +11,7 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 ### Changed
 
 - TMS new stacking plan for  PDR, 34 thin, 22 thick and 24 double thick steel planes
-  - Introduce 3 diffrent TMS geometries, 3.2b, 4.2c and 4.2d
+  - Introduce 3 diffrent TMS geometries, 3.2b, 4.2c and 4.2d in 1T magnetic field
 
 ### Removed
 
