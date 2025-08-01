@@ -10,7 +10,17 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ### Added
 
-- Added the option to build "new_window" in MakeFile to build the new design of the cryostat window
+- Added the option to build "old_window" in MakeFile to build the old design of the cryostat window
+
+### Changed
+
+- TMS new stacking plan for  PDR, 34 thin, 22 thick and 24 double thick steel planes
+  - Introduce 3 diffrent TMS geometries, 3.2b, 4.2c and 4.2d in 1T magnetic field
+- Changed the cryostat window design
+
+### Removed
+
+- Muon tagger as it's not in current engineering design
 
 ## [TDR_Production_geometry_v_1.2.0]
 
