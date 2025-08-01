@@ -1,10 +1,6 @@
 from gegede import Quantity as Q
 import gegede.builder
 
-def did_it_work():
-    print("it imported nicely")
-    return 3
-
 #geom needed, n_support_beams, full_rectnangle_length is size of the dim of shell that you want to build support beams in the direction of, support_beam_gap gap between support beams, support_beam_z
 # support_beam_subBuilder, n_support_sections is number of sections that contain triangle gaps, triangle_x_origin, middle_triangle_subBuilder, full_rectangle_height is the size of shell dim paralell to support beam lengths
 # support_section_length is the length of each support beam section, triangle_z, triangle_boolean, support_beam_shape, middle_triangle_shape, side_triangle_subBuilder, side_triangle_shape, support_beam_hole_subBuilder,
@@ -24,11 +20,8 @@ def make_beam(geom, n_support_beams, full_rectangle_length, support_beam_gap, su
     
     support_frame_pos = geom.structure.Position(support_beam_subBuilder.name+'frame_pos'+ extra_name_bit, support_frame_coord[0], support_frame_coord[1], support_frame_coord[2] )
     
-    for i in range(1, n_support_beams + 1): #should be n_support_beams + 1 i think
+    for i in range(1, n_support_beams + 1): #should be n_support_beams + 1
         #start building the support beam in negative then finish at positve
-        #support_beam_coord = [  Q("0.0cm") - full_rectangle_length + 2 * support_beam_gap * i, Q("0.0cm"), support_beam_z ]
-        
-        #support_beam_pos = geom.structure.Position(support_beam_subBuilder.name+'_pos'+ extra_name_bit +str(i), support_beam_coord[0], support_beam_coord[1], support_beam_coord[2] )
             
 
         for j in range(1, n_support_sections+1):
@@ -58,42 +51,6 @@ def make_beam(geom, n_support_beams, full_rectangle_length, support_beam_gap, su
                         
             beam_minus_down_triangle = geom.shapes.Boolean( middle_triangle_subBuilder.name+'_down_'+ triangle_boolean + str(i) + str(j)+ extra_name_bit, type = triangle_boolean,
                                                     first = beam_minus_up_triangle, second = middle_triangle_shape, pos= down_triangle_pos, rot = down_triangle_rot)
-                    
-                    
-                        #setup the half triangles
-                        #left triangle setup
-                        
-                        
-                    
-                                    
-                    
-                    
-                    
-                        #setup the left and right triangles
-                        #at the start make the extra triangle at bottom, at top have the triangle from the loop, then turn these into halves
-            '''
-            if j == 1:
-                right_triangle_coord = [  triangle_x_origin , Q("0.0mm") - full_rectangle_height + support_beam_hole_subBuilder.height * 2  + support_section_length * (j-0.5) * 2 ,
-                                          triangle_z  + side_triangle_subBuilder.height  + side_triangle_subBuilder.side_triangle_gap ]
-                right_triangle_pos = geom.structure.Position(side_triangle_subBuilder.name+'down_right_pos'+str(i)+str(j)+ extra_name_bit, right_triangle_coord[0], right_triangle_coord[1], right_triangle_coord[2] )
-                right_triangle_angle = [ Q("180deg") , Q("0deg"), Q("0deg") ]
-                right_triangle_rot = geom.structure.Rotation(side_triangle_subBuilder.name+'down_right_rot'+str(i)+str(j)+ extra_name_bit, right_triangle_angle[0], right_triangle_angle[1], right_triangle_angle[2] )
-                beam_minus_right_triangle = geom.shapes.Boolean( side_triangle_subBuilder.name+'_down_right_'+ triangle_boolean + str(i) + str(j)+ extra_name_bit, type = triangle_boolean,
-                                        first = beam_minus_down_triangle, second = side_triangle_shape, pos= right_triangle_pos, rot = right_triangle_rot)
-                            
-                left_triangle_coord = [  triangle_x_origin , Q("0.0mm") - full_rectangle_height - support_section_length + support_section_length * (j-0.5) * 2 + support_beam_hole_subBuilder.height * 2,
-                                                     triangle_z - side_triangle_subBuilder.height - side_triangle_subBuilder.side_triangle_gap]
-                left_triangle_pos = geom.structure.Position(side_triangle_subBuilder.name+'down_left_pos'+str(i)+str(j)+ extra_name_bit, left_triangle_coord[0], left_triangle_coord[1], left_triangle_coord[2] )
-                left_triangle_angle = [ Q("0deg") , Q("0deg"), Q("0deg") ]
-                left_triangle_rot = geom.structure.Rotation(side_triangle_subBuilder.name+'down_left_rot'+str(i)+str(j)+ extra_name_bit, left_triangle_angle[0], left_triangle_angle[1], left_triangle_angle[2] )
-                        #cheating with the name below to make things easier
-                beam_minus_down_triangle = geom.shapes.Boolean( side_triangle_subBuilder.name+'_down_left_'+ triangle_boolean + str(i) + str(j)+ extra_name_bit, type = triangle_boolean,
-                                                                                first = beam_minus_right_triangle, second = side_triangle_shape, pos= left_triangle_pos, rot = left_triangle_rot)
-                    
-                        
-            else:
-                pass
-            '''
             
             right_triangle_coord = [  triangle_x_origin , Q("0.0mm") - full_rectangle_height + support_beam_hole_subBuilder.height * 2  + support_section_length * (j-0.5) * 2 ,
                                                   triangle_z  + side_triangle_subBuilder.height + side_triangle_subBuilder.side_triangle_gap]
@@ -141,15 +98,14 @@ def make_beam(geom, n_support_beams, full_rectangle_length, support_beam_gap, su
                         
                         
                     
-        #print(i)
+
         #below uses shape beam_minus_down_triangle as it is the last shape made in the j loop not left triangle
         
 
         if i == 1:
 
             
-            support_beam_union_shape = last_shape_j_loop#geom.shapes.Boolean( support_beam_subBuilder.name+'_'+ support_beam_boolean + str(i)+ extra_name_bit, type = support_beam_boolean,
-                                        #                    first = rectangle_removal_shape, second = last_shape_j_loop, pos= support_beam_pos, rot = main_rot)
+            support_beam_union_shape = last_shape_j_loop
             
         else:
 

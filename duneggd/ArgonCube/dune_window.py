@@ -1,11 +1,8 @@
 import gegede.builder
 from gegede import Quantity as Q
-#import numpy as np
 from . import make_beam
 from duneggd.LocalTools import localtools as ltools
 import math
-
-#make_beam.did_it_work()
 
 
 class WorldBuilder(gegede.builder.Builder):
@@ -50,13 +47,7 @@ class WorldBuilder(gegede.builder.Builder):
                                           ("Elem_carbon",   0.9),
                                           ("Elem_hydrogen", 0.1)
                                     ))
-        #comment out below as Air already in use
-        #air = geom.matter.Mixture("Air",
-         #                         density = "0.001225*g/cc",
-          #                        components = (
-           #                           ("Elem_nitrogen", 0.8),
-            #                          ("Elem_oxygen",   0.2),
-             #                       ))
+        
         #assuming only using low carbon steel (0.3%) approx dens 7.87 g/cm3
         simple_steel = geom.matter.Mixture("Simple_steel",    density = "7.87*g/cc",
                                     components = (
@@ -66,17 +57,6 @@ class WorldBuilder(gegede.builder.Builder):
         #Grad 50 A572 steel at this link https://www.matweb.com/search/datasheet.aspx?matguid=9ced5dc901c54bd1aef19403d0385d7f&ckck=1
         # Also silicon range is 0.15 - 0.40% https://en.wikipedia.org/wiki/A572_steel
 
-        # Steel mixture already in use, 
-        #steel = geom.matter.Mixture("Steel",    density = "7.80*g/cc",
-         #                           components = (
-          #                              ("Elem_carbon", 0.0021),
-           #                             ("Elem_manganese", 0.0135),
-            #                            ("Elem_phosphorus", 0.0003),
-             #                           ("Elem_sulfur", 0.0003),
-              #                          ("Elem_carbon", 0.0021),
-               #                         ("Elem_silicon", 0.00275), #this is avg of silicon range above
-                #                        ("Elem_iron", 0.97895), #quickly calced using 1 - others
-                 #                   ))
         
         
     
@@ -123,7 +103,7 @@ class WorldBuilder(gegede.builder.Builder):
         full_rectangle_subVolume = full_rectangle_subBuilder.get_volume()
         smaller_rectangle_subVolume = smaller_rectangle_subBuilder.get_volume()
         zaxis_smaller_rectangle_subVolume = zaxis_smaller_rectangle_subBuilder.get_volume()
-        #sideways_smaller_rectangle_subVolume = sideways_smaller_rectangle_subBuilder.get_volume()
+        
         support_beam_subVolume = support_beam_subBuilder.get_volume()
         middle_triangle_subVolume = middle_triangle_subBuilder.get_volume()
         side_triangle_subVolume = side_triangle_subBuilder.get_volume()
@@ -142,7 +122,7 @@ class WorldBuilder(gegede.builder.Builder):
         full_rectangle_shape = geom.store.shapes.get(full_rectangle_subVolume.shape)
         smaller_rectangle_shape = geom.store.shapes.get(smaller_rectangle_subVolume.shape)
         zaxis_smaller_rectangle_shape = geom.store.shapes.get(zaxis_smaller_rectangle_subVolume.shape)
-        #sideways_smaller_rectangle_shape = geom.store.shapes.get(sideways_smaller_rectangle_subVolume.shape)
+        
         support_beam_shape = geom.store.shapes.get(support_beam_subVolume.shape)
         middle_triangle_shape = geom.store.shapes.get(middle_triangle_subVolume.shape)
         side_triangle_shape = geom.store.shapes.get(side_triangle_subVolume.shape)
@@ -164,14 +144,8 @@ class WorldBuilder(gegede.builder.Builder):
         rectangle_removal_shape = geom.shapes.Boolean( self.name+'_zaxis_'+rectangle_removal_boolean , type = rectangle_removal_boolean ,
                                                        first = full_rectangle_shape, second=zaxis_smaller_rectangle_shape, pos=rectangle_removal_pos)
         
-        #rectangle_removal_shape = geom.shapes.Boolean( self.name+'_'+rectangle_removal_boolean , type = rectangle_removal_boolean , first = rectangle_removal_shape, second=smaller_rectangle_shape, pos=rectangle_removal_pos)
-        #remove the sideways triangle to remove material on top of rectangle
-        #rectangle_removal_shape = geom.shapes.Boolean( self.name+'_sideways_'+rectangle_removal_boolean , type = rectangle_removal_boolean ,
-         #                                              first = rectangle_removal_shape, second=sideways_smaller_rectangle_shape, pos=rectangle_removal_pos)
-
         
-        #rectangle_removal_lv = geom.structure.Volume('vol'+rectangle_removal_shape.name, material=self.material,shape=rectangle_removal_shape)
-
+        
         #add information for support beams
         full_rectangle_length = full_rectangle_subBuilder.length
         full_rectangle_height = full_rectangle_subBuilder.height
@@ -202,7 +176,7 @@ class WorldBuilder(gegede.builder.Builder):
         support_beam_boolean = "union"
         triangle_boolean = "subtraction"
 
-        #n_support_beams = 1 #this should not be 1, but I am changing this so it is easier to view
+        
         support_beam_union_shape = make_beam.make_beam(geom, n_support_beams, full_rectangle_length, support_beam_gap, support_beam_z, support_beam_subBuilder, n_support_sections, triangle_x_origin, middle_triangle_subBuilder,
                                                              full_rectangle_height, support_section_length, triangle_z, triangle_boolean, support_beam_shape, middle_triangle_shape, side_triangle_subBuilder, side_triangle_shape,
                                                              support_beam_hole_subBuilder, support_beam_hole_shape, support_beam_endline_subBuilder, support_beam_endline_shape, rectangle_removal_shape, support_beam_boolean,
@@ -212,25 +186,21 @@ class WorldBuilder(gegede.builder.Builder):
         support_beam_gap_hori = ( verti_active_area) / (n_support_beams_hori + 1) # the arena surrounds beams so +1
         support_beam_subBuilder_hori = sideways_support_beam_subBuilder
         
-        n_support_sections_hori = 14 #this to be changed now !!!
+        n_support_sections_hori = 14 
         support_section_length_hori = hori_active_area / (n_support_sections_hori) # this time plus 3 for 1.5 sections on either end of hori beam
         
-        #middle_triangle_subBuilder_hori = middle_triangle_subBuilder
+        
         
         support_beam_shape_hori = sideways_support_beam_shape
-        #middle_triangle_shape_hori = middle_triangle_shape
-        #side_triangle_subBuilder_hori = side_triangle_subBuilder
-        #side_triangle_shape_hori = side_triangle_shape
-        support_beam_hole_subBuilder_hori = support_beam_hole_hori_subBuilder #change now!!!
-        support_beam_hole_shape_hori = support_beam_hole_hori_shape #change now!!!
+        support_beam_hole_subBuilder_hori = support_beam_hole_hori_subBuilder 
+        support_beam_hole_shape_hori = support_beam_hole_hori_shape 
         support_beam_endline_subBuilder_hori = support_beam_endline_subBuilder
         support_beam_endline_shape_hori = support_beam_endline_shape
         
         support_beam_union_shape = make_beam.make_beam(geom, n_support_beams_hori, full_rectangle_height, support_beam_gap_hori, support_beam_z, support_beam_subBuilder_hori, n_support_sections_hori, triangle_x_origin,
                                                        hori_middle_triangle_subBuilder, full_rectangle_length, support_section_length_hori, triangle_z, triangle_boolean, support_beam_shape_hori, hori_middle_triangle_shape,
                                                        hori_side_triangle_subBuilder, hori_side_triangle_shape,
-                                                       support_beam_hole_subBuilder_hori, support_beam_hole_shape_hori, support_beam_endline_subBuilder_hori, support_beam_endline_shape_hori,support_beam_union_shape,
-                                                       #should be support_beam_union_shape
+                                                       support_beam_hole_subBuilder_hori, support_beam_hole_shape_hori, support_beam_endline_subBuilder_hori, support_beam_endline_shape_hori,support_beam_union_shape,                                                     
                                                        support_beam_boolean, Q("0deg") , Q("0deg"),  Q("90deg"), "_hori_")
 
 
@@ -254,8 +224,8 @@ class WorldBuilder(gegede.builder.Builder):
             pass
         
 
-        support_beam_union_lv = geom.structure.Volume( 'volCompositeWindow', material=support_beam_subBuilder.material, shape=support_beam_union_shape) #'vol'+ support_beam_union_shape.name
-        #triangle_subtract_lv = geom.structure.Volume('vol'+ triangle_subtract_shape.name, material=self.material, shape=triangle_subtract_shape)
+        support_beam_union_lv = geom.structure.Volume( 'volCompositeWindow', material=support_beam_subBuilder.material, shape=support_beam_union_shape) 
+
 
         #make world vol
         dim = (self.length, self.height, self.depth)
@@ -263,21 +233,14 @@ class WorldBuilder(gegede.builder.Builder):
 
         world_volume = geom.structure.Volume(self.name+'_volume', material=self.material, shape=world_shape)
         
-        #world_angle = [Q("0deg") , Q("0deg"),  Q("90deg")]
-        #world_rot = geom.structure.Rotation(self.name+'_rot', world_angle[0], world_angle[1], world_angle[2] )
-        #placement = geom.structure.Placement('place'+ support_beam_union_shape.name, volume = support_beam_union_lv)
-        #volume = geom.structure.Volume('my_volume', material = self.material, placements = placement)
-
-        #need to append the daughter
-        #world_volume.placements.append(placement.name)
         
         volume = support_beam_union_lv
-        self.add_volume(volume) #used to be world_volume
-        ########### new lines below!!
+        self.add_volume(volume) 
+
         if self.AuxParams != None:
             ltools.addAuxParams( self, volume )
 
-        #time to remove triangles from support beams
+
         
         
         
@@ -294,23 +257,8 @@ class Block(gegede.builder.Builder):
     def construct(self, geom):
         
 
-        # get volumes from sub-builders.  Note, implicitly assume
-        # order, which must be born out by configuration.  Once could
-        # remove this by querying each sub-builder for its "location"
-        # configuration parameter, but this then requires other
-        # assumptions.
-        #blocks = [sb.get_volume() for sb in self.get_builders()]
-        #block_shape = geom.store.shapes.get(blocks[-1].shape)
-        
-        #blocks.reverse()        # you'll see why
-
-        # Calculate overall dimensions from daughters.  Assume identical cubes!
-        #half_size = (block_shape.dx + self.gap) * 3
-        #dim = (half_size,)*3
-
-        #Try and make my own volume
         dim = (self.length, self.height, self.thickness)
-        #dim = (half_size,) * 3
+        
         
         # make overall shape and LV
         shape = geom.shapes.Box(self.name + '_box_shape', *dim)
@@ -322,12 +270,7 @@ class Block(gegede.builder.Builder):
 
 
 class TriangleGap(gegede.builder.Builder):
-    #Build a Rubik's cube (kind of).  
-
-    #Delegate to three sub-builders assumed to provide each one of, in
-    #order, corner, edge and center blocks.  Blocks are assumed to be
-    #cubes of equal size.
-
+    
     def configure(self,  material = 'Steel', side_length = Q("5cm"), angle = 45 * 3.14 / 180, thickness = Q("0.1cm"), triangle_gap = Q("7.5cm"), side_triangle_gap = Q("0cm"), **kwds):
         
         self.material = material
@@ -341,22 +284,6 @@ class TriangleGap(gegede.builder.Builder):
     def construct(self, geom):
         
 
-        # get volumes from sub-builders.  Note, implicitly assume
-        # order, which must be born out by configuration.  Once could
-        # remove this by querying each sub-builder for its "location"
-        # configuration parameter, but this then requires other
-        # assumptions.
-        #blocks = [sb.get_volume() for sb in self.get_builders()]
-        #block_shape = geom.store.shapes.get(blocks[-1].shape)
-        
-        #blocks.reverse()        # you'll see why
-
-        # Calculate overall dimensions from daughters.  Assume identical cubes!
-        #half_size = (block_shape.dx + self.gap) * 3
-        #dim = (half_size,)*3
-
-        
-        #Try and make my own volume
         dim = (self.thickness, self.thickness, self.side_length, Q("0cm"), self.height)
         
         
