@@ -241,3 +241,20 @@ nd_hall_no_dets.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_CraneRailStruct2.cfg \
 	duneggd/Config/ND_HallwayStruct.cfg \
 	duneggd/Config/ND_CryoStruct.cfg
+
+nd_hall_with_lar_tms_sand_old_window.gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND.cfg \
+	duneggd/Config/ND_Hall_Rock.cfg \
+	duneggd/Config/ND_ElevatorStruct.cfg \
+	duneggd/Config/ND_CraneRailStruct1.cfg \
+	duneggd/Config/ND_CraneRailStruct2.cfg \
+	duneggd/Config/ND_HallwayStruct.cfg \
+	duneggd/Config/ND_CryoStruct.cfg \
+	duneggd/Config/SAND_MAGNET.cfg \
+	duneggd/Config/SAND_INNERVOLOPT2.cfg \
+	duneggd/Config/SAND_ECAL.cfg \
+	duneggd/Config/SAND_STT/STT1.cfg \
+	duneggd/Config/SAND_GRAIN.cfg \
+	duneggd/Config/TMS.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeCryostatOldWindow.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
