@@ -5,6 +5,7 @@ name: Create new release
 on:
   push:
     tags:
+    - "v*.*.*"
     - "*_v_*.*.*"
 
 jobs:
