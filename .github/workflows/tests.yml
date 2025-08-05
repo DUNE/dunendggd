@@ -107,7 +107,7 @@ jobs:
         do
           OUTDIR=../jsroot/plots_$F
           mkdir -p $OUTDIR
-          draw_all.sh --filename $F --outdir $OUTDIR
+          ./draw_all.sh --filename $F --outdir $OUTDIR
           for $OF in $OUTDIR/*.png
           do
             LISTITEMS="$LISTITEMS <li><img src=\"${OF#../jsroot/}\" /></li>"
