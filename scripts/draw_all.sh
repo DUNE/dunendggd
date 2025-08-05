@@ -18,17 +18,20 @@ if [[ $# -eq 0 ]] || [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
   $PYTHON $scriptname --help
   exit 0
 fi
-$PYTHON $scriptname --view xz_zoom $@
-$PYTHON $scriptname --view yz_zoom $@
-$PYTHON $scriptname --view sand_top $@
-$PYTHON $scriptname --view sand_side $@
-$PYTHON $scriptname --view lar_side $@
-$PYTHON $scriptname --view lar_top $@
-$PYTHON $scriptname --view rock_top $@
-$PYTHON $scriptname --view rock_side $@
-$PYTHON $scriptname --view tms_side $@
-$PYTHON $scriptname --view tms_top $@
-$PYTHON $scriptname --view xz $@
-$PYTHON $scriptname --view xz_wide $@
-$PYTHON $scriptname --view yz $@
-$PYTHON $scriptname --view yz_wide $@
+
+xargs <<EOF -I {} -P $(nproc) $PYTHON $scriptname --view {} $@
+xz_zoom
+yz_zoom
+sand_top
+sand_side
+lar_side
+lar_top
+rock_top
+rock_side
+tms_side
+tms_top
+xz
+xz_wide
+yz
+yz_wide
+EOF
