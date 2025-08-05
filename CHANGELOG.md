@@ -10,6 +10,10 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
+### Fixed
+
+- Bug where warm steel material was set to air in previous release.
+
 ## [v2025.08.02]
 
 ### Added
