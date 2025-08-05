@@ -113,6 +113,7 @@ jobs:
             LISTITEMS="$LISTITEMS <li><img src=\"${OF#../jsroot/}\" /></li>"
           done
         done
+        cd ..
         sed -i -e "s|<li>image</li>|$LISTITEMS|" jsroot/static.htm
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
