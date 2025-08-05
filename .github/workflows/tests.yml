@@ -98,6 +98,22 @@ jobs:
     - name: Replace heading in html
       run: |
         sed -i -e "s|master|$GITHUB_REF_NAME|" jsroot/index.htm
+        sed -i -e "s|master|$GITHUB_REF_NAME|" jsroot/static.htm
+    - name: Create static images
+      run: |
+        cd scripts
+        LISTITEMS=""
+        for F in ../*.gdml
+        do
+          OUTDIR=../jsroot/plots_$F
+          mkdir -p $OUTDIR
+          draw_all.sh --filename $F --outdir $OUTDIR
+          for $OF in $OUTDIR/*.png
+          do
+            LISTITEMS="$LISTITEMS <li><img src=\"${OF#../jsroot/}\" /></li>"
+          done
+        done
+        sed -i -e "s|<li>image</li>|$LISTITEMS|" jsroot/static.htm
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
