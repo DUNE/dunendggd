@@ -14,6 +14,12 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 - Automatic geometry render generation for automated tests
 
+### Changed
+
+- Changed to two different varaints of SAND for default geomeotries
+  - STT1
+  - DRIFT1
+
 ## [v2025.08.06]
 
 ### Fixed
