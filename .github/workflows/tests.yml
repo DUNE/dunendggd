@@ -124,3 +124,10 @@ jobs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
+    - name: Post link in PR:
+      if: github.event_name == 'pull_request'
+      uses: thollander/actions-comment-pull-request@v3
+      with:
+        message: |
+          Geometry is ready for visual inspection at https://dune.github.io/dunendggd/
+        comment-tag: geoview
