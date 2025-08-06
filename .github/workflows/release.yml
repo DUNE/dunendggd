@@ -20,7 +20,7 @@ jobs:
     - name: Setup
       run: pip install .
     - name: Build default gdml files
-      run: make -j2
+      run: make -j $(nproc)
     - name: Rename gdml files to include tag
       run: |
         for F in *.gdml
