@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project uses data based versioning. So a release will be tagged `vYYYY.MM.DD`.
 
 Past versions adhered to a modified version of [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
+These geometry releases were tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
