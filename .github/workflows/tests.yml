@@ -11,6 +11,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  pull-requests: write
 
 jobs:
   check_changelog:
@@ -98,6 +99,24 @@ jobs:
     - name: Replace heading in html
       run: |
         sed -i -e "s|master|$GITHUB_REF_NAME|" jsroot/index.htm
+        sed -i -e "s|master|$GITHUB_REF_NAME|" jsroot/static.htm
+    - name: Create static images
+      run: |
+        sed -i -e "s|<li>image</li>|$LISTITEMS|" jsroot/static.htm
+        LISTITEMS=""
+        for F in *.gdml
+        do
+          cd scripts
+          OUTDIR=../jsroot/plots_$F
+          mkdir -p $OUTDIR
+          ./draw_all.sh --filename ../$F --outdir $OUTDIR
+          for OF in $OUTDIR/*.png
+          do
+            LISTITEMS="$LISTITEMS <tr><td>${OF#../jsroot/}<br/><img src=\"${OF#../jsroot/}\" /></td></tr>"
+          done
+          cd ..
+        done
+        sed -i -e "s|<tr><td>image</td></tr>|$LISTITEMS|" jsroot/static.htm
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
@@ -106,3 +125,10 @@ jobs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
+    - name: Post link in PR
+      if: github.event_name == 'pull_request'
+      uses: thollander/actions-comment-pull-request@v3
+      with:
+        message: |
+          Geometry is ready for visual inspection at https://dune.github.io/dunendggd/
+        comment-tag: geoview
