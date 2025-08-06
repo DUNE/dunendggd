@@ -14,6 +14,13 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 - Automatic geometry render generation for automated tests
 
+## [v2025.08.06]
+
+### Fixed
+
+- Bug where VaporBarrier was air instead of SSteel304.
+- Bug where dz of Membrane was changed which had unexpected downstream effects.
+
 ## [v2025.08.05]
 
 ### Fixed
