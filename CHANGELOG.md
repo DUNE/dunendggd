@@ -10,6 +10,11 @@ Geometry releases will be tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
+### Fixed
+
+- Bug where VaporBarrier was air instead of SSteel304.
+- Bug where dz of Membrane was changed which had unexpected downstream effects.
+
 ## [v2025.08.05]
 
 ### Fixed
