@@ -10,6 +10,8 @@ These geometry releases were tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
+## [v2025.08.07]
+
 ### Added
 
 - Automatic geometry render generation for automated tests
