@@ -1,13 +1,16 @@
 .PHONY: clean all prod tms tms_nosand gar garlite empty sandopt
 
 # Default
-prod: tms
+prod: tms tms_drift1
 
 # Other options
-all:  tms tms_nosand gar_nosand garlite_nosand empty sandopt
+all:  tms tms_drift1 tms_nosand gar_nosand garlite_nosand empty sandopt
 
-tms: nd_hall_with_lar_tms_sand.gdml \
-	anti_fiducial_nd_hall_with_lar_tms_sand.gdml
+tms: nd_hall_with_lar_tms_sand_stt1.gdml \
+	anti_fiducial_nd_hall_with_lar_tms_sand_stt1.gdml
+
+tms_drift1: nd_hall_with_lar_tms_sand_drift1.gdml \
+	anti_fiducial_nd_hall_with_lar_tms_sand_drift1.gdml
 
 tms_nosand: nd_hall_with_lar_tms_nosand.gdml
 
@@ -34,7 +37,7 @@ clean:
 %.gdml:
 	gegede-cli $^ -w World -o $@
 
-nd_hall_with_lar_tms_sand.gdml: duneggd/Config/WORLDggd.cfg \
+nd_hall_with_lar_tms_sand_stt1.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND.cfg \
 	duneggd/Config/ND_Hall_Rock.cfg \
 	duneggd/Config/ND_ElevatorStruct.cfg \
@@ -43,7 +46,7 @@ nd_hall_with_lar_tms_sand.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_HallwayStruct.cfg \
 	duneggd/Config/ND_CryoStruct.cfg \
 	duneggd/Config/SAND_MAGNET.cfg \
-	duneggd/Config/SAND_INNERVOLOPT2.cfg \
+	duneggd/Config/SAND_INNERVOLOPT3.cfg \
 	duneggd/Config/SAND_ECAL.cfg \
 	duneggd/Config/SAND_STT/STT1.cfg \
 	duneggd/Config/SAND_GRAIN.cfg \
@@ -51,7 +54,7 @@ nd_hall_with_lar_tms_sand.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
 
-anti_fiducial_nd_hall_with_lar_tms_sand.gdml: duneggd/Config/WORLDggd.cfg \
+anti_fiducial_nd_hall_with_lar_tms_sand_stt1.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND.cfg \
 	duneggd/Config/ND_Hall_Rock.cfg \
 	duneggd/Config/ND_ElevatorStruct.cfg \
@@ -60,9 +63,43 @@ anti_fiducial_nd_hall_with_lar_tms_sand.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_HallwayStruct.cfg \
 	duneggd/Config/ND_CryoStruct.cfg \
 	duneggd/Config/SAND_MAGNET.cfg \
-	duneggd/Config/SAND_INNERVOLOPT2.cfg \
+	duneggd/Config/SAND_INNERVOLOPT3.cfg \
 	duneggd/Config/SAND_ECAL.cfg \
 	duneggd/Config/SAND_STT/STT1.cfg \
+	duneggd/Config/SAND_GRAIN.cfg \
+	duneggd/Config/TMS.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeDetectorNoActive.cfg
+
+nd_hall_with_lar_tms_sand_drift1.gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND.cfg \
+	duneggd/Config/ND_Hall_Rock.cfg \
+	duneggd/Config/ND_ElevatorStruct.cfg \
+	duneggd/Config/ND_CraneRailStruct1.cfg \
+	duneggd/Config/ND_CraneRailStruct2.cfg \
+	duneggd/Config/ND_HallwayStruct.cfg \
+	duneggd/Config/ND_CryoStruct.cfg \
+	duneggd/Config/SAND_MAGNET.cfg \
+	duneggd/Config/SAND_INNERVOLOPTDRIFT1.cfg \
+	duneggd/Config/SAND_ECAL.cfg \
+	duneggd/Config/SAND_DRIFT_CHAMBER/DRIFT1.cfg \
+	duneggd/Config/SAND_GRAIN.cfg \
+	duneggd/Config/TMS.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
+
+anti_fiducial_nd_hall_with_lar_tms_sand_drift1.gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND.cfg \
+	duneggd/Config/ND_Hall_Rock.cfg \
+	duneggd/Config/ND_ElevatorStruct.cfg \
+	duneggd/Config/ND_CraneRailStruct1.cfg \
+	duneggd/Config/ND_CraneRailStruct2.cfg \
+	duneggd/Config/ND_HallwayStruct.cfg \
+	duneggd/Config/ND_CryoStruct.cfg \
+	duneggd/Config/SAND_MAGNET.cfg \
+	duneggd/Config/SAND_INNERVOLOPTDRIFT1.cfg \
+	duneggd/Config/SAND_ECAL.cfg \
+	duneggd/Config/SAND_DRIFT_CHAMBER/DRIFT1.cfg \
 	duneggd/Config/SAND_GRAIN.cfg \
 	duneggd/Config/TMS.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
