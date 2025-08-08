@@ -14,6 +14,17 @@ These geometry releases were tagged as `Descriptive_tag_v_X.Y.Z`.
 
 - Air to cryo window
 
+### Changed
+
+- Cryo window position by z=-0.5x4.765mm to remove overlap with WarmSteel
+- Plywood membrane back to SSteel304
+- ThermalInsulation material to Polyurethane
+
+### Removed
+
+- Remove SensDet from muon window
+- PolyurethaneFoam from materials
+
 ## [v2025.08.07]
 
 ### Added
