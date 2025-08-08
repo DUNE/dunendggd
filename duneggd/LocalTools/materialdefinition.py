@@ -240,7 +240,6 @@ def define_materials( g ):
                             ))
 
 
-
        # make up a dumb but not crazy density for the STT framing just inside of the ECAL
     sttFrameMix = g.matter.Mixture( "sttFrameMix", density = "0.235*g/cc",
                             components = (
@@ -377,14 +376,7 @@ def define_materials( g ):
                                 ("oxygen",10)
                             ))
 
-    polyurethanefoam = g.matter.Molecule("PolyurethaneFoam", density="0.090*g/cc",
-                            elements=(
-                                ("carbon",27),
-                                ("hydrogen",36),
-                                ("nitrogen",2),
-                                ("oxygen",10)
-                            ))
-
+    
     # http://www.engineeringtoolbox.com/engineering-materials-properties-d_1225.html
     # http://hepwww.rl.ac.uk/atlas-sct/engineering/material_budget/models/Endcap_Module/ATLAS_ECSCT_Materials.pdf
     # table 3 - C6 H6 O, jp
@@ -658,3 +650,22 @@ def define_materials( g ):
 
     # SiPM plastic spacer
     # Using PVT
+
+    # approximate def for plywood for membrane, density for components less accurately known. 
+    C6H10O5 = g.matter.Molecule( "C6H10O5",    density="1.5*g/cc",
+                            elements=( ("carbon",6), ("hydrogen",10), ("oxygen",5) ))
+
+    C5H10O4 = g.matter.Molecule( "C5H10O4",    density="1.5*g/cc",
+                            elements=( ("carbon",5), ("hydrogen",10), ("oxygen",4) ))
+
+    #assuming soft/pine plywood
+    C9H10O3 = g.matter.Molecule( "C9H10O3",    density="1.3*g/cc",
+                            elements=( ("carbon",9), ("hydrogen",10), ("oxygen",3) ))
+
+    #not using adhesive, about the same density as other materials
+    plywood = g.matter.Mixture( "Plywood", density = "0.7*g/cc",
+                            components = (
+                                ("C6H10O5", 0.555556),
+                                ("C5H10O4", 0.166667),
+                                ("C9H10O3", 0.277777)
+                            ))
