@@ -376,14 +376,7 @@ def define_materials( g ):
                                 ("oxygen",10)
                             ))
 
-    polyurethanefoam = g.matter.Molecule("PolyurethaneFoam", density="0.090*g/cc",
-                            elements=(
-                                ("carbon",27),
-                                ("hydrogen",36),
-                                ("nitrogen",2),
-                                ("oxygen",10)
-                            ))
-
+    
     # http://www.engineeringtoolbox.com/engineering-materials-properties-d_1225.html
     # http://hepwww.rl.ac.uk/atlas-sct/engineering/material_budget/models/Endcap_Module/ATLAS_ECSCT_Materials.pdf
     # table 3 - C6 H6 O, jp
