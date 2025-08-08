@@ -25,6 +25,13 @@ These geometry releases were tagged as `Descriptive_tag_v_X.Y.Z`.
 - Remove SensDet from muon window
 - PolyurethaneFoam from materials
 
+## [v2025.08.08]
+
+### Removed
+
+- Removed new cryostat window and reverted to old design
+  - New window needs further debugging
+
 ## [v2025.08.07]
 
 ### Added
