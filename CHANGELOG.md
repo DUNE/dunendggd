@@ -12,6 +12,7 @@ These geometry releases were tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ### Added
 
+- Re-introduced the new cryostat window design
 - Air to cryo window
 
 ### Changed
