@@ -65,6 +65,8 @@ class ArCLightBuilder(gegede.builder.Builder):
 
         if self.N_DCM>2:
             self.half_x += self.DCM_dd
+        if self.N_DCM>3:
+            self.half_y += 2 * self.DCM_dd
         if self.N_DCM>5:
             self.half_z += self.DCM_dd
 
@@ -76,6 +78,9 @@ class ArCLightBuilder(gegede.builder.Builder):
             self.shift_x -= self.DCM_dd
         if self.N_DCM>5:
             self.shift_z += self.DCM_dd
+
+        print(self.half_y)
+        print(self.WLS_dy)
 
         self.halfDimension      = { 'dx':   self.half_x,
 
