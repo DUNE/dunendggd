@@ -21,7 +21,8 @@ garlite_nosand: nd_hall_with_lar_garlite_nosand.gdml
 empty: nd_hall_no_dets.gdml
 
 sandopt: SAND_opt3_STT1.gdml \
-	SAND_opt3_DRIFT1.gdml
+	SAND_opt3_DRIFT1.gdml \
+	only_SAND_STT_Initial.gdml
 
 lar_only: nd_hall_with_lar_only.gdml
 
