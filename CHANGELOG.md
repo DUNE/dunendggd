@@ -10,6 +10,9 @@ These geometry releases were tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
+### Changed
+- Removed the stale SAND tracker geometry options from the default `sandopt` list. Only the supported full STT, full Drift-Chamber and Initial STT geometries are now built.
+
 ## [v2025.08.11]
 
 ### Added
