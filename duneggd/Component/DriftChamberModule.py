@@ -89,7 +89,7 @@ class DriftChamberModuleBuilder(gegede.builder.Builder):
                 DriftModule_lv       = self.constructBox(geom, "drift_module"+str(i), self.DriftModuleThickness/2, half_h, half_l, self.DriftChamberGas)
                 rot_x = Q("0deg")
 
-            self.FillDriftModule(geom, DriftModule_lv)
+            # self.FillDriftModule(geom, DriftModule_lv)
 
             self.PlaceSubVolume(geom, drift_volume, DriftModule_lv, pos_x = running_x, rot_x = rot_x, label = "_"+str(i))
 

@@ -67,9 +67,13 @@ class DRIFTBuilder(gegede.builder.Builder):
 
             self.nofSuperMods               = int((self.Space4Tracker / (self.SuperModThickness + self.clearenceSupermods)).to_base_units().magnitude)
 
-            self.nofSymMods                 = 3
+            self.upstreamTrkSpace           = self.kloeVesselRadius - self.GRAINThickness - self.clearenceECALGRAIN - self.clearenceGRAINTracker
+            
+            self.nofSymMods                 = int((self.upstreamTrkSpace / self.SuperModThickness).to_base_units().magnitude)
 
-            self.nofExtraMods               = 2
+            self.downstreamExtraSpace       = self.kloeVesselRadius - (self.nofSymMods * (self.SuperModThickness)) - self.clearenceTrackerECAL
+
+            self.nofExtraMods               = int((self.downstreamExtraSpace / (self.SuperModThickness)).to_base_units().magnitude)
 
             self.WiresCounter               = {"Tracker":0, "SuperMod":0, "DriftChamber":0, "DriftModule":0}
 
@@ -91,6 +95,7 @@ class DRIFTBuilder(gegede.builder.Builder):
             print("clearance tracker-ECAL         | "+str(self.clearenceTrackerECAL))
             print("clearance SuperMods            | "+str(self.clearenceSupermods))
             print("Space 4 Tracker                | "+str(self.Space4Tracker))
+            print("Space 4 Tracker upstream       | "+str(self.upstreamTrkSpace))
             print("")
             print("_"*20+" MODULE INFO "+"_"*20)
             print("")
@@ -98,9 +103,12 @@ class DRIFTBuilder(gegede.builder.Builder):
             print("C3H6Mod      Thickness         | "+str(self.ModThickness["C3H6Mod"]))
             print("CMod         Thickness         | "+str(self.ModThickness["CMod"]))
             print("SuperMod     Thickness         | "+str(self.SuperModThickness))
+            print("SuperMod     Thickness + clear | "+str(self.SuperModThickness + self.clearenceSupermods))
             print("")
             print("")
             print(f"nof supermodules               | {self.nofSuperMods}")
+            print(f"nof symmetrical supermodules   | {self.nofSymMods}")
+            print(f"nof extra supermodules         | {self.nofExtraMods}")
             print("")
             print("_"*60)
 
@@ -158,25 +166,25 @@ class DRIFTBuilder(gegede.builder.Builder):
 
         running_x = self.kloeVesselRadius - self.clearenceTrackerECAL - (self.SuperModThickness + self.clearenceSupermods) * self.nofExtraMods
 
-        supermod_label = ["C", "B", "A"]
-        step           = [5,3,1]
+        supermod_label = ["O", "N", "M", "L", "I", "H", "G", "F", "E", "D", "C", "B", "A"]
 
         for i in range(self.nofSymMods):
 
-            SuperMod_lv = self.constructSuperMod(geom, abs(running_x), label = "_"+supermod_label[i])
+            SuperMod_lv = self.constructSuperMod(geom, abs(running_x), label = "_"+supermod_label[-(self.nofSymMods -1 + i)])
 
             self.placeSubVolume(geom, volume, SuperMod_lv, pos_x = running_x - self.SuperModThickness/2, label = str(i)+"dw")
 
-            print(f"placing SuperMod {supermod_label[i]} up")
+            print(f"placing SuperMod {supermod_label[-(self.nofSymMods -1 + i)]} up")
 
-            self.placeSubVolume(geom, volume, SuperMod_lv, pos_x = running_x - self.SuperModThickness/2 - (self.SuperModThickness + self.clearenceSupermods)*step[i], label = str(i)+"up")
+            step = (self.nofSymMods * 2) - (i * 2 + 1)
+            self.placeSubVolume(geom, volume, SuperMod_lv, pos_x = running_x - self.SuperModThickness/2 - (self.SuperModThickness + self.clearenceSupermods)*step, label = str(i)+"up")
 
-            print(f"placing SuperMod {supermod_label[i]} dw")
+            print(f"placing SuperMod {supermod_label[-(self.nofSymMods -1 + i)]} dw")
 
             if i == 0 : 
                 tracking_lv = self.constructTrackingMod(geom, volume,abs(running_x))
                 half_tracking_thickness = geom.get_shape(tracking_lv.shape)[1]
-                self.placeSubVolume(geom, volume, tracking_lv, pos_x = running_x - self.SuperModThickness - (self.SuperModThickness + self.clearenceSupermods)*step[i] - half_tracking_thickness, label = "Trk")
+                self.placeSubVolume(geom, volume, tracking_lv, pos_x = running_x - self.SuperModThickness - (self.SuperModThickness + self.clearenceSupermods)*step - half_tracking_thickness, label = "Trk")
 
             running_x -= (self.SuperModThickness + self.clearenceSupermods)
 
@@ -315,7 +323,7 @@ class DRIFTBuilder(gegede.builder.Builder):
 
             DriftModule_lv.params.append(("SensDet","DriftVolume"))
 
-            self.FillDriftModule(geom, DriftModule_lv, module_number = i)
+            # self.FillDriftModule(geom, DriftModule_lv, module_number = i)
 
             self.WiresCounter["DriftChamber"] += self.WiresCounter["DriftModule"]
 
