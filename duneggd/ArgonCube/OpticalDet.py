@@ -83,3 +83,20 @@ class OpticalDetBuilder(gegede.builder.Builder):
                                                     pos=PCBBar_pos)
 
             main_lv.placements.append(PCBBar_pla.name)
+
+
+class SimpleDetBuilder(gegede.builder.Builder):
+    """Simple charge-only TPC geometry"""
+
+    def configure(self, N_TilesY=1, Drift_Length=0, **kwargs):
+        self.Drift_Length = Drift_Length
+        self.Material = 'LAr'
+
+        self.TPCPlane_builder = self.get_builder('TPCPlane')
+
+    def construct(self, geom):
+        self.halfDimension = {
+            'dx': self.Drift_Length,
+            'dy': self.TPCPlane_builder.halfDimension['dy'],
+            'dz': self.TPCPlane_builder.halfDimension['dz'],
+        }
