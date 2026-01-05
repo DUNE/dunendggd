@@ -88,7 +88,7 @@ class OpticalDetBuilder(gegede.builder.Builder):
 class SimpleDetBuilder(gegede.builder.Builder):
     """Simple charge-only TPC geometry"""
 
-    def configure(self, N_TilesY=1, Drift_Length=0, **kwargs):
+    def configure(self, Drift_Length=0, **kwargs):
         self.Drift_Length = Drift_Length
         self.Material = 'LAr'
 
@@ -100,3 +100,8 @@ class SimpleDetBuilder(gegede.builder.Builder):
             'dy': self.TPCPlane_builder.halfDimension['dy'],
             'dz': self.TPCPlane_builder.halfDimension['dz'],
         }
+
+        main_lv, main_hDim = ltools.main_lv(self,geom,'Box')
+        print('SimpleDetBuilder::construct()')
+        print(('main_lv = '+main_lv.name))
+        self.add_volume(main_lv)

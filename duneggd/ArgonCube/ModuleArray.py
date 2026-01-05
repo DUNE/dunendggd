@@ -73,23 +73,23 @@ class ModuleArrayBuilder(gegede.builder.Builder):
             main_lv.placements.append(Grating_pla.name)
 
 
-class SimpleTPCArrayBuilder(gegede.builder.Builder):
-    """Class to build simple array of TPCs"""
+class SimpleModuleArrayBuilder(gegede.builder.Builder):
+    """Class to build simple array of modules"""
 
-    def configure(self, N_TpcX=1, N_TpcY=1, N_TpcZ=1, **kwargs):
+    def configure(self, N_ModuleX=1, N_ModuleY=1, N_ModuleZ=1, **kwargs):
         self.Material = 'LAr'
 
-        self.N_TpcX = N_TpcX
-        self.N_TpcY = N_TpcY
-        self.N_TpcZ = N_TpcZ
+        self.N_ModuleX = N_ModuleX
+        self.N_ModuleY = N_ModuleY
+        self.N_ModuleZ = N_ModuleZ
 
-        self.TPC_builder = self.get_builder()
+        self.Module_builder = self.get_builder()
 
     def construct(self, geom):
         self.halfDimension = {
-            'dx': self.TPC_builder.halfDimension['dx'] * self.N_TpcX,
-            'dy': self.TPC_builder.halfDimension['dy'] * self.N_TpcY,
-            'dz': self.TPC_builder.halfDimension['dz'] * self.N_TpcZ
+            'dx': self.Module_builder.halfDimension['dx'] * self.N_ModuleX,
+            'dy': self.Module_builder.halfDimension['dy'] * self.N_ModuleY,
+            'dz': self.Module_builder.halfDimension['dz'] * self.N_ModuleZ
         }
 
         main_lv, _mainhDim = ltools.main_lv(self, geom, 'Box')
@@ -97,23 +97,23 @@ class SimpleTPCArrayBuilder(gegede.builder.Builder):
         print('main_lv = ' + main_lv.name)
         self.add_volume(main_lv)
 
-        for i in range(self.N_TpcX):
-            for j in range(self.N_TpcY):
-                for k in range(self.N_TpcZ):
-                    copy = k + (j * self.N_TpcZ) + (i * self.N_TpcY * self.N_TpcZ)
+        for i in range(self.N_ModuleX):
+            for j in range(self.N_ModuleY):
+                for k in range(self.N_ModuleZ):
+                    copy = k + (j * self.N_ModuleZ) + (i * self.N_ModuleZ * self.N_ModuleY)
 
                     pos = [
-                        -self.halfDimension['dx'] + (i+1)*self.TPC_builder.halfDimension['dx'],
-                        -self.halfDimension['dy'] + (j+1)*self.TPC_builder.halfDimension['dy'],
-                        -self.halfDimension['dz'] + (k+1)*self.TPC_builder.halfDimension['dz']
+                        -self.halfDimension['dx'] + (2*i+1)*self.Module_builder.halfDimension['dx'],
+                        -self.halfDimension['dy'] + (2*j+1)*self.Module_builder.halfDimension['dy'],
+                        -self.halfDimension['dz'] + (2*k+1)*self.Module_builder.halfDimension['dz']
                     ]
 
-                    TPC_lv = self.TPC_builder.get_volume()
+                    Mod_lv = self.Module_builder.get_volume()
 
-                    TPC_pos = geom.structure.Position(f'{self.TPC_builder.name}_pos_{i}.{j}.{k}',
-                                                      pos[0], pos[1], pos[2])
+                    Mod_pos = geom.structure.Position(f'{self.Module_builder.name}_pos_{i}.{j}.{k}',
+                                                        pos[0], pos[1], pos[2])
 
-                    TPC_pla = geom.structure.Placement(f'{self.TPC_builder.name}_pla_{i}.{j}.{k}',
-                                                       volume=TPC_lv, pos=TPC_pos, copynumber=copy)
+                    Mod_pla = geom.structure.Placement(f'{self.Module_builder.name}_pla_{i}.{j}.{k}',
+                                                        volume=Mod_lv, pos=Mod_pos, copynumber=copy)
 
-                    main_lv.placements.append(TPC_pla.name)
+                    main_lv.placements.append(Mod_pla.name)
