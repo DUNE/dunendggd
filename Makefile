@@ -270,6 +270,7 @@ only_SAND_DRIFT_GENERIC.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/SAND_MAGNET.cfg \
 	duneggd/Config/SAND_INNERVOLOPTDRIFT1.cfg \
 	duneggd/Config/SAND_ECAL.cfg \
+	duneggd/Config/SAND_DRIFT_CHAMBER/DRIFT_STATIONS.cfg \
 	duneggd/Config/SAND_DRIFT_CHAMBER/DRIFT_generic.cfg \
 	duneggd/Config/SAND_GRAIN.cfg
 
