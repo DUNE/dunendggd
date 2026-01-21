@@ -11,7 +11,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
                 configuration = None,tracker_configuration=None, nBarrelModules = None, halfDimension = None, Material = None, GRAINThickness = None, 
                 clearenceECALGRAIN = None, clearenceGRAINTracker = None, clearenceTrackerECAL = None, clearanceStations = None,
                 # station commons
-                frameThickness = None, frameMaterial = None, driftGas = None,
+                frameThickness = None, frameMaterial = None, driftGas = None, MylarThickness=None,
                 # tracker stations
                 stationDict = None,
                 **kwds):
@@ -34,7 +34,8 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
             # station common info (assumed to be constant)
             self.frameThickness             = frameThickness
             self.frameMaterial              = frameMaterial
-            self.driftGas                 = driftGas
+            self.driftGas                   = driftGas
+            self.MylarThickness             = MylarThickness
             
             # station info dictionary (reasonably station-wise customisable parameters)
             self.stationDict                = stationDict
@@ -47,6 +48,8 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
 
             # self.SuperModThickness          = self.ModThickness["CMod"] + self.ModThickness["C3H6Mod"] * self.nofC3H6ModAfterCMod# + self.clearenceSupermods 
 
+            self.TrackerAvailableRadius     = self.kloeVesselRadius - self.clearenceTrackerECAL
+            
             self.Space4Tracker              = self.kloeVesselRadius * 2 - self.GRAINThickness - self.clearenceECALGRAIN - self.clearenceGRAINTracker - self.clearenceTrackerECAL
 
             # self.nofSuperMods               = int((self.Space4Tracker / (self.SuperModThickness + self.clearenceSupermods)).to_base_units().magnitude)
@@ -67,7 +70,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
             print("clearance GRAIN-ECAL           | "+str(self.clearenceECALGRAIN))
             print("clearance GRAIN-tracker        | "+str(self.clearenceGRAINTracker))
             print("clearance tracker-ECAL         | "+str(self.clearenceTrackerECAL))
-            print("clearance SuperMods            | "+str(self.clearanceStations))
+            print("clearance stations            | "+str(self.clearanceStations))
             print("Space 4 Tracker                | "+str(self.Space4Tracker))
             print("")
 
@@ -111,27 +114,28 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
         
     def constructTrackingStations(self, geom, volume):
 
-        running_x =  -self.kloeVesselRadius + self.clearenceECALGRAIN + self.GRAINThickness + self.clearenceGRAINTracker + self.clearanceStations#TODO: start from the GRAIN-side
+        running_x =  -self.kloeVesselRadius + self.clearenceECALGRAIN + self.GRAINThickness + self.clearenceGRAINTracker#TODO: start from the GRAIN-side
 
         for idx, station_cfg in enumerate(self.stationDict):
 
             station_lv, station_thick = self.constructStation(geom, running_x, station_cfg,label = "s_"+str(idx))
 
-            self.placeSubVolume(geom, volume, station_lv, pos_x = running_x - station_thick/2, label = str(idx))
+            self.placeSubVolume(geom, volume, station_lv, pos_x = running_x + station_thick/2, label = str(idx))
 
             running_x += (station_thick + self.clearanceStations) #TODO: start from the GRAIN-side
 
             # self.WiresCounter["Tracker"] += self.WiresCounter["SuperMod"] 
             
 
-    def constructStation(self, geom, running_x, station_cfg, name = "SuperMod", label = ""):
-        # build SuperMod main shape
+    def constructStation(self, geom, running_x, station_cfg, chamberThickness=None, half_thickness=None,half_length=None, name = "station", label = ""):
+        # build station main shape
         print("")
         print(f"Building station s_{label}")
 
         # self.WiresCounter["SuperMod"] = 0
         # TODO: temporarily assume only modules with targets when computing the thickness
-        if half_thickness == None : half_thickness = (station_cfg["tgt_thickness"]+station_cfg["n_views"]*station_cfg["view_thickness"])/2
+        if chamberThickness == None : chamberThickness = station_cfg["n_views"]*station_cfg["view_thickness"]
+        if half_thickness == None : half_thickness = (station_cfg["tgt_thickness"]+chamberThickness)/2
         if half_length    == None : half_length    = self.kloeVesselHalfDx
 
         half_heigth    = self.getHalfHeight(abs(running_x))
@@ -143,26 +147,34 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
         # build station subvolumes : frame and views(planes)
 
         frame_lv       = self.constructFrame(geom, half_thickness, half_heigth, half_length, label = label)
-
-        CMod_lv        = self.constructMod(geom, "C", half_heigth - self.frameThickness, label = label) # adapt this for the station
-
-        # place subvolumes in SuperMod
-
+        # place the frame subvolume in the station logical volume 
         self.placeSubVolume(geom, station_lv, frame_lv)
+        
+        view_half_height            = half_heigth - self.frameThickness
+        view_half_length            = half_length - self.frameThickness
 
-        self.placeSubVolume(geom, station_lv, CMod_lv, pos_x = - half_thickness + self.ModThickness["CMod"]/2)
+        inner_station_lv            = self.constructBox(geom, label+"in", half_thickness, view_half_height, view_half_length)
+        
+        tgt_string = "c" if station_cfg["tgt_material"] == 'Graphite' else "pp"
 
-        for i in range(nofC3H6):
+        target_lv                   = self.constructBox(geom, label+"t_"+tgt_string, station_cfg["tgt_thickness"]/2, view_half_height, view_half_length, material=station_cfg["tgt_material"])
 
-            pos_x =  - half_thickness + self.ModThickness["CMod"] + self.ModThickness["C3H6Mod"] * (0.5 + i)
+        DriftChamber_lv             = self.constructBox(geom, label+"c", chamberThickness/2, view_half_height, view_half_length)
 
-            self.placeSubVolume(geom, station_lv, C3H6Mod_lv, pos_x = pos_x, label=str(i))
+        self.FillDriftChamber(geom, DriftChamber_lv, label, station_cfg) # updates self.WiresCounter["DriftChamber"]
+
+        self.placeSubVolume(geom, inner_station_lv, target_lv, pos_x =- half_thickness + station_cfg["tgt_thickness"]/2)
+
+        self.placeSubVolume(geom, inner_station_lv, DriftChamber_lv, pos_x = - half_thickness + station_cfg["tgt_thickness"] + chamberThickness/2)
+        
+        # place the inner station volume within the station
+        self.placeSubVolume(geom, station_lv, inner_station_lv)
+        
 
         print("")
-        print(f"supermodule dimensions : thickness {half_thickness*2}, heigth {half_heigth*2}, lenght {half_length*2}")
-        print(f"{station_lv.name} nof wires {self.WiresCounter['SuperMod']}")
+        print(f"station dimensions : thickness {half_thickness*2}, heigth {half_heigth*2}, lenght {half_length*2}")
 
-        return station_lv
+        return station_lv, half_thickness*2
 
     def constructFrame(self, geom, half_thickness, half_heigth, half_length, label = ""):
 
@@ -178,27 +190,36 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
 
         return frame_lv
     
-    def constructMod(self, geom, target_type, half_heigth, label = ""):
+    
+    def FillDriftChamber(self, geom, DriftChamber_lv, label, station_cfg):
 
-        self.WiresCounter["DriftChamber"] = 0
+        half_dx, half_h, half_l     = geom.get_shape(DriftChamber_lv.shape)[1:]
+        view_thickness = station_cfg["view_thickness"]
 
-        half_thickness, half_length = self.ModThickness[target_type+"Mod"]/2, self.kloeVesselHalfDx - self.frameThickness
+        MylarPlane_lv               = self.constructBox(geom, label+"_m", self.MylarThickness/2, half_h, half_l, "Mylar")
 
-        target_material = "Graphite" if target_type == 'C' else "C3H6"
+        running_x                   = - half_dx
 
-        mod_lv                      = self.constructBox(geom, target_type+"Mod"+label, half_thickness, half_heigth, half_length)
+        for i in range(station_cfg["n_views"]):
 
-        target_lv                   = self.constructBox(geom, target_type+"Target"+label, self.targetThickness[target_type+"Mod"]/2, half_heigth, half_length, material=target_material)
+            running_x += self.MylarThickness/2
 
-        DriftChamber_lv             = self.constructBox(geom, target_type+"DriftChamber"+label, self.DriftChamberThickness/2, half_heigth, half_length)
+            self.placeSubVolume(geom, DriftChamber_lv, MylarPlane_lv, pos_x = running_x, label = "_"+str(i))
 
-        self.FillDriftChamber(geom, DriftChamber_lv, target_type, label) # updates self.WiresCounter["DriftChamber"]
+            running_x += self.MylarThickness/2 + view_thickness/2
 
-        self.placeSubVolume(geom, mod_lv, target_lv, pos_x = - half_thickness + self.targetThickness[target_type+"Mod"]/2)
 
-        self.placeSubVolume(geom, mod_lv, DriftChamber_lv, pos_x = - half_thickness + self.targetThickness[target_type+"Mod"] + self.DriftChamberThickness/2)
+            view_lv = self.constructBox(geom, label+"v_"+str(i), view_thickness/2, half_h, half_l, self.driftGas)
 
-        return mod_lv
+            view_lv.params.append(("SensDet","DriftVolume"))
+
+            self.placeSubVolume(geom, DriftChamber_lv, view_lv, pos_x = running_x, label = "_"+str(i))
+
+            running_x           += view_thickness/2
+
+        running_x           += self.MylarThickness/2
+
+        self.placeSubVolume(geom, DriftChamber_lv, MylarPlane_lv, pos_x = running_x, label = "_"+str(station_cfg["n_views"]+1))
 
 
     def constructBox(self, geom, name, half_thickness, half_heigth, half_length, material="Air35C"):
@@ -216,3 +237,21 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
         place    = geom.structure.Placement(name + "_place", volume = subvolume.name, pos = position.name, rot = rotation.name)
 
         volume.placements.append(place.name)
+        
+        
+    def getHalfHeight(self,dis2c):
+
+        theta   = math.pi*2/self.nBarrelModules
+        d       = self.TrackerAvailableRadius*math.tan(theta/2)
+        if dis2c<d:
+            return self.TrackerAvailableRadius
+        projectedDis = d
+        HalfHeight   = self.TrackerAvailableRadius
+
+        for i in range(1,int(self.nBarrelModules/4)):
+            projectedDisPre = projectedDis
+            projectedDis   += 2 * d * math.cos(i * theta)
+            if dis2c<projectedDis:
+                return HalfHeight-(dis2c-projectedDisPre)*math.tan(i*theta)
+            else:
+                HalfHeight-=2*d*math.sin(i*theta)
