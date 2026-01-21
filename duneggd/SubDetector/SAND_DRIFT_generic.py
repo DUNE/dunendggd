@@ -153,13 +153,13 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
         view_half_height            = half_heigth - self.frameThickness
         view_half_length            = half_length - self.frameThickness
 
-        inner_station_lv            = self.constructBox(geom, label+"in", half_thickness, view_half_height, view_half_length)
+        inner_station_lv            = self.constructBox(geom, label+"_in", half_thickness, view_half_height, view_half_length)
         
         tgt_string = "c" if station_cfg["tgt_material"] == 'Graphite' else "pp"
 
-        target_lv                   = self.constructBox(geom, label+"t_"+tgt_string, station_cfg["tgt_thickness"]/2, view_half_height, view_half_length, material=station_cfg["tgt_material"])
+        target_lv                   = self.constructBox(geom, label+"_t_"+tgt_string, station_cfg["tgt_thickness"]/2, view_half_height, view_half_length, material=station_cfg["tgt_material"])
 
-        DriftChamber_lv             = self.constructBox(geom, label+"c", chamberThickness/2, view_half_height, view_half_length)
+        DriftChamber_lv             = self.constructBox(geom, label+"_ch", chamberThickness/2, view_half_height, view_half_length)
 
         self.FillDriftChamber(geom, DriftChamber_lv, label, station_cfg) # updates self.WiresCounter["DriftChamber"]
 
@@ -178,7 +178,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
 
     def constructFrame(self, geom, half_thickness, half_heigth, half_length, label = ""):
 
-        name = label+"_frame"
+        name = label+"_fr"
 
         outer_box  = geom.shapes.Box(name+"_out_shape", dx = half_thickness, dy = half_heigth, dz = half_length)
 
@@ -209,7 +209,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
             running_x += self.MylarThickness/2 + view_thickness/2
 
 
-            view_lv = self.constructBox(geom, label+"v_"+str(i), view_thickness/2, half_h, half_l, self.driftGas)
+            view_lv = self.constructBox(geom, label+"_v_"+str(i), view_thickness/2, half_h, half_l, self.driftGas)
 
             view_lv.params.append(("SensDet","DriftVolume"))
 
