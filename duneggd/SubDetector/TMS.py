@@ -4,7 +4,7 @@ from duneggd.LocalTools import materialdefinition as materials
 from gegede import Quantity as Q
 global Pos
 class tmsBuilder(gegede.builder.Builder):
-    def configure(self, mat=None, thinbox1Dimension=None, gapPosition=None, BFieldUpLow = None, BFieldUpHigh = None, BFieldDownLow = None , BFieldDownHigh = None, thin_horizontal=None, thick_horizontal=None, double_horizontal=None, thin_U=None, thick_U=None, double_U=None, thin_V=None, thick_V=None, double_V=None,  **kwds): 
+    def configure(self, mat=None, thinbox1Dimension=None, gapPosition=None, BFieldUpLow = None, BFieldUpHigh = None, BFieldDownLow = None , BFieldDownHigh = None, thin_horizontal=None, thick_horizontal=None, double_horizontal=None, thin_U=None, thick_U=None, double_U=None, thin_V=None, thick_V=None, double_V=None, thin_Y=None, thick_Y=None, double_Y=None, **kwds): 
         self.BFieldUpLow = BFieldUpLow
         self.BFieldUpHigh = BFieldUpHigh
         self.BFieldDownLow = BFieldDownLow 
@@ -21,15 +21,18 @@ class tmsBuilder(gegede.builder.Builder):
         self.thin_V = thin_V
         self.thick_V = thick_V
         self.double_V = double_V
+        self.thin_Y = thin_Y
+        self.thick_Y = thick_Y
+        self.double_Y = double_Y
 
         
         
     def construct(self, geom):        
 
         six_width = False #6m
-        hybrid = False #6m, 4.2c, UVX set by rules in TMS.cfg
-        XY = False #6m, 4.2d, XY UVX set by rules in TMS.cfg 
-        PDR_3_2b = True #7m, 3.2b, UVXUVXUVX...
+        hybrid = False #4.2c, UVX set by rules in TMS.cfg
+        XY = True #4.2d, orthogonal set by rules in TMS.cfg 
+        PDR_3_2b = False #7m, 3.2b, UVXUVXUVX...
 
             
         #Make Boxes for steel and logical volumes
@@ -560,6 +563,7 @@ class tmsBuilder(gegede.builder.Builder):
                 
                 tms_lv.placements.append(thin_Modlayer_pla_first[module].name)
         elif XY:
+            # Very first layer consist of Y X before the first steel plate to improve matching performace.
             thinModlayer_pos_first = [geom.structure.Position('q')]*(Module_layers_thin+1)
             thin_Modlayer_pla_first = [geom.structure.Placement('r',volume=Module_layer_lv4,pos=thinModlayer_pos[1])]*(Module_layers_thin+1)
             zpos = -Q("3.650m") -Q("0.0325m") -Q("0.065m") # first layer of thin steel - half plane thickness + plane thickness
@@ -580,9 +584,7 @@ class tmsBuilder(gegede.builder.Builder):
                 #4_2d
                 if module in self.thin_horizontal:
                     thin_Modlayer_pla_first[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thinModlayer_pos_first[module] )#x
-                if module in self.thin_U:
-                    thin_Modlayer_pla_first[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv4, pos=thinModlayer_pos_first[module] )#y
-                if module in self.thin_V:
+                if module in self.thin_Y:
                     thin_Modlayer_pla_first[module] = geom.structure.Placement( 'thinModlayerpla'+self.name+str(module), volume=Module_layer_lv4, pos=thinModlayer_pos_first[module] )#y
 
                 tms_lv.placements.append(thin_Modlayer_pla_first[module].name)
@@ -630,9 +632,7 @@ class tmsBuilder(gegede.builder.Builder):
                 #4_2d
                 if module in self.thick_horizontal:
                     thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=thickModlayer_pos[module] )#x
-                if module in self.thick_U:
-                    thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv4, pos=thickModlayer_pos[module] )
-                if module in self.thick_V:
+                if module in self.thick_Y:
                     thick_Modlayer_pla[module] = geom.structure.Placement( 'thickModlayerpla'+self.name+str(module), volume=Module_layer_lv4, pos=thickModlayer_pos[module] )
             elif PDR_3_2b:
                 #3_2b
@@ -670,9 +670,7 @@ class tmsBuilder(gegede.builder.Builder):
                 #XY version (XY)
                 if module in self.double_horizontal:
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv3, pos=doubleModlayer_pos[module] )
-                if module in self.double_U:
-                    double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv4, pos=doubleModlayer_pos[module] )
-                if module in self.double_V:
+                if module in self.double_Y:
                     double_Modlayer_pla[module] = geom.structure.Placement( 'doubleModlayerpla'+self.name+str(module), volume=Module_layer_lv4, pos=doubleModlayer_pos[module] )
             elif PDR_3_2b:
                 #UVX
