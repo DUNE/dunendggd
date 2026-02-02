@@ -159,7 +159,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
 
         target_lv                   = self.constructBox(geom, label+"_t_"+tgt_string, station_cfg["tgt_thickness"]/2, view_half_height, view_half_length, material=station_cfg["tgt_material"])
 
-        DriftChamber_lv             = self.constructBox(geom, label+"_ch", chamberThickness/2, view_half_height, view_half_length)
+        DriftChamber_lv             = self.constructBox(geom, label+"_ch", chamberThickness/2, view_half_height, view_half_length) #TODO: review the need for a DriftChamber logical volume
 
         self.FillDriftChamber(geom, DriftChamber_lv, label, station_cfg) # updates self.WiresCounter["DriftChamber"]
 
