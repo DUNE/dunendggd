@@ -13,6 +13,7 @@ These geometry releases were tagged as `Descriptive_tag_v_X.Y.Z`.
 ### Changed
 - Removed the stale SAND tracker geometry options from the default `sandopt` list. Only the supported full STT, full Drift-Chamber and Initial STT geometries are now built.
 - Updated TMS cassette ordering to the final design (50 X, 32 Y; 8×(X+Y) + 22×(X+X+Y)) 
+- Updated the active and passive layer thicknesses of ECAL modules to match the detector specifications, 620 um and 480 um respectively.
 
 ## [v2025.08.11]
 
