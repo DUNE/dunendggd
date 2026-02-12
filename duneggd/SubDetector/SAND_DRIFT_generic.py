@@ -137,7 +137,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
 
         # self.WiresCounter["SuperMod"] = 0
         # TODO: temporarily assume only modules with targets when computing the thickness
-        if chamberThickness == None : chamberThickness = station_cfg["n_views"]*station_cfg["view_thickness"]
+        if chamberThickness == None : chamberThickness = station_cfg["n_views"]*station_cfg["view_thickness"] + self.MylarThickness
         if half_thickness == None : half_thickness = (station_cfg["tgt_thickness"]+chamberThickness)/2
         if half_length    == None : half_length    = self.kloeVesselHalfDx
 
@@ -203,26 +203,22 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
 
         MylarPlane_lv               = self.constructBox(geom, label+"_m", self.MylarThickness/2, half_h, half_l, "Mylar")
 
-        running_x                   = - half_dx
-
+        running_x                   = - half_dx + self.MylarThickness/2
+        
         for i in range(station_cfg["n_views"]):
 
-            running_x += self.MylarThickness/2
-
             self.placeSubVolume(geom, DriftChamber_lv, MylarPlane_lv, pos_x = running_x, label = "_"+str(i))
+            
+            running_x += view_thickness/2
 
-            running_x += self.MylarThickness/2 + view_thickness/2
 
-
-            view_lv = self.constructBox(geom, label+"_v_"+str(i), view_thickness/2, half_h, half_l, self.driftGas)
+            view_lv = self.constructBox(geom, label+"_v_"+str(i), (view_thickness - self.MylarThickness)/2, half_h, half_l, self.driftGas)
 
             view_lv.params.append(("SensDet","DriftVolume"))
 
             self.placeSubVolume(geom, DriftChamber_lv, view_lv, pos_x = running_x, label = "_"+str(i))
 
             running_x           += view_thickness/2
-
-        running_x           += self.MylarThickness/2
 
         self.placeSubVolume(geom, DriftChamber_lv, MylarPlane_lv, pos_x = running_x, label = "_"+str(station_cfg["n_views"]+1))
 
