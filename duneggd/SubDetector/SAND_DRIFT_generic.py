@@ -116,15 +116,18 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
 
         running_x =  -self.kloeVesselRadius + self.clearenceECALGRAIN + self.GRAINThickness + self.clearenceGRAINTracker#TODO: start from the GRAIN-side
 
+        mylar_area_counter = 0
         for idx, station_cfg in enumerate(self.stationDict):
 
-            station_lv, station_thick = self.constructStation(geom, running_x, station_cfg,label = "s_"+str(idx))
+            station_lv, station_thick, station_mylar_area = self.constructStation(geom, running_x, station_cfg,label = "s_"+str(idx))
 
             self.placeSubVolume(geom, volume, station_lv, pos_x = running_x + station_thick/2, label = str(idx))
 
             running_x += (station_thick + self.clearanceStations) #TODO: start from the GRAIN-side
 
+            mylar_area_counter+=station_mylar_area
             # self.WiresCounter["Tracker"] += self.WiresCounter["SuperMod"] 
+        print(f"Total mylar area: {mylar_area_counter}")
             
 
     def constructStation(self, geom, running_x, station_cfg, chamberThickness=None, half_thickness=None,half_length=None, name = "station", label = ""):
@@ -155,7 +158,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
 
         inner_station_lv            = self.constructBox(geom, label+"_in", half_thickness, view_half_height, view_half_length)
         
-        tgt_string = "c" if station_cfg["tgt_material"] == 'Graphite' else "pp"
+        tgt_string = "C" if station_cfg["tgt_material"] == 'Graphite' else "P"
 
         target_lv                   = self.constructBox(geom, label+"_t_"+tgt_string, station_cfg["tgt_thickness"]/2, view_half_height, view_half_length, material=station_cfg["tgt_material"])
 
@@ -170,11 +173,13 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
         # place the inner station volume within the station
         self.placeSubVolume(geom, station_lv, inner_station_lv)
         
+        station_mylar_area = (view_half_height*2)*(view_half_length*2)*(station_cfg["n_views"]+1)
 
         print("")
         print(f"station dimensions : thickness {half_thickness*2}, heigth {half_heigth*2}, lenght {half_length*2}")
+        print(f"Station mylar area: {station_mylar_area}")
 
-        return station_lv, half_thickness*2
+        return station_lv, half_thickness*2, station_mylar_area
 
     def constructFrame(self, geom, half_thickness, half_heigth, half_length, label = ""):
 
