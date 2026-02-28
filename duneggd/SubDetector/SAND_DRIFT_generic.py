@@ -156,7 +156,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
         view_half_height            = half_heigth - self.frameThickness
         view_half_length            = half_length - self.frameThickness
 
-        inner_station_lv            = self.constructBox(geom, label+"_in", half_thickness, view_half_height, view_half_length)
+        # inner_station_lv            = self.constructBox(geom, label+"_in", half_thickness, view_half_height, view_half_length)
         
         tgt_string = "C" if station_cfg["tgt_material"] == 'Graphite' else "P"
 
@@ -166,12 +166,12 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
 
         self.FillDriftChamber(geom, DriftChamber_lv, label, station_cfg) # updates self.WiresCounter["DriftChamber"]
 
-        self.placeSubVolume(geom, inner_station_lv, target_lv, pos_x =- half_thickness + station_cfg["tgt_thickness"]/2)
+        self.placeSubVolume(geom, station_lv, target_lv, pos_x =- half_thickness + station_cfg["tgt_thickness"]/2)
 
-        self.placeSubVolume(geom, inner_station_lv, DriftChamber_lv, pos_x = - half_thickness + station_cfg["tgt_thickness"] + chamberThickness/2)
+        self.placeSubVolume(geom, station_lv, DriftChamber_lv, pos_x = - half_thickness + station_cfg["tgt_thickness"] + chamberThickness/2)
         
-        # place the inner station volume within the station
-        self.placeSubVolume(geom, station_lv, inner_station_lv)
+        # # place the inner station volume within the station
+        # self.placeSubVolume(geom, station_lv, inner_station_lv)
         
         station_mylar_area = (view_half_height*2)*(view_half_length*2)*(station_cfg["n_views"]+1)
 
