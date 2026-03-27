@@ -26,28 +26,28 @@ sandopt: SAND_opt3_STT1.gdml \
 
 lar_only: nd_hall_with_lar_only.gdml
 
-# -----------With movable PRISM ----------------------
-#  make prism TMS_SHIFT="10" LAr_SHIFT="30"
+# ----------------Movable PRISM ----------------------
+#  Customize with: make prism TMS_SHIFT="15000" LAr_SHIFT="20000"
 TMS_SHIFT ?= 10000
 LAr_SHIFT ?= 10000
 
-prism: with_sand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml \
-anti_fiducial_with_sand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml
+prism: nd_hall_with_lar_shift_$(LAr_SHIFT)_tms_shift_$(TMS_SHIFT)_sand_stt1.gdml \
+anti_fiducial_nd_hall_with_lar_shift_$(LAr_SHIFT)_tms_shift_$(TMS_SHIFT)_sand_stt1.gdml
 
-duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND_shifted_by_$(TMS_SHIFT)_$(LAr_SHIFT).cfg: duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND_movable.cfg
-	sed -E \
-	    -e "s|TMS_offset = Q('10000mm')|TMS_offset = Q('$(TMS_SHIFT)mm')|" \
-	    -e "s|LAr_offset = Q('10000mm')|LAr_offset = Q('$(LAr_SHIFT)mm')|" \
+duneggd/Config/ND_Hall_Air_Volume_LAr_shift_$(LAr_SHIFT)_TMS_shift_$(TMS_SHIFT)_SAND.cfg: duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND.cfg
+	sed \
+	    -e "s|TMS_offset = Q('0mm')|TMS_offset = Q('$(TMS_SHIFT)mm')|" \
+	    -e "s|LAr_offset = Q('0mm')|LAr_offset = Q('$(LAr_SHIFT)mm')|" \
 	    $< > $@
 
-prism_nosand: nosand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml
+prism_nosand: nd_hall_with_lar_shift_$(LAr_SHIFT)_tms_shift_$(TMS_SHIFT)_nosand.gdml
 
-duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_noSAND_shifted_by_$(TMS_SHIFT)_$(LAr_SHIFT).cfg: duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_noSAND_movable.cfg
-	sed -E \
-	    -e "s|TMS_offset = Q('10000mm')|TMS_offset = Q('$(TMS_SHIFT)mm')|" \
-	    -e "s|LAr_offset = Q('10000mm')|LAr_offset = Q('$(LAr_SHIFT)mm')|" \
+duneggd/Config/ND_Hall_Air_Volume_LAr_shift_$(LAr_SHIFT)_TMS_shift_$(TMS_SHIFT)_noSAND.cfg: duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_noSAND.cfg
+	sed \
+	    -e "s|TMS_offset = Q('0mm')|TMS_offset = Q('$(TMS_SHIFT)mm')|" \
+	    -e "s|LAr_offset = Q('0mm')|LAr_offset = Q('$(LAr_SHIFT)mm')|" \
 	    $< > $@
-#----------------------------------------------------
+#-----------------------------------------------------
 
 clean:
 	rm *.gdml
@@ -315,8 +315,8 @@ nd_hall_with_lar_tms_sand_old_window.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
 
 #---------------PRISM-------------------------
-with_sand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml: duneggd/Config/WORLDggd.cfg \
-	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND_shifted_by_$(TMS_SHIFT)_$(LAr_SHIFT).cfg \
+nd_hall_with_lar_shift_$(LAr_SHIFT)_tms_shift_$(TMS_SHIFT)_sand_stt1.gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_LAr_shift_$(LAr_SHIFT)_TMS_shift_$(TMS_SHIFT)_SAND.cfg \
 	duneggd/Config/ND_Hall_Rock.cfg \
 	duneggd/Config/ND_ElevatorStruct.cfg \
 	duneggd/Config/ND_CraneRailStruct1.cfg \
@@ -332,8 +332,8 @@ with_sand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml: duneggd/Config/WORL
 	duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
 
-anti_fiducial_with_sand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml: duneggd/Config/WORLDggd.cfg \
-	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND_shifted_by_$(TMS_SHIFT)_$(LAr_SHIFT).cfg \
+anti_fiducial_nd_hall_with_lar_shift_$(LAr_SHIFT)_tms_shift_$(TMS_SHIFT)_sand_stt1.gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_LAr_shift_$(LAr_SHIFT)_TMS_shift_$(TMS_SHIFT)_SAND.cfg \
 	duneggd/Config/ND_Hall_Rock.cfg \
 	duneggd/Config/ND_ElevatorStruct.cfg \
 	duneggd/Config/ND_CraneRailStruct1.cfg \
@@ -349,8 +349,8 @@ anti_fiducial_with_sand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml: duneg
 	duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeDetectorNoActive.cfg
 
-nosand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml: duneggd/Config/WORLDggd.cfg \
-	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_noSAND_shifted_by_$(TMS_SHIFT)_$(LAr_SHIFT).cfg \
+nd_hall_with_lar_shift_$(LAr_SHIFT)_tms_shift_$(TMS_SHIFT)_nosand.gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_LAr_shift_$(LAr_SHIFT)_TMS_shift_$(TMS_SHIFT)_noSAND.cfg \
 	duneggd/Config/ND_Hall_Rock.cfg \
 	duneggd/Config/ND_ElevatorStruct.cfg \
 	duneggd/Config/ND_CraneRailStruct1.cfg \
