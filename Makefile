@@ -26,6 +26,29 @@ sandopt: SAND_opt3_STT1.gdml \
 
 lar_only: nd_hall_with_lar_only.gdml
 
+# -----------With movable PRISM ----------------------
+#  make prism TMS_SHIFT="10" LAr_SHIFT="30"
+TMS_SHIFT ?= 10000
+LAr_SHIFT ?= 10000
+
+prism: with_sand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml \
+anti_fiducial_with_sand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml
+
+duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND_shifted_by_$(TMS_SHIFT)_$(LAr_SHIFT).cfg: duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND_movable.cfg
+	sed -E \
+	    -e "s|TMS_offset = Q('10000mm')|TMS_offset = Q('$(TMS_SHIFT)mm')|" \
+	    -e "s|LAr_offset = Q('10000mm')|LAr_offset = Q('$(LAr_SHIFT)mm')|" \
+	    $< > $@
+
+prism_nosand: nosand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml
+
+duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_noSAND_shifted_by_$(TMS_SHIFT)_$(LAr_SHIFT).cfg: duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_noSAND_movable.cfg
+	sed -E \
+	    -e "s|TMS_offset = Q('10000mm')|TMS_offset = Q('$(TMS_SHIFT)mm')|" \
+	    -e "s|LAr_offset = Q('10000mm')|LAr_offset = Q('$(LAr_SHIFT)mm')|" \
+	    $< > $@
+#----------------------------------------------------
+
 clean:
 	rm *.gdml
 
@@ -105,7 +128,7 @@ nd_hall_with_lar_only.gdml: duneggd/Config/WORLDggd.cfg \
         duneggd/Config/ND_Hall_Rock.cfg \
         duneggd/Config/ND_CryoStruct.cfg \
         duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
-        duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
+        duneggd/Config/ArgonCube/ArgonCubeDetector.cfg	
 
 nd_hall_with_lar_tms_nosand.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_noSAND.cfg \
@@ -252,7 +275,7 @@ only_SAND_STT_Initial.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/SAND_INNERVOLOPT_BackupSTT.cfg \
 	duneggd/Config/SAND_ECAL.cfg \
 	duneggd/Config/SAND_STT/STT_Backup.cfg \
-	duneggd/Config/SAND_GRAIN.cfg 
+	duneggd/Config/SAND_GRAIN.cfg
 
 only_SAND_STT_Complete.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_Hall_Air_Volume_Only_SAND.cfg \
@@ -262,7 +285,7 @@ only_SAND_STT_Complete.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/SAND_INNERVOLOPT_DefaultSTT.cfg \
 	duneggd/Config/SAND_ECAL.cfg \
 	duneggd/Config/SAND_STT/STT_Default.cfg \
-	duneggd/Config/SAND_GRAIN.cfg 
+	duneggd/Config/SAND_GRAIN.cfg
 
 
 nd_hall_no_dets.gdml: duneggd/Config/WORLDggd.cfg \
@@ -290,3 +313,51 @@ nd_hall_with_lar_tms_sand_old_window.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/TMS.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeCryostatOldWindow.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
+
+#---------------PRISM-------------------------
+with_sand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND_shifted_by_$(TMS_SHIFT)_$(LAr_SHIFT).cfg \
+	duneggd/Config/ND_Hall_Rock.cfg \
+	duneggd/Config/ND_ElevatorStruct.cfg \
+	duneggd/Config/ND_CraneRailStruct1.cfg \
+	duneggd/Config/ND_CraneRailStruct2.cfg \
+	duneggd/Config/ND_HallwayStruct.cfg \
+	duneggd/Config/ND_CryoStruct.cfg \
+	duneggd/Config/SAND_MAGNET.cfg \
+	duneggd/Config/SAND_INNERVOLOPT3.cfg \
+	duneggd/Config/SAND_ECAL.cfg \
+	duneggd/Config/SAND_STT/STT1.cfg \
+	duneggd/Config/SAND_GRAIN.cfg \
+	duneggd/Config/TMS.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
+
+anti_fiducial_with_sand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_SAND_shifted_by_$(TMS_SHIFT)_$(LAr_SHIFT).cfg \
+	duneggd/Config/ND_Hall_Rock.cfg \
+	duneggd/Config/ND_ElevatorStruct.cfg \
+	duneggd/Config/ND_CraneRailStruct1.cfg \
+	duneggd/Config/ND_CraneRailStruct2.cfg \
+	duneggd/Config/ND_HallwayStruct.cfg \
+	duneggd/Config/ND_CryoStruct.cfg \
+	duneggd/Config/SAND_MAGNET.cfg \
+	duneggd/Config/SAND_INNERVOLOPT3.cfg \
+	duneggd/Config/SAND_ECAL.cfg \
+	duneggd/Config/SAND_STT/STT1.cfg \
+	duneggd/Config/SAND_GRAIN.cfg \
+	duneggd/Config/TMS.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeDetectorNoActive.cfg
+
+nosand_shifted_by_TMS_$(TMS_SHIFT)_LAr_$(LAr_SHIFT).gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_noSAND_shifted_by_$(TMS_SHIFT)_$(LAr_SHIFT).cfg \
+	duneggd/Config/ND_Hall_Rock.cfg \
+	duneggd/Config/ND_ElevatorStruct.cfg \
+	duneggd/Config/ND_CraneRailStruct1.cfg \
+	duneggd/Config/ND_CraneRailStruct2.cfg \
+	duneggd/Config/ND_HallwayStruct.cfg \
+	duneggd/Config/ND_CryoStruct.cfg \
+	duneggd/Config/TMS.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
+	duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
+#--------------------------------------------------
