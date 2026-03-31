@@ -169,7 +169,7 @@ class DRIFTBuilder(gegede.builder.Builder):
 
             self.placeSubVolume(geom, volume, SuperMod_lv, pos_x = running_x - self.SuperModThickness/2 - (self.SuperModThickness + self.clearenceSupermods)*step[i], label = str(i)+"up")
 
-            print(f"placing SuperMod {supermod_label[i]} dw")
+            print(f"placing downstream SuperMod {supermod_label[i]}")
 
             SuperMod_lv = self.constructSuperMod(geom, abs(running_x), label = "_"+str(2*self.nofSymMods-i-1))
             
@@ -191,14 +191,16 @@ class DRIFTBuilder(gegede.builder.Builder):
         half_heigth  = self.getHalfHeight(running_x)
 
         thickness    = nofDriftMods * self.DriftModuleThickness + (nofDriftMods + 1) * self.MylarThickness
+        
+        trk_label = "trk"
+        
+        tracking_lv  = self.constructBox(geom, trk_label, thickness/2, half_heigth,self.kloeVesselHalfDx)
 
-        tracking_lv  = self.constructBox(geom, "Trk", thickness/2, half_heigth,self.kloeVesselHalfDx)
+        frame_lv     = self.constructFrame(geom, thickness/2, half_heigth, self.kloeVesselHalfDx, label = trk_label)
 
-        frame_lv     = self.constructFrame(geom, thickness/2, half_heigth, self.kloeVesselHalfDx, label = "Trk")
+        drift_lv     = self.constructBox(geom, trk_label+"_ch", thickness/2, half_heigth - self.frameThickness, self.kloeVesselHalfDx - self.frameThickness)
 
-        drift_lv     = self.constructBox(geom, "TrkDrift", thickness/2, half_heigth - self.frameThickness, self.kloeVesselHalfDx - self.frameThickness)
-
-        self.FillDriftChamber(geom, drift_lv,"C", nofDriftModules = nofDriftMods, wireAngles = [Q("0deg"),Q("90deg")])
+        self.FillDriftChamber(geom, drift_lv,"C", nofDriftModules = nofDriftMods, wireAngles = [Q("0deg"),Q("90deg")],label=trk_label+"_ch")
 
         self.placeSubVolume(geom, tracking_lv, frame_lv)
         self.placeSubVolume(geom, tracking_lv, drift_lv)
