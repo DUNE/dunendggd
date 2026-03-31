@@ -224,13 +224,11 @@ class DRIFTBuilder(gegede.builder.Builder):
 
         # build SuperMod subvolumes : CMod, C3H6Mod, Frame
 
-        frame_lv       = self.constructFrame(geom, half_thickness, half_heigth, half_length, label = label)
+        frame_lv       = self.constructFrame(geom, half_thickness, half_heigth, half_length, label = SuperMod_name)
 
-        CMod_lv        = self.constructMod(geom, "C", half_heigth - self.frameThickness, label = label)
+        CMod_lv        = self.constructMod(geom, "C", half_heigth - self.frameThickness, label = SuperMod_name,station_num=0)
 
         self.WiresCounter["SuperMod"] += self.WiresCounter["DriftChamber"] 
-
-        C3H6Mod_lv     = self.constructMod(geom, "C3H6", half_heigth - self.frameThickness, label = label)
 
         self.WiresCounter["SuperMod"] += self.WiresCounter["DriftChamber"] * nofC3H6 
         # place subvolumes in SuperMod
@@ -240,6 +238,8 @@ class DRIFTBuilder(gegede.builder.Builder):
         self.placeSubVolume(geom, SuperMod_lv, CMod_lv, pos_x = - half_thickness + self.ModThickness["CMod"]/2)
 
         for i in range(nofC3H6):
+            
+            C3H6Mod_lv     = self.constructMod(geom, "C3H6", half_heigth - self.frameThickness, label = SuperMod_name,station_num=i+1)
 
             pos_x =  - half_thickness + self.ModThickness["CMod"] + self.ModThickness["C3H6Mod"] * (0.5 + i)
 
@@ -253,7 +253,7 @@ class DRIFTBuilder(gegede.builder.Builder):
 
     def constructFrame(self, geom, half_thickness, half_heigth, half_length, label = ""):
 
-        name = "Frame"+label
+        name = label+"_fr"
 
         outer_box  = geom.shapes.Box(name+"_out_shape", dx = half_thickness, dy = half_heigth, dz = half_length)
 
@@ -265,21 +265,27 @@ class DRIFTBuilder(gegede.builder.Builder):
 
         return frame_lv
  
-    def constructMod(self, geom, target_type, half_heigth, label = ""):
+    def constructMod(self, geom, target_type, half_heigth, label = "", station_num = 0):
 
         self.WiresCounter["DriftChamber"] = 0
 
         half_thickness, half_length = self.ModThickness[target_type+"Mod"]/2, self.kloeVesselHalfDx - self.frameThickness
 
         target_material = "Graphite" if target_type == 'C' else "C3H6"
+        
+        target_string = {"C": 'c', "C3H6": 'pp'}
+        
+        mod_label = label+"_s_"+str(station_num)
 
-        mod_lv                      = self.constructBox(geom, target_type+"Mod"+label, half_thickness, half_heigth, half_length)
+        mod_lv                      = self.constructBox(geom, mod_label, half_thickness, half_heigth, half_length)
 
-        target_lv                   = self.constructBox(geom, target_type+"Target"+label, self.targetThickness[target_type+"Mod"]/2, half_heigth, half_length, material=target_material)
+        target_lv                   = self.constructBox(geom, mod_label+"_t_"+target_string[target_type], self.targetThickness[target_type+"Mod"]/2, half_heigth, half_length, material=target_material)
 
-        DriftChamber_lv             = self.constructBox(geom, target_type+"DriftChamber"+label, self.DriftChamberThickness/2, half_heigth, half_length)
+        drift_chamber_label =  mod_label+"_ch"
+        
+        DriftChamber_lv             = self.constructBox(geom, drift_chamber_label, self.DriftChamberThickness/2, half_heigth, half_length)
 
-        self.FillDriftChamber(geom, DriftChamber_lv, target_type, label) # updates self.WiresCounter["DriftChamber"]
+        self.FillDriftChamber(geom, DriftChamber_lv, target_type, drift_chamber_label) # updates self.WiresCounter["DriftChamber"]
 
         self.placeSubVolume(geom, mod_lv, target_lv, pos_x = - half_thickness + self.targetThickness[target_type+"Mod"]/2)
 
@@ -295,7 +301,7 @@ class DRIFTBuilder(gegede.builder.Builder):
 
         half_dx, half_h, half_l     = geom.get_shape(DriftChamber_lv.shape)[1:]
 
-        MylarPlane_lv               = self.constructBox(geom, target_type+"Mylar"+label, self.MylarThickness/2, half_h, half_l, "Mylar")
+        MylarPlane_lv               = self.constructBox(geom, label+"_m", self.MylarThickness/2, half_h, half_l, "Mylar")
 
         running_x                   = - half_dx
 
@@ -309,10 +315,10 @@ class DRIFTBuilder(gegede.builder.Builder):
 
             if wireAngles[i] == Q("90deg"):
 
-                DriftModule_lv       = self.constructBox(geom, target_type+"DriftModule_"+str(i)+label, self.DriftModuleThickness/2, half_l, half_h, DriftChamberGas)
+                DriftModule_lv       = self.constructBox(geom, label+"_v_"+str(i), self.DriftModuleThickness/2, half_l, half_h, DriftChamberGas)
                 rot_x = Q("90deg")
             else:
-                DriftModule_lv       = self.constructBox(geom, target_type+"DriftModule_"+str(i)+label, self.DriftModuleThickness/2, half_h, half_l, DriftChamberGas)
+                DriftModule_lv       = self.constructBox(geom, label+"_v_"+str(i), self.DriftModuleThickness/2, half_h, half_l, DriftChamberGas)
                 rot_x = Q("0deg")
 
             DriftModule_lv.params.append(("SensDet","DriftVolume"))
@@ -335,9 +341,9 @@ class DRIFTBuilder(gegede.builder.Builder):
 
         staggered               = (module_number%2)
 
-        FieldWire_lv            = self.constructWire(geom, DriftModule_lv.name, half_l*2, "F")
+        FieldWire_lv            = self.constructWire(geom, DriftModule_lv.name, half_l*2, "f")
 
-        SignalWire_lv           = self.constructWire(geom, DriftModule_lv.name, half_l*2, "S")
+        SignalWire_lv           = self.constructWire(geom, DriftModule_lv.name, half_l*2, "s")
 
         wire_index, running_wire = 0, FieldWire_lv
 
@@ -357,7 +363,7 @@ class DRIFTBuilder(gegede.builder.Builder):
 
     def constructWire(self, geom, base_name, length, wire_type):
 
-        wire_name           = base_name+"_"+wire_type+"wire"
+        wire_name           = base_name+"_"+wire_type+"w"
         r                   = self.SignalWireRadius if wire_type=="S" else self.FieldWireRadius
         wire_shape          = geom.shapes.Tubs(wire_name+"_shape", rmin = Q("0mm"), rmax = r, dz=length/2)
         wire_lv             = geom.structure.Volume(wire_name, material = self.WireMaterial, shape = wire_shape)
