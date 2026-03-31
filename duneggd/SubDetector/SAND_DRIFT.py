@@ -146,7 +146,7 @@ class DRIFTBuilder(gegede.builder.Builder):
 
         for i in range(self.nofExtraMods):
 
-            extraMod_lv = self.constructSuperMod(geom, running_x, label = "_X"+str(i))
+            extraMod_lv = self.constructSuperMod(geom, running_x, label = "_"+str((2*self.nofSymMods+self.nofExtraMods)-i-1))
 
             self.placeSubVolume(geom, volume, extraMod_lv, pos_x = running_x - self.SuperModThickness/2, label = str(i))
 
@@ -162,21 +162,23 @@ class DRIFTBuilder(gegede.builder.Builder):
         step           = [5,3,1]
 
         for i in range(self.nofSymMods):
-
-            SuperMod_lv = self.constructSuperMod(geom, abs(running_x), label = "_"+supermod_label[i])
-
-            self.placeSubVolume(geom, volume, SuperMod_lv, pos_x = running_x - self.SuperModThickness/2, label = str(i)+"dw")
-
-            print(f"placing SuperMod {supermod_label[i]} up")
+            
+            print(f"placing upstream SuperMod {supermod_label[i]}")
+            
+            SuperMod_lv = self.constructSuperMod(geom, abs(running_x), label = "_"+str(i))
 
             self.placeSubVolume(geom, volume, SuperMod_lv, pos_x = running_x - self.SuperModThickness/2 - (self.SuperModThickness + self.clearenceSupermods)*step[i], label = str(i)+"up")
 
             print(f"placing SuperMod {supermod_label[i]} dw")
 
+            SuperMod_lv = self.constructSuperMod(geom, abs(running_x), label = "_"+str(2*self.nofSymMods-i-1))
+            
+            self.placeSubVolume(geom, volume, SuperMod_lv, pos_x = running_x - self.SuperModThickness/2, label = str(i)+"dw")
+
             if i == 0 : 
                 tracking_lv = self.constructTrackingMod(geom, volume,abs(running_x))
                 half_tracking_thickness = geom.get_shape(tracking_lv.shape)[1]
-                self.placeSubVolume(geom, volume, tracking_lv, pos_x = running_x - self.SuperModThickness - (self.SuperModThickness + self.clearenceSupermods)*step[i] - half_tracking_thickness, label = "Trk")
+                self.placeSubVolume(geom, volume, tracking_lv, pos_x = running_x - self.SuperModThickness - (self.SuperModThickness + self.clearenceSupermods)*step[i] - half_tracking_thickness, label = "trk")
 
             running_x -= (self.SuperModThickness + self.clearenceSupermods)
 
@@ -203,7 +205,7 @@ class DRIFTBuilder(gegede.builder.Builder):
 
         return tracking_lv
 
-    def constructSuperMod(self, geom, running_x, half_thickness = None, half_length = None, nofC3H6 = None, name = "SuperMod", label = ""):
+    def constructSuperMod(self, geom, running_x, half_thickness = None, half_length = None, nofC3H6 = None, name = "smod", label = ""):
         # build SuperMod main shape
         print("")
         print(f"Building SuperMod{label}")
