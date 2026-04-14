@@ -128,7 +128,7 @@ nd_hall_with_lar_only.gdml: duneggd/Config/WORLDggd.cfg \
         duneggd/Config/ND_Hall_Rock.cfg \
         duneggd/Config/ND_CryoStruct.cfg \
         duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
-        duneggd/Config/ArgonCube/ArgonCubeDetector.cfg	
+        duneggd/Config/ArgonCube/ArgonCubeDetector.cfg
 
 nd_hall_with_lar_tms_nosand.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_Hall_Air_Volume_LAr_TMS_noSAND.cfg \
