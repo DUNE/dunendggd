@@ -13,6 +13,8 @@ These geometry releases were tagged as `Descriptive_tag_v_X.Y.Z`.
 ### Added
 - Added the `prism` and `prism_nosand` options in MakeFile to build geometries with movable TMS and LAr detectors. Supports custom shifts using parameters `TMS_SHIFT` and `LAr_SHIFT`. For example, `make prism TMS_SHIFT="20000" LAr_SHIFT="15000"`.
 
+## [v2026.03.06]
+
 ### Changed
 - Removed the stale SAND tracker geometry options from the default `sandopt` list. Only the supported full STT, full Drift-Chamber and Initial STT geometries are now built.
 - Updated TMS cassette ordering to the final design (50 X, 32 Y; 8×(X+Y) + 22×(X+X+Y)) 
