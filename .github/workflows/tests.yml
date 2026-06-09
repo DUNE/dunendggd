@@ -96,6 +96,13 @@ jobs:
         do
           root "gdml2root.C(\"$F\", \"jsroot/${F%.gdml}.root\")"
         done
+    - name: Add files to dropdown menu
+      run: |
+        for F in *.gdml
+        do
+          sed -i -e "s|<ROOTFILES>|${F%.gdml}.root;<ROOTFILES>|" jsroot/jsroot.htm
+        done
+        sed -i -e "s|;<ROOTFILES>||" jsroot/jsroot.htm
     - name: Replace heading in html
       run: |
         sed -i -e "s|master|$GITHUB_REF_NAME|" jsroot/index.htm

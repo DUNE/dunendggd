@@ -40,11 +40,19 @@ class SandECalBarrelModBuilder(gegede.builder.Builder):
         self.add_volume(ECAL_lv)
 
             ######## Aluminum back plate##################
-
-        ECAL_Alplate_shape = geom.shapes.Box('ECAL_Alplate_shape',
-                                           dx = self.trapezoidDim[1],
-                                           dy = self.trapezoidDim[2],
-                                           dz = AlPlateThick/2.)
+        
+        #tan = math.tan(math.pi/self.Segmentation)
+        tan = 0.5*(self.trapezoidDim[1] - self.trapezoidDim[0])/self.trapezoidDim[3]
+        
+        bhalfAlPlate=self.trapezoidDim[1]
+        BhalfAlPlate=bhalfAlPlate+AlPlateThick*tan
+        
+        ECAL_Alplate_shape = geom.shapes.Trapezoid('ECAL_Alplate_shape',
+                            dx1=bhalfAlPlate,
+                            dx2=BhalfAlPlate,
+                            dy1=self.trapezoidDim[2],
+                            dy2=self.trapezoidDim[2],
+                            dz=AlPlateThick/2.)
       
         ECAL_Alplate_lv = geom.structure.Volume('ECAL_Alplate_lv', material = 'Aluminum', 
                                               shape = ECAL_Alplate_shape)
@@ -58,8 +66,6 @@ class SandECalBarrelModBuilder(gegede.builder.Builder):
         ECAL_lv.placements.append(ECAL_Alplate_place.name)
 
         for i in range(self.nSlabs): #nSlabs
-            #tan = math.tan(math.pi/self.Segmentation)
-            tan = 0.5*(self.trapezoidDim[1] - self.trapezoidDim[0])/self.trapezoidDim[3]
             xposSlab=Q('0cm')
             yposSlab=Q('0cm')
             zposSlabActive = (-self.trapezoidDim[3]-AlPlateThick/2. +

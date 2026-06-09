@@ -12,3 +12,5 @@ ArgonCube/geom-test.root
 !ArgonCube/*2x2*
 scratch/*
 *.root
+duneggd/Config/ND_Hall_Air_Volume_LAr_shift_*_TMS_shift_*_noSAND.cfg
+duneggd/Config/ND_Hall_Air_Volume_LAr_shift_*_TMS_shift_*_SAND.cfg

@@ -120,6 +120,35 @@ find the paths to the volumes you want to inspect.
 
 Currently this does _not_ work copies of volumes ending with `#<some_number>`.
 
+# PRISM geometries with movable TMS and LAr
+
+The PRISM geometry allows you to generate geometries with movable TMS and LAr detectors. Both detectors can be moved independently or together in the X-direction. 
+
+To build the geometries with default offsets (10000 mm for both TMS and LAr):
+
+```bash
+make prism
+```
+You can specify shift offsets for TMS and LAr separately using the `TMS_SHIFT` and `LAr_SHIFT` parameters:
+
+```bash
+make prism TMS_SHIFT="15000" LAr_SHIFT="20000"
+```
+This moves the TMS and LAr detectors to 15000 mm and 20000 mm, respectively. Note that the maximum movable distance for PRISM is 35000 mm.
+
+A `prism_nosand` geometries is also available here to build a much, _much_ faster geometry:
+
+```bash
+make prism_nosand
+```
+Similarly, To specify shift offsets for TMS and LAr:
+
+```bash
+make prism_nosand TMS_SHIFT="15000" LAr_SHIFT="20000"
+```
+
+
+
 # Contact
 - **dunendggd:** Package managers
   - Lukas Koch
