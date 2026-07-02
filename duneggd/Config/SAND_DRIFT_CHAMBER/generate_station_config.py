@@ -20,10 +20,10 @@ def fill_uniform_from_CCH2_tgt_ratio(Space4Tracker,gen_cfg,**kwargs):
     while running_z < Space4Tracker:
         if idx % (gen_cfg["n_CH2_after_C"]+1) == 0:
             station_lst.append({"tgt_material" : "Graphite", "tgt_thickness":gen_cfg["C_tgt_thickness"], "n_views":gen_cfg["n_views"], "view_thickness":gen_cfg["view_thickness"]})
-            running_z += gen_cfg["C_tgt_thickness"] + gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"]
+            running_z += gen_cfg["C_tgt_thickness"] + gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"] + gen_cfg["clearanceTargets"]
         else:
             station_lst.append({"tgt_material" : "C3H6", "tgt_thickness":gen_cfg["CH2_tgt_thickness"], "n_views":gen_cfg["n_views"], "view_thickness":gen_cfg["view_thickness"]})
-            running_z += gen_cfg["CH2_tgt_thickness"] + gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"]
+            running_z += gen_cfg["CH2_tgt_thickness"] + gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"] + gen_cfg["clearanceTargets"]
         idx += 1
     return station_lst
        
@@ -108,6 +108,7 @@ if __name__ == "__main__":
     print("\n>Generation parameters")
     print(f" gen_mode: {gen_mode['name']}")
     print(f" clearanceStations: {gen_mode['clearanceStations']}")
+    print(f" clearanceTargets: {gen_mode['clearanceTargets']}")
     
     # compute the space available for the tracker along z
     Space4Tracker  = kloeVesselRadius * 2 - GRAINThickness - clearanceECALGRAIN - clearanceGRAINTracker - clearanceTrackerECAL
@@ -118,7 +119,10 @@ if __name__ == "__main__":
     
     # Save the configuration file
     station_config = configparser.ConfigParser()
-    station_config["SAND_GENERIC_DRIFT_STATIONS"]={"clearanceStations": serialize_obj_to_cfg(gen_mode["clearanceStations"]), "stationDict": serialize_obj_to_cfg(stations_dict)}
+    station_config["SAND_GENERIC_DRIFT_STATIONS"]={"clearanceStations": serialize_obj_to_cfg(gen_mode["clearanceStations"]), 
+                                                   "clearanceTargets": serialize_obj_to_cfg(gen_mode["clearanceTargets"]), 
+                                                   "stationDict": serialize_obj_to_cfg(stations_dict)}
+    
     with open(f"{cfg_save_path}/TEST_DRIFT_STATIONS.cfg", "w") as f:
         station_config.write(f)
     

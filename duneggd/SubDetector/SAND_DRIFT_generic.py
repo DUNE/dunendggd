@@ -9,7 +9,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
     def configure(self,
                 # sand inner volume info
                 configuration = None,tracker_configuration=None, nBarrelModules = None, halfDimension = None, Material = None, GRAINThickness = None, 
-                clearenceECALGRAIN = None, clearenceGRAINTracker = None, clearenceTrackerECAL = None, clearanceStations = None,
+                clearenceECALGRAIN = None, clearenceGRAINTracker = None, clearenceTrackerECAL = None, clearanceStations = None, clearanceTargets = None,
                 # station commons
                 frameThickness = None, frameMaterial = None, driftGas = None, MylarThickness=None,
                 # tracker stations
@@ -30,6 +30,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
             
             self.clearenceTrackerECAL       = clearenceTrackerECAL
             self.clearanceStations          = clearanceStations
+            self.clearanceTargets            = clearanceTargets        
 
             # station common info (assumed to be constant)
             self.frameThickness             = frameThickness
@@ -70,7 +71,8 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
             print("clearance GRAIN-ECAL           | "+str(self.clearenceECALGRAIN))
             print("clearance GRAIN-tracker        | "+str(self.clearenceGRAINTracker))
             print("clearance tracker-ECAL         | "+str(self.clearenceTrackerECAL))
-            print("clearance stations            | "+str(self.clearanceStations))
+            print("clearance stations             | "+str(self.clearanceStations))
+            print("clearance targets              | "+str(self.clearanceTargets))
             print("Space 4 Tracker                | "+str(self.Space4Tracker))
             print("")
 
@@ -138,7 +140,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
         # self.WiresCounter["SuperMod"] = 0
         # TODO: temporarily assume only modules with targets when computing the thickness
         if chamberThickness == None : chamberThickness = station_cfg["n_views"]*station_cfg["view_thickness"] + self.MylarThickness
-        if half_thickness == None : half_thickness = (station_cfg["tgt_thickness"]+chamberThickness)/2
+        if half_thickness == None : half_thickness = (station_cfg["tgt_thickness"] + self.clearanceTargets + chamberThickness)/2
         if half_length    == None : half_length    = self.kloeVesselHalfDx
 
         half_heigth    = self.getHalfHeight(abs(running_x))
@@ -168,7 +170,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
 
         self.placeSubVolume(geom, station_lv, target_lv, pos_x =- half_thickness + station_cfg["tgt_thickness"]/2)
 
-        self.placeSubVolume(geom, station_lv, DriftChamber_lv, pos_x = - half_thickness + station_cfg["tgt_thickness"] + chamberThickness/2)
+        self.placeSubVolume(geom, station_lv, DriftChamber_lv, pos_x = - half_thickness + station_cfg["tgt_thickness"] + self.clearanceTargets + chamberThickness/2)
         
         # # place the inner station volume within the station
         # self.placeSubVolume(geom, station_lv, inner_station_lv)
