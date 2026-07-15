@@ -39,11 +39,11 @@ def fill_uniform_from_CCH2_tgt_ratio_with_trk_mods(Space4Tracker,gen_cfg,**kwarg
     # add potential upstream tracking modules
     for _ in range(gen_cfg["n_upstream_trk_mods"]):
         if running_z < Space4Tracker:
-            station_lst.append({"tgt_material" : "trk_mod", "n_views":gen_cfg["n_views"], "view_thickness":gen_cfg["view_thickness"]})
-            running_z += gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"]
+            station_lst.append({"tgt_material" : "trk_mod", "n_views":gen_cfg["trk_mod_n_views"], "view_thickness":gen_cfg["view_thickness"]})
+            running_z += gen_cfg["trk_mod_n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"]
             idx += 1
     # reserve space for potential downstream tracking modules
-    downstream_trk_thick = gen_cfg["n_downstream_trk_mods"]*(gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"])
+    downstream_trk_thick = gen_cfg["n_downstream_trk_mods"]*(gen_cfg["trk_mod_n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"])
     # fill the main section of the tracker
     while running_z < (Space4Tracker-downstream_trk_thick):
         if idx % (gen_cfg["n_CH2_after_C"]+1) == 0:
@@ -56,8 +56,8 @@ def fill_uniform_from_CCH2_tgt_ratio_with_trk_mods(Space4Tracker,gen_cfg,**kwarg
     # fill the downstream tracking modules if present 
     for _ in range(gen_cfg["n_downstream_trk_mods"]):
         if running_z < Space4Tracker:
-            station_lst.append({"tgt_material" : "trk_mod", "n_views":gen_cfg["n_views"], "view_thickness":gen_cfg["view_thickness"]})
-            running_z += gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"]
+            station_lst.append({"tgt_material" : "trk_mod", "n_views":gen_cfg["trk_mod_n_views"], "view_thickness":gen_cfg["view_thickness"]})
+            running_z += gen_cfg["trk_mod_n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"]
             idx += 1
     return station_lst
     
