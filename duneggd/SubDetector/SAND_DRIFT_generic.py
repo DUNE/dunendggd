@@ -137,10 +137,13 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
         print("")
         print(f"Building station s_{label}")
 
-        # self.WiresCounter["SuperMod"] = 0
-        # TODO: temporarily assume only modules with targets when computing the thickness
+        # Account for tracking modules when filling
+        has_target = station_cfg["tgt_material"] != "trk_mod"
+        tgt_thickness = station_cfg["tgt_thickness"] if has_target else Q("0mm")
+        clearance_tgt = self.clearanceTargets if has_target else Q("0mm")
+        
         if chamberThickness == None : chamberThickness = station_cfg["n_views"]*station_cfg["view_thickness"] + self.MylarThickness
-        if half_thickness == None : half_thickness = (station_cfg["tgt_thickness"] + self.clearanceTargets + chamberThickness)/2
+        if half_thickness == None : half_thickness = (tgt_thickness+ clearance_tgt + chamberThickness)/2
         if half_length    == None : half_length    = self.kloeVesselHalfDx
 
         half_heigth    = self.getHalfHeight(abs(running_x))
@@ -160,17 +163,16 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
 
         # inner_station_lv            = self.constructBox(geom, label+"_in", half_thickness, view_half_height, view_half_length)
         
-        tgt_string = "C" if station_cfg["tgt_material"] == 'Graphite' else "P"
-
-        target_lv                   = self.constructBox(geom, label+"_t_"+tgt_string, station_cfg["tgt_thickness"]/2, view_half_height, view_half_length, material=station_cfg["tgt_material"])
-
         DriftChamber_lv             = self.constructBox(geom, label+"_ch", chamberThickness/2, view_half_height, view_half_length) #TODO: review the need for a DriftChamber logical volume
 
         self.FillDriftChamber(geom, DriftChamber_lv, label, station_cfg) # updates self.WiresCounter["DriftChamber"]
+        
+        if has_target:
+            tgt_string = "C" if station_cfg["tgt_material"] == 'Graphite' else "P"
+            target_lv                   = self.constructBox(geom, label+"_t_"+tgt_string, tgt_thickness/2, view_half_height, view_half_length, material=station_cfg["tgt_material"])
+            self.placeSubVolume(geom, station_lv, target_lv, pos_x =- half_thickness + tgt_thickness/2)
 
-        self.placeSubVolume(geom, station_lv, target_lv, pos_x =- half_thickness + station_cfg["tgt_thickness"]/2)
-
-        self.placeSubVolume(geom, station_lv, DriftChamber_lv, pos_x = - half_thickness + station_cfg["tgt_thickness"] + self.clearanceTargets + chamberThickness/2)
+        self.placeSubVolume(geom, station_lv, DriftChamber_lv, pos_x = - half_thickness + tgt_thickness + clearance_tgt + chamberThickness/2)
         
         # # place the inner station volume within the station
         # self.placeSubVolume(geom, station_lv, inner_station_lv)

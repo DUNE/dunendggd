@@ -26,7 +26,40 @@ def fill_uniform_from_CCH2_tgt_ratio(Space4Tracker,gen_cfg,**kwargs):
             running_z += gen_cfg["CH2_tgt_thickness"] + gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"] + gen_cfg["clearanceTargets"]
         idx += 1
     return station_lst
-       
+
+
+# separate option (as an example) for including upstream and downstream tracking modules (with no target) 
+def fill_uniform_from_CCH2_tgt_ratio_with_trk_mods(Space4Tracker,gen_cfg,**kwargs):
+    print("\n>Generating with: fill_uniform_from_CCH2_tgt_ratio")
+    
+    station_lst = []
+    idx = 0
+    running_z = Q("0.0mm")
+    
+    # add potential upstream tracking modules
+    for _ in range(gen_cfg["n_upstream_trk_mods"]):
+        if running_z < Space4Tracker:
+            station_lst.append({"tgt_material" : "trk_mod", "n_views":gen_cfg["n_views"], "view_thickness":gen_cfg["view_thickness"]})
+            running_z += gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"]
+            idx += 1
+    # reserve space for potential downstream tracking modules
+    downstream_trk_thick = gen_cfg["n_downstream_trk_mods"]*(gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"])
+    # fill the main section of the tracker
+    while running_z < (Space4Tracker-downstream_trk_thick):
+        if idx % (gen_cfg["n_CH2_after_C"]+1) == 0:
+            station_lst.append({"tgt_material" : "Graphite", "tgt_thickness":gen_cfg["C_tgt_thickness"], "n_views":gen_cfg["n_views"], "view_thickness":gen_cfg["view_thickness"]})
+            running_z += gen_cfg["C_tgt_thickness"] + gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"] + gen_cfg["clearanceTargets"]
+        else:
+            station_lst.append({"tgt_material" : "C3H6", "tgt_thickness":gen_cfg["CH2_tgt_thickness"], "n_views":gen_cfg["n_views"], "view_thickness":gen_cfg["view_thickness"]})
+            running_z += gen_cfg["CH2_tgt_thickness"] + gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"] + gen_cfg["clearanceTargets"]
+        idx += 1
+    # fill the downstream tracking modules if present 
+    for _ in range(gen_cfg["n_downstream_trk_mods"]):
+        if running_z < Space4Tracker:
+            station_lst.append({"tgt_material" : "trk_mod", "n_views":gen_cfg["n_views"], "view_thickness":gen_cfg["view_thickness"]})
+            running_z += gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"]
+            idx += 1
+    return station_lst
     
 
 
@@ -72,7 +105,8 @@ if __name__ == "__main__":
     # pass the Q in the configuration files as gegede quantities
     namespace = {"Q": Q}
     # set a dictionary of generation options --> add new options here
-    gen_mode_dict = {"fill_uniform_from_CCH2_tgt_ratio": fill_uniform_from_CCH2_tgt_ratio}
+    gen_mode_dict = {"fill_uniform_from_CCH2_tgt_ratio": fill_uniform_from_CCH2_tgt_ratio,
+                     "fill_uniform_from_CCH2_tgt_ratio_with_trk_mods":fill_uniform_from_CCH2_tgt_ratio_with_trk_mods}
     
     # Read the generation algorithm configuration file
     args = parse_script_args()
