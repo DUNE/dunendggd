@@ -36,27 +36,42 @@ def fill_uniform_from_CCH2_tgt_ratio_with_trk_mods(Space4Tracker,gen_cfg,**kwarg
     idx = 0
     running_z = Q("0.0mm")
     
+    #thickness of a tracking module
+    trk_thick = gen_cfg["trk_mod_n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"]
+    # reserve space for potential downstream tracking modules
+    downstream_trk_thick = gen_cfg["n_downstream_trk_mods"]*trk_thick
+    
+    total_trk_thick = (gen_cfg["n_upstream_trk_mods"]+gen_cfg["n_downstream_trk_mods"])*trk_thick
+    if total_trk_thick > Space4Tracker:
+        raise ValueError(
+            f"Tracking modules require {total_trk_thick}, "
+            f"but only {Space4Tracker} is available."
+        )
+    
     # add potential upstream tracking modules
     for _ in range(gen_cfg["n_upstream_trk_mods"]):
-        if running_z < Space4Tracker:
-            station_lst.append({"tgt_material" : "trk_mod", "n_views":gen_cfg["trk_mod_n_views"], "view_thickness":gen_cfg["view_thickness"]})
-            running_z += gen_cfg["trk_mod_n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"]
-    # reserve space for potential downstream tracking modules
-    downstream_trk_thick = gen_cfg["n_downstream_trk_mods"]*(gen_cfg["trk_mod_n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"])
+        station_lst.append({"tgt_material" : "trk_mod", "n_views":gen_cfg["trk_mod_n_views"], "view_thickness":gen_cfg["view_thickness"]})
+        running_z += trk_thick
+    
     # fill the main section of the tracker
-    while running_z < (Space4Tracker-downstream_trk_thick):
-        if (idx) % (gen_cfg["n_CH2_after_C"]+1) == 0:
-            station_lst.append({"tgt_material" : "Graphite", "tgt_thickness":gen_cfg["C_tgt_thickness"], "n_views":gen_cfg["n_views"], "view_thickness":gen_cfg["view_thickness"]})
-            running_z += gen_cfg["C_tgt_thickness"] + gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"] + gen_cfg["clearanceTargets"]
+    while True:
+        if idx % (gen_cfg["n_CH2_after_C"]+1) == 0:
+            material, tgt_thick = "Graphite", gen_cfg["C_tgt_thickness"]
         else:
-            station_lst.append({"tgt_material" : "C3H6", "tgt_thickness":gen_cfg["CH2_tgt_thickness"], "n_views":gen_cfg["n_views"], "view_thickness":gen_cfg["view_thickness"]})
-            running_z += gen_cfg["CH2_tgt_thickness"] + gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"] + gen_cfg["clearanceTargets"]
+            material, tgt_thick = "C3H6", gen_cfg["CH2_tgt_thickness"]
+        
+        station_thick = tgt_thick + gen_cfg["n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"] + gen_cfg["clearanceTargets"]
+        
+        if running_z + station_thick > (Space4Tracker-downstream_trk_thick):
+            break
+        station_lst.append({"tgt_material": material, "tgt_thickness": tgt_thick, "n_views": gen_cfg["n_views"], "view_thickness": gen_cfg["view_thickness"]})
+        running_z+=station_thick
         idx += 1
+        
     # fill the downstream tracking modules if present 
     for _ in range(gen_cfg["n_downstream_trk_mods"]):
-        if running_z < Space4Tracker:
-            station_lst.append({"tgt_material" : "trk_mod", "n_views":gen_cfg["trk_mod_n_views"], "view_thickness":gen_cfg["view_thickness"]})
-            running_z += gen_cfg["trk_mod_n_views"] * gen_cfg["view_thickness"] + gen_cfg["clearanceStations"]
+        station_lst.append({"tgt_material" : "trk_mod", "n_views":gen_cfg["trk_mod_n_views"], "view_thickness":gen_cfg["view_thickness"]})
+        running_z += trk_thick
     return station_lst
     
 
