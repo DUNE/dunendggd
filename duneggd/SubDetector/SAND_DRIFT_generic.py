@@ -137,8 +137,8 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
             
             mylar_area_counter+=station_mylar_area
             # self.WiresCounter["Tracker"] += self.WiresCounter["SuperMod"] 
-        print(f"Total Graphite target mass: {Q(graphite_tgt_mass_counter,'kg')}")
-        print(f"Total C3H6 target mass: {Q(ch2_tgt_mass_counter,'kg')}")
+        print(f"Total Graphite target mass: {graphite_tgt_mass_counter.to('kg')}")
+        print(f"Total C3H6 target mass: {ch2_tgt_mass_counter.to('kg')}")
         print(f"Total mylar area: {mylar_area_counter}")
             
 
@@ -183,7 +183,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
             target_lv                   = self.constructBox(geom, label+"_t_"+tgt_string, tgt_thickness/2, view_half_height, view_half_length, material=station_cfg["tgt_material"])
             self.placeSubVolume(geom, station_lv, target_lv, pos_x =- half_thickness + tgt_thickness/2)
             # compute the target mass
-            tgt_volume = (0.5 * tgt_thickness * view_half_height * view_half_length)*2
+            tgt_volume = tgt_thickness * view_half_height * view_half_length * 4
 
         self.placeSubVolume(geom, station_lv, DriftChamber_lv, pos_x = - half_thickness + tgt_thickness + clearance_tgt + chamberThickness/2)
         
