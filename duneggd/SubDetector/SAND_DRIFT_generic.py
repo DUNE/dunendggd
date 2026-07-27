@@ -119,16 +119,26 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
         running_x =  -self.kloeVesselRadius + self.clearenceECALGRAIN + self.GRAINThickness + self.clearenceGRAINTracker#TODO: start from the GRAIN-side
 
         mylar_area_counter = 0
+        graphite_tgt_mass_counter = 0
+        ch2_tgt_mass_counter = 0
+        
         for idx, station_cfg in enumerate(self.stationDict):
 
-            station_lv, station_thick, station_mylar_area = self.constructStation(geom, running_x, station_cfg,label = "s_"+str(idx))
+            station_lv, station_thick, station_mylar_area, tgt_vol = self.constructStation(geom, running_x, station_cfg,label = "s_"+str(idx))
 
             self.placeSubVolume(geom, volume, station_lv, pos_x = running_x + station_thick/2, label = str(idx))
 
             running_x += (station_thick + self.clearanceStations) #TODO: start from the GRAIN-side
-
+            # compute the 
+            if station_cfg["tgt_material"] == "Graphite":
+                graphite_tgt_mass_counter+=tgt_vol * Q("2.23 g/cm^3")
+            elif station_cfg["tgt_material"] == "C3H6":
+                ch2_tgt_mass_counter+=tgt_vol * Q("0.946 g/cm^3")
+            
             mylar_area_counter+=station_mylar_area
             # self.WiresCounter["Tracker"] += self.WiresCounter["SuperMod"] 
+        print(f"Total Graphite target mass: {Q(graphite_tgt_mass_counter,'kg')}")
+        print(f"Total C3H6 target mass: {Q(ch2_tgt_mass_counter,'kg')}")
         print(f"Total mylar area: {mylar_area_counter}")
             
 
@@ -167,10 +177,13 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
 
         self.FillDriftChamber(geom, DriftChamber_lv, label, station_cfg) # updates self.WiresCounter["DriftChamber"]
         
+        tgt_volume=0
         if has_target:
             tgt_string = "C" if station_cfg["tgt_material"] == 'Graphite' else "P"
             target_lv                   = self.constructBox(geom, label+"_t_"+tgt_string, tgt_thickness/2, view_half_height, view_half_length, material=station_cfg["tgt_material"])
             self.placeSubVolume(geom, station_lv, target_lv, pos_x =- half_thickness + tgt_thickness/2)
+            # compute the target mass
+            tgt_volume = (0.5 * tgt_thickness * view_half_height * view_half_length)*2
 
         self.placeSubVolume(geom, station_lv, DriftChamber_lv, pos_x = - half_thickness + tgt_thickness + clearance_tgt + chamberThickness/2)
         
@@ -183,7 +196,7 @@ class GenericDRIFTBuilder(gegede.builder.Builder):
         print(f"station dimensions : thickness {half_thickness*2}, heigth {half_heigth*2}, lenght {half_length*2}")
         print(f"Station mylar area: {station_mylar_area}")
 
-        return station_lv, half_thickness*2, station_mylar_area
+        return station_lv, half_thickness*2, station_mylar_area, tgt_volume
 
     def constructFrame(self, geom, half_thickness, half_heigth, half_length, label = ""):
 
