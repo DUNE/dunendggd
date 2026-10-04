@@ -304,6 +304,30 @@ only_SAND_DRIFT_GENERIC.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/SAND_GRAIN.cfg
 	gegede-cli -o $(OUTPUT_DIR)/$@ $^
 
+only_SAND_DRIFT_TAGGER.gdml: duneggd/Config/WORLDggd.cfg \
+    duneggd/Config/ND_Hall_Air_Volume_Only_SAND.cfg \
+    duneggd/Config/ND_Hall_Rock.cfg \
+    duneggd/Config/SAND_MAGNET.cfg \
+    duneggd/Config/SAND_INNERVOLOPTDRIFT1.cfg \
+    duneggd/Config/SAND_ECAL.cfg \
+    $(GENERIC_DRIFT_STATIONS_CFG) \
+    duneggd/Config/SAND_DRIFT_CHAMBER/DRIFT_generic.cfg \
+    duneggd/Config/SAND_GRAIN.cfg \
+    duneggd/Config/MUON_TAGGER.cfg
+	gegede-cli -o $(OUTPUT_DIR)/$@ $^
+
+only_SAND_DRIFT_TAGGER2.gdml: duneggd/Config/WORLDggd.cfg \
+    duneggd/Config/ND_Hall_Air_Volume_Only_SAND_TAGGER2.cfg \
+    duneggd/Config/ND_Hall_Rock.cfg \
+    duneggd/Config/SAND_MAGNET.cfg \
+    duneggd/Config/SAND_INNERVOLOPTDRIFT1.cfg \
+    duneggd/Config/SAND_ECAL.cfg \
+    $(GENERIC_DRIFT_STATIONS_CFG) \
+    duneggd/Config/SAND_DRIFT_CHAMBER/DRIFT_generic.cfg \
+    duneggd/Config/SAND_GRAIN.cfg \
+    duneggd/Config/MUON_TAGGER2.cfg
+	gegede-cli -o $(OUTPUT_DIR)/$@ $^
+
 
 nd_hall_no_dets.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_Hall_Air_Volume_NoDets.cfg \
