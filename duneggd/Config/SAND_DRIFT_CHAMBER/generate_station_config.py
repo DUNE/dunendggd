@@ -7,7 +7,7 @@ import time
 import argparse
 import configparser
 
-__CONFIG__ = "/storage/gpfs_data/neutrino/users/alrugger/Software/dunendggd/duneggd/Config"
+__CONFIG__ = "/storage/gpfs_data/neutrino/users/glupi/dunendggd/duneggd/Config"
 
 def fill_uniform_from_CCH2_tgt_ratio(Space4Tracker,gen_cfg,**kwargs):
     print("\n>Generating with: fill_uniform_from_CCH2_tgt_ratio")
