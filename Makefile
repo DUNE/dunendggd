@@ -305,8 +305,8 @@ only_SAND_DRIFT_GENERIC.gdml: duneggd/Config/WORLDggd.cfg \
 	gegede-cli -o $(OUTPUT_DIR)/$@ $^
 
 
-only_SAND_DRIFT_TAGGER4.gdml: duneggd/Config/WORLDggd.cfg \
-    duneggd/Config/ND_Hall_Air_Volume_Only_SAND_TAGGER4.cfg \
+only_SAND_DRIFT_MUONSYSTEM.gdml: duneggd/Config/WORLDggd.cfg \
+    duneggd/Config/ND_Hall_Air_Volume_Only_SAND_MUONSYSTEM.cfg \
     duneggd/Config/ND_Hall_Rock.cfg \
     duneggd/Config/SAND_MAGNET.cfg \
     duneggd/Config/SAND_INNERVOLOPTDRIFT1.cfg \
@@ -314,7 +314,7 @@ only_SAND_DRIFT_TAGGER4.gdml: duneggd/Config/WORLDggd.cfg \
     $(GENERIC_DRIFT_STATIONS_CFG) \
     duneggd/Config/SAND_DRIFT_CHAMBER/DRIFT_generic.cfg \
     duneggd/Config/SAND_GRAIN.cfg \
-    duneggd/Config/MUON_SYSTEM4.cfg
+    duneggd/Config/MUON_SYSTEM.cfg
 	gegede-cli -o $(OUTPUT_DIR)/$@ $^
 
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 '''
 Builder del volume madre volMuonSystem, che contiene i piani del muon tagger /
-catcher di SAND (geometria TAGGER4).
+catcher di SAND (geometria only_SAND_DRIFT_MUONSYSTEM).
 
 I piani sono i sub-builder (MuonSystemPlaneBuilder, in MuonSystemPlane.py):
 questo builder li piazza dentro di se', e la hall piazza volMuonSystem.
