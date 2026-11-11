@@ -3,7 +3,9 @@ void geoDisplay()
 	//gSystem->Load("libGdml");
 	gSystem->Load("libGeom");
 	TGeoManager *geo = new TGeoManager();
-	geo->Import("example.gdml");
+	geo->Import("/storage/gpfs_data/neutrino/users/glupi/dunendggd/only_SAND_DRIFT_TAGGER3.gdml");
+	geo->Export("/storage/gpfs_data/neutrino/users/glupi/dunendggd/only_SAND_DRIFT_TAGGER3.root");
+	
 	geo->DefaultColors();
 
 
