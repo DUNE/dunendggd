@@ -1,7 +1,5 @@
-
 import gegede.builder
 from gegede import Quantity as Q
-
 
 class MuonSystemPlaneBuilder(gegede.builder.Builder):
 
@@ -25,7 +23,7 @@ class MuonSystemPlaneBuilder(gegede.builder.Builder):
             'vol' + self.name,
             material = self.mat,
             shape    = plane_shape)
-        
+
         plane_lv.params.append(('SensDet', self.sensdet))
 
-return
+        self.add_volume(plane_lv)

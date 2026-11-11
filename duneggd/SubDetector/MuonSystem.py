@@ -3,13 +3,14 @@
 Builder del volume madre volMuonSystem, che contiene i piani del muon tagger /
 catcher di SAND (geometria TAGGER4).
 
-I piani sono i sub-builder (MuonTaggerPlaneBuilder, invariato): questo builder
-li piazza dentro di se', e la hall piazza volMuonSystem.
+I piani sono i sub-builder (MuonSystemPlaneBuilder, in MuonSystemPlane.py):
+questo builder li piazza dentro di se', e la hall piazza volMuonSystem.
 
 PERCHE' UN'UNIONE DI BOX E NON UNA SCATOLA UNICA
     Una scatola d'aria lunga abbastanza da contenere tagger (a monte) e catcher
-    (a valle) ingloberebbe volSAND: e' l'overlap della prima versione, vedi la
-    docstring di MuonTaggerPlane.py.  Qui la forma e' l'unione booleana di un
+    (a valle) ingloberebbe volSAND: il test di overlap a campionamento della
+    prima versione segnalava "volSAND overlapping" per ~359 cm.  Qui la forma
+    e' l'unione booleana di un
     box per piano, ciascuno centrato sul proprio piano e piu' grande di
     `margin` per lato: il volume copre solo i piani e un velo d'aria attorno,
     e l'aria fra un piano e l'altro resta della caverna.
