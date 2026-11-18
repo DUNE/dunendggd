@@ -27,8 +27,8 @@ class GrainBuilder(gegede.builder.Builder):
         self.LArLength              = LArLength
 
         self.VacuumThicknessX       = self.ExtVesselThickness/2 - self.CarbonFiberThickness*2 - self.HoneycombThickness - (self.LArThickness/2 + self.SteelThickness)
-        self.VacuumThicknessY       = self.ExtVesselThickness/2 - self.CarbonFiberThickness*2 - self.HoneycombThickness - (self.LArHeight/2 + self.SteelThickness)
-        self.VacuumThicknessZ       = self.ExtVesselThickness/2 - self.CarbonFiberThickness*2 - self.HoneycombThickness - (self.LArLength/2 + self.SteelThickness)
+        self.VacuumThicknessY       = self.ExtVesselHeight/2 - self.CarbonFiberThickness*2 - self.HoneycombThickness - (self.LArHeight/2 + self.SteelThickness)
+        self.VacuumThicknessZ       = self.ExtVesselLength/2 - self.CarbonFiberThickness*2 - self.HoneycombThickness - (self.LArLength/2 + self.EndcapThickness)
     
 
     def construct(self, geom):
