@@ -13,7 +13,7 @@ These geometry releases were tagged as `Descriptive_tag_v_X.Y.Z`.
 ### Added
 - Added the `prism` and `prism_nosand` options in MakeFile to build geometries with movable TMS and LAr detectors. Supports custom shifts using parameters `TMS_SHIFT` and `LAr_SHIFT`. For example, `make prism TMS_SHIFT="20000" LAr_SHIFT="15000"`.
 - Added `prism_drift1` option which was missing from the addition above.
-- Added an `anti_fiducial_nd_hall_with_lar_no_tms_no_sand.gdml` geometry without TMS and SAND.
+- Added an `anti_fiducial_nd_hall_with_nolarctive_no_tms_no_sand.gdml` geometry without TMS and SAND.
 
 ### Fixed
 - Fixed the Y and Z widths of the vacuum gap between the GRAIN inner and outer vessel (`GRAIN_gap_between_vessels_lv`).
