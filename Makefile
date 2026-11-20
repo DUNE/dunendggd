@@ -126,7 +126,7 @@ anti_fiducial_nd_hall_with_lar_tms_sand_drift1.gdml: duneggd/Config/WORLDggd.cfg
 	duneggd/Config/ArgonCube/ArgonCubeCryostat.cfg \
 	duneggd/Config/ArgonCube/ArgonCubeDetectorNoActive.cfg
 
-anti_fiducial_nd_hall_with_nolarctive_no_tms_no_sand.gdml: duneggd/Config/WORLDggd.cfg \
+anti_fiducial_nd_hall_with_nolaractive_no_tms_no_sand.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_Hall_Air_Volume_LAr_noTMS_noSAND.cfg \
 	duneggd/Config/ND_Hall_Rock.cfg \
 	duneggd/Config/ND_ElevatorStruct.cfg \
