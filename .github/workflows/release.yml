@@ -1,6 +1,10 @@
-# This workflow will automatically create a new release and upload the default geometry
+# This workflow uploads the default geometry to an existing release.
+# Create the release manually on GitHub before pushing the tag.
 
-name: Create new release
+name: Upload geometries to release
+
+permissions:
+  contents: write
 
 on:
   push:
@@ -37,6 +41,8 @@ jobs:
         do
           root "gdml2root.C(\"$F\", \"${F%.gdml}.root\")"
         done
-    - name: Upload files to releoas
+    - name: Upload files to release
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
-        gh release upload ${GITHUB_REF_NAME} default_geometries_*.tar.gz *.root --clobber
+        gh release upload ${GITHUB_REF_NAME} default_geometries_*.tar.gz *.root
