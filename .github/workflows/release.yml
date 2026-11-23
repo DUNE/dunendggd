@@ -38,7 +38,7 @@ jobs:
           root "gdml2root.C(\"$F\", \"${F%.gdml}.root\")"
         done
     - name: Create release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v3
       with:
         files: |
           default_geometries_*.tar.gz
