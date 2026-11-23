@@ -37,10 +37,6 @@ jobs:
         do
           root "gdml2root.C(\"$F\", \"${F%.gdml}.root\")"
         done
-    - name: Create release
-      uses: softprops/action-gh-release@v3
-      with:
-        files: |
-          default_geometries_*.tar.gz
-          *.root
-        body: See `CHANGELOG.md` for a detailed release history.
+    - name: Upload files to releoas
+      run: |
+        gh release upload ${GITHUB_REF_NAME} default_geometries_*.tar.gz *.root --clobber
