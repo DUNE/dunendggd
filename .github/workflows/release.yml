@@ -8,35 +8,97 @@ on:
     - "v*.*.*"
     - "*_v_*.*.*"
 
+permissions:
+  contents: write
+
 jobs:
-  release:
-
+  # Single source of truth for the geometry matrix used by every job below.
+  define_matrix:
+    name: Identify geometries to build
     runs-on: ubuntu-latest
-
+    outputs:
+      geometries: ${{ steps.geometries.outputs.geometries }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+    - name: List GDML files built by the default target
+      id: geometries
+      run: |
+        geometries=$(scripts/list_geometries.sh prod \
+          | jq -R -s -c 'split("\n") | map(select(length > 0))')
+        echo "Geometries to build: $geometries"
+        echo "geometries=$geometries" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build ${{ matrix.geometry }}
+    runs-on: ubuntu-latest
+    needs: define_matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        geometry: ${{ fromJSON(needs.define_matrix.outputs.geometries) }}
+    steps:
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # We need the full history for the git metadata
     - name: Setup
       run: pip install .
-    - name: Build default gdml files
-      run: make -j $(nproc)
-    - name: Rename gdml files to include tag
-      run: |
-        for F in *.gdml
-        do
-          mv $F ${F%.gdml}_${GITHUB_REF_NAME}.gdml
-        done
-    - name: Compress geometry files
-      run: tar -czf default_geometries_${GITHUB_REF_NAME}.tar.gz *.gdml
+    - name: Build ${{ matrix.geometry }}
+      run: make -j $(nproc) ${{ matrix.geometry }}
+    - name: Upload ${{ matrix.geometry }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: gdml-${{ matrix.geometry }}
+        path: ${{ matrix.geometry }}
+        if-no-files-found: error
+
+  package:
+    name: Convert ${{ matrix.geometry }} to root
+    runs-on: ubuntu-latest
+    needs: [ define_matrix, build ]
+    strategy:
+      fail-fast: false
+      matrix:
+        geometry: ${{ fromJSON(needs.define_matrix.outputs.geometries) }}
+    steps:
+    - uses: actions/checkout@v4
     - name: Install ROOT
       run: sudo snap install root-framework
-    - name: Convert gdml files to root
+    - name: Download geometry
+      uses: actions/download-artifact@v4
+      with:
+        name: gdml-${{ matrix.geometry }}
+    - name: Rename gdml file to include tag and convert to root
+      env:
+        GEOMETRY: ${{ matrix.geometry }}
       run: |
-        for F in *.gdml
-        do
-          root "gdml2root.C(\"$F\", \"${F%.gdml}.root\")"
-        done
+        mkdir -p release_artifact
+        F="${GEOMETRY%.gdml}_${GITHUB_REF_NAME}.gdml"
+        mv "${GEOMETRY}" "${F}"
+        root "gdml2root.C(\"${F}\", \"release_artifact/${F%.gdml}.root\")"
+        mv "${F}" release_artifact/
+    - name: Upload tagged geometry files
+      uses: actions/upload-artifact@v4
+      with:
+        name: release-${{ matrix.geometry }}
+        path: release_artifact
+        if-no-files-found: error
+
+  # Collate all per-geometry artifacts back into one release.
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    needs: package
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # We need the full history for the git metadata
+    - name: Download all geometry files
+      uses: actions/download-artifact@v4
+      with:
+        pattern: release-*
+        merge-multiple: true
+    - name: Compress geometry files
+      run: tar -czf default_geometries_${GITHUB_REF_NAME}.tar.gz *.gdml
     - name: Create release
       uses: softprops/action-gh-release@v3
       with:

@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'pull_request' }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0
     - name: Check CHANGELOG diff
@@ -31,76 +31,131 @@ jobs:
         else
             echo "::notice file=CHANGELOG.md::CHANGELOG was updated"
         fi
-  build:
-    name: Build default geometry
+
+  # Single source of truth for the geometry matrix used by every job below.
+  define_matrix:
+    name: Identify geometries to build
     runs-on: ubuntu-latest
+    outputs:
+      geometries: ${{ steps.geometries.outputs.geometries }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+    - name: List GDML files built by the default target
+      id: geometries
+      run: |
+        geometries=$(scripts/list_geometries.sh prod \
+          | jq -R -s -c 'split("\n") | map(select(length > 0))')
+        echo "Geometries to build: $geometries"
+        echo "geometries=$geometries" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Build ${{ matrix.geometry }}
+    runs-on: ubuntu-latest
+    needs: define_matrix
+    strategy:
+      fail-fast: false
+      matrix:
+        geometry: ${{ fromJSON(needs.define_matrix.outputs.geometries) }}
+    steps:
+    - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # We need the full history for the git metadata
     - name: Setup
       run: pip install .
-    - name: Build defaul gdml
-      run: make -j $(nproc)
-    - name: Upload default geometry
+    - name: Build ${{ matrix.geometry }}
+      run: make -j $(nproc) ${{ matrix.geometry }}
+    - name: Upload ${{ matrix.geometry }}
       uses: actions/upload-artifact@v4
       with:
-        name: Default Geometry
-        path: "*.gdml"
+        name: gdml-${{ matrix.geometry }}
+        path: ${{ matrix.geometry }}
         if-no-files-found: error
+
   check_overlaps:
-    name: Check geometry for overlaps
+    name: Check overlaps in ${{ matrix.geometry }}
     runs-on: ubuntu-latest
-    needs: build
+    needs: [ define_matrix, build ]
+    strategy:
+      fail-fast: false
+      matrix:
+        geometry: ${{ fromJSON(needs.define_matrix.outputs.geometries) }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install ROOT
       run: sudo snap install root-framework
-    - name: Download default geometry
+    - name: Download geometry
       uses: actions/download-artifact@v4
       with:
-        name: Default Geometry
+        name: gdml-${{ matrix.geometry }}
     - name: Debug artifact
       run: |
         ls -l
         head *.gdml
     - name: Run standard overlap check
       run: |
-        for F in *.gdml
-        do
-            root -q -b "checkOverlaps.C(\"${F}\", 0)" 2>&1 | tee check.log
-            grep "Number of illegal overlaps/extrusions : 0" check.log
-        done
+        root -q -b "checkOverlaps.C(\"${{ matrix.geometry }}\", 0)" 2>&1 | tee check.log
+        grep "Number of illegal overlaps/extrusions : 0" check.log
     - name: Run sampling overlap check
       run: |
-        for F in *.gdml
-        do
-            root -q -b "checkOverlaps.C(\"${F}\", 1)" 2>&1 | tee check.log
-            grep "Number of illegal overlaps/extrusions : 0" check.log
-        done
-  put_online:
-    name: Put geometries online for visual inspection
+        root -q -b "checkOverlaps.C(\"${{ matrix.geometry }}\", 1)" 2>&1 | tee check.log
+        grep "Number of illegal overlaps/extrusions : 0" check.log
+
+  generate_web:
+    name: Prepare ${{ matrix.geometry }} for visual inspection
     runs-on: ubuntu-latest
-    needs: build
+    needs: [ define_matrix, build ]
+    strategy:
+      fail-fast: false
+      matrix:
+        geometry: ${{ fromJSON(needs.define_matrix.outputs.geometries) }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Install ROOT
       run: sudo snap install root-framework
-    - name: Download default geometry
+    - name: Download geometry
       uses: actions/download-artifact@v4
       with:
-        name: Default Geometry
-    - name: Convert gdml files to root
+        name: gdml-${{ matrix.geometry }}
+    - name: Convert gdml file to root
+      env:
+        GEOMETRY: ${{ matrix.geometry }}
       run: |
-        for F in *.gdml
-        do
-          root "gdml2root.C(\"$F\", \"jsroot/${F%.gdml}.root\")"
-        done
+        mkdir -p web_artifact
+        root "gdml2root.C(\"${GEOMETRY}\", \"web_artifact/${GEOMETRY%.gdml}.root\")"
+    - name: Create static images
+      env:
+        GEOMETRY: ${{ matrix.geometry }}
+      run: |
+        cd scripts
+        OUTDIR=../web_artifact/plots_${GEOMETRY}
+        mkdir -p "${OUTDIR}"
+        ./draw_all.sh --filename ../${GEOMETRY} --outdir "${OUTDIR}"
+    - name: Upload geometry page files
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-${{ matrix.geometry }}
+        path: web_artifact
+        if-no-files-found: error
+
+  # Collate every per-geometry artifact into the single jsroot page and deploy it.
+  deploy:
+    name: Put geometries online for visual inspection
+    runs-on: ubuntu-latest
+    needs: generate_web
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download generated geometry files
+      uses: actions/download-artifact@v4
+      with:
+        pattern: web-*
+        merge-multiple: true
+        path: jsroot
     - name: Add files to dropdown menu
       run: |
-        for F in *.gdml
+        for F in jsroot/*.root
         do
-          sed -i -e "s|<ROOTFILES>|${F%.gdml}.root;<ROOTFILES>|" jsroot/jsroot.htm
+          R=$(basename "${F}")
+          sed -i -e "s|<ROOTFILES>|${R};<ROOTFILES>|" jsroot/jsroot.htm
         done
         sed -i -e "s|;<ROOTFILES>||" jsroot/jsroot.htm
     - name: Replace heading in html
@@ -109,19 +164,13 @@ jobs:
         sed -i -e "s|master|$GITHUB_REF_NAME|" jsroot/static.htm
     - name: Create static images
       run: |
-        sed -i -e "s|<li>image</li>|$LISTITEMS|" jsroot/static.htm
         LISTITEMS=""
-        for F in *.gdml
+        for D in jsroot/plots_*
         do
-          cd scripts
-          OUTDIR=../jsroot/plots_$F
-          mkdir -p $OUTDIR
-          ./draw_all.sh --filename ../$F --outdir $OUTDIR
-          for OF in $OUTDIR/*.png
+          for OF in "$D"/*.png
           do
-            LISTITEMS="$LISTITEMS <tr><td>${OF#../jsroot/}<br/><img src=\"${OF#../jsroot/}\" /></td></tr>"
+            LISTITEMS="$LISTITEMS <tr><td>${OF#jsroot/}<br/><img src=\"${OF#jsroot/}\" /></td></tr>"
           done
-          cd ..
         done
         sed -i -e "s|<tr><td>image</td></tr>|$LISTITEMS|" jsroot/static.htm
     - name: Upload artifact
