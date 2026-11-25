@@ -305,7 +305,7 @@ only_SAND_DRIFT_GENERIC.gdml: duneggd/Config/WORLDggd.cfg \
 	gegede-cli -o $(OUTPUT_DIR)/$@ $^
 
 
-only_SAND_DRIFT_MUONSYSTEM.gdml: duneggd/Config/WORLDggd.cfg \
+Only_SAND_MuonSystem.gdml: duneggd/Config/WORLDggd.cfg \
     duneggd/Config/ND_Hall_Air_Volume_Only_SAND_MUONSYSTEM.cfg \
     duneggd/Config/ND_Hall_Rock.cfg \
     duneggd/Config/SAND_MAGNET.cfg \
