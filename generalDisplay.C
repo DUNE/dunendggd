@@ -56,11 +56,11 @@ void generalDisplay( TString filename, Bool_t drawbeam=kTRUE, Int_t checkoverlap
 std::map<TString,Int_t> getMaterialKolor()
 {
   std::map<TString,Int_t> KKolor;
-  KKolor["Steel"] = kGreen;
+  KKolor["Steel"] = kGrey;
   KKolor["Copper"] = kYellow;
   KKolor["Aluminum"] = kRed;
   KKolor["FR4"] = kGray;
-  KKolor["Scintillator"] = kGray;
+  KKolor["Scintillator"] = kGreen;
   return KKolor;
 }
 
