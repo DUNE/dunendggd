@@ -10,6 +10,9 @@ These geometry releases were tagged as `Descriptive_tag_v_X.Y.Z`.
 
 ## [Unreleased]
 
+### Added
+- Added an external muon system around SAND: two 800 x 843.5 x 0.5 cm scintillator planes, `TaggerFar` upstream and `CatcherFar` downstream, in a new `volMuonSystem` mother volume (union of one air box per plane, so it does not enclose `volSAND`). New `Only_SAND_MuonSystem.gdml` target; the SAND tracker is chosen with `SAND_TRACKER_CFGS` (default STT), e.g. `make Only_SAND_MuonSystem.gdml SAND_TRACKER_CFGS="duneggd/Config/SAND_INNERVOLOPTDRIFT1.cfg duneggd/Config/SAND_DRIFT_CHAMBER/DRIFT1.cfg"`.
+
 ## [v2026.11.20]
 
 ### Added
