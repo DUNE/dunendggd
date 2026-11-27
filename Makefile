@@ -303,6 +303,43 @@ only_SAND_STT_Complete.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/SAND_GRAIN.cfg
 
 
+# SAND with the external muon system (MUON_SYSTEM.cfg): one scintillator plane
+# upstream and one downstream of SAND.  The muon system does not depend on the
+# tracker: there is one target per tracker, with the muon-system hall and
+# MUON_SYSTEM.cfg.  The DRIFT and STT_Complete targets are the only_SAND_*
+# targets with the same tracker; STT1 is the tracker of SAND_opt3_STT1.gdml,
+# the supported standard STT configuration.
+only_SAND_STT1_MuonSystem.gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_Only_SAND_MUONSYSTEM.cfg \
+	duneggd/Config/ND_Hall_Rock.cfg \
+	duneggd/Config/SAND_MAGNET.cfg \
+	duneggd/Config/SAND_INNERVOLOPT3.cfg \
+	duneggd/Config/SAND_ECAL.cfg \
+	duneggd/Config/SAND_STT/STT1.cfg \
+	duneggd/Config/SAND_GRAIN.cfg \
+	duneggd/Config/MUON_SYSTEM.cfg
+
+only_SAND_DRIFT_MuonSystem.gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_Only_SAND_MUONSYSTEM.cfg \
+	duneggd/Config/ND_Hall_Rock.cfg \
+	duneggd/Config/SAND_MAGNET.cfg \
+	duneggd/Config/SAND_INNERVOLOPTDRIFT1.cfg \
+	duneggd/Config/SAND_ECAL.cfg \
+	duneggd/Config/SAND_DRIFT_CHAMBER/DRIFT1.cfg \
+	duneggd/Config/SAND_GRAIN.cfg \
+	duneggd/Config/MUON_SYSTEM.cfg
+
+only_SAND_STT_Complete_MuonSystem.gdml: duneggd/Config/WORLDggd.cfg \
+	duneggd/Config/ND_Hall_Air_Volume_Only_SAND_MUONSYSTEM.cfg \
+	duneggd/Config/ND_Hall_Rock.cfg \
+	duneggd/Config/ND_ElevatorStruct.cfg \
+	duneggd/Config/SAND_MAGNET.cfg \
+	duneggd/Config/SAND_INNERVOLOPT_DefaultSTT.cfg \
+	duneggd/Config/SAND_ECAL.cfg \
+	duneggd/Config/SAND_STT/STT_Default.cfg \
+	duneggd/Config/SAND_GRAIN.cfg \
+	duneggd/Config/MUON_SYSTEM.cfg
+
 nd_hall_no_dets.gdml: duneggd/Config/WORLDggd.cfg \
 	duneggd/Config/ND_Hall_Air_Volume_NoDets.cfg \
 	duneggd/Config/ND_Hall_Rock.cfg \
